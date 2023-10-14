@@ -1,0 +1,175 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap');
+*{
+    font-family: 'poppins' ;
+}
+body{
+    background: rgb(1, 1, 48);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    
+}
+
+
+span{
+    color: #000000;
+    font-size: small;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 10px 0;
+}
+header{
+    color: #000000;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 40px 0;
+}
+
+i{
+    position: relative;
+    top: -33px;
+    left: 17px;
+    color: #000000;
+}
+::-webkit-input-placeholder{
+    color: #00000057;
+}
+.submit{
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    height: 45px;
+    outline: none;
+    width: 40%;
+    color: rgb(0, 0, 0);
+    background:  #0aff02;
+    cursor: pointer;
+    transition: .3s ;
+    font-weight: 900;
+    box-shadow: 1px 5px 7px 1px rgb(0, 0, 0);
+}
+
+.submit:hover{
+    box-shadow: 1px 5px 7px 1px rgb(0, 0, 0);
+    background-color: #0e9909;
+}
+
+.next{
+    text-align-last: center;
+    padding-top: 2rem;
+}
+.two-col{
+    width: 31rem;
+    display: flex;
+    justify-content: space-between;
+    color: #000000;
+    font-size:medium;
+    padding-top: 2rem;
+    padding-left: 1rem;
+}
+.one{
+    display: flex;
+}
+label a{
+    text-decoration: none;
+    color: #000000;
+}
+
+.next a{
+    height: 45px;
+    width: 87%;
+    border: none;
+    border-radius: 30px;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px 30px 10px 30px;
+    background:linear-gradient(135deg, rgba(255, 0, 0, 0.336), rgba(0, 0, 255, 0.336));
+    outline: none;
+}
+
+.tech-container{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color: antiquewhite;
+}
+
+.tech-input-field .input{
+    height: 45px;
+    width:75%;
+    border: none;
+    font-size: 15px;
+    padding: 0 0 0 45px;    
+    font-weight:600;
+    background-color: antiquewhite;
+    border-bottom: 3px solid rgb(0, 0, 0);
+    
+}
+
+.name{
+    font-size: x-large;
+    padding-top: rem;
+    width: 8rem;
+}
+.tech-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.tech-input-field{
+    width: 100%;
+}
+
+.tag{
+    position: relative;
+    left: 6px;
+    color: #000;
+}
+.up{
+    float: left;
+    padding-left: 2rem;
+}
+.down{
+    float: right;
+}
+.tech-reg{
+    width: 70%;
+    padding-top: 33rem;
+    padding-left: 8rem;
+}
+.img{
+    width: 90%;
+    height: 50vh;
+    float: right;
+    padding: 150px 20px 20px 20px;
+}
+.top{
+    float: left;
+    width: 30rem;
+    font-weight:bolder;
+}
+.tec{
+    background-color: #4e51d1;
+    float: right;
+    height: 110vh;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+.teacher{
+    padding-top: 2rem;
+    text-align-last: center;
+    width: 50%;
+    padding-left: 1rem;
+}
+.stureg{
+    border-radius: 2rem;
+    color: #000000;
+    font-size: large;
+}
