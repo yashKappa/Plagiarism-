@@ -72,13 +72,13 @@ app.post('/register', (req, res) => {
             console.error('Error inserting data into the database:', error);
             res.sendStatus(500);
         } else {
-            res.redirect('/userpanel.html');
+            res.redirect('/student user/userpanel.html');
         }
     });
 });
 
-app.get('/userpanel.html', (req, res) => {
-    res.sendFile(__dirname + '/userpanel.html');
+app.get('/student user/userpanel.html', (req, res) => {
+    res.sendFile(__dirname + '/student user/userpanel.html');
 });
 
 /*------------------------------------student register ---------------------------------*/
