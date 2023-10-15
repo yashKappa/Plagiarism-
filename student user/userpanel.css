@@ -54,8 +54,8 @@ nav{
     line-height: 75px;
     position: fixed;
     z-index: 999;
-    background-color:var(--primary-color);
-    padding-right: 2rem;
+        background-color:var(--primary-color);      
+        text-align-last: center;
 }
 nav p{
     font-family:'Blackadder ITC';
@@ -65,10 +65,7 @@ nav p{
     text-transform:capitalize;
     cursor: pointer;
 }
-.menu{
-    padding-left: 15rem;
-    width: 100%;
-}
+
 nav li{
     letter-spacing: 10%;
 }
@@ -146,7 +143,8 @@ a{
 
 .logout{
     display: inline-block;
-    padding-left: 13.5rem;
+    padding-right: 0.5rem;
+    float: right;
 }
 .fe{
     background-color: #880000;
@@ -179,10 +177,19 @@ a{
     width: 25%;
     height: 50vh;
     margin-left: 2rem;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    text-align-last: center;
+
 }
 #text2{
     width: 25%;
     height: 50vh;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    text-align-last: center;
 }
 #check{
     background-color:var(--check-color);
@@ -190,9 +197,11 @@ a{
     border: none;
     color: var(--third-color);
     height: 6vh;
+    text-align-last: center;
 }
 #check:hover{
     background-color: var(--check-hover-color);
+    text-align-last: center;
 }
 
 .content button{
@@ -200,6 +209,7 @@ a{
     background-color: #fd8535;
     border-radius: 0.2rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
+    text-align-last: center;
 }
 .content button:hover{
     color: #000000;
@@ -209,19 +219,20 @@ a{
     cursor: pointer;
 }
 .check{
-    margin-left: 37.5rem;
     margin-top: 1rem;
     margin-bottom: 2rem;
+    text-align-last: center;
 }
 .content p{
     margin-left: 16rem;
     margin-top: 2rem;
+    text-align-last: center;
 }
 
 
 
 .popup {
-    width: 15%;
+    width: 20%;
     height: 20vh;
     display: none;
     position: fixed;
@@ -232,20 +243,22 @@ a{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 9999;
     transition: background-color 0.3s ease;
+    text-align-last: center;
 }
 
 .popup button{
     width: 30%;
     margin-top: 2rem;
-    margin-left: 4.5rem;
 }
 
 .popup p{
     width: 100%;
+    text-align-last: center;
 }
 #popupMessage{
     margin-left: -0rem;
     text-align: center;
+    text-align-last: center;
 }
 
 .code-input {
@@ -380,14 +393,16 @@ a{
     transition: background-color 0.3s ease;
 }
 
-.content h2{
+h2{
     width: 100%;
     font-size: larger;
     border: 3px solid rgb(58, 55, 55);
     transition: background-color 0.3s ease;
+    text-align-last: center;
 }
 
 .res{
+    width: 100%;
     padding-bottom: 1rem;
 }
 .code-editor{
@@ -579,9 +594,9 @@ p{
     background-color: none;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    width: 100%;
+    width: 20vh;
     line-height: 5vh;
-    padding-top: 0.5rem;
+    padding-top: 1rem;
 }
 
 .dropdown-content a {
@@ -598,14 +613,11 @@ p{
     display: block;
 }
 
-.dropdown:hover .dropbtn {
-    background-color: #2980b9;
-}
 
 .drop{
-    width: 100px;
-    background-color: #000000;
+    width:20vh;
+    background-color: #060025;
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    text-align: center;
 }
 
