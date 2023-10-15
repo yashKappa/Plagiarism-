@@ -54,8 +54,13 @@ nav{
     line-height: 75px;
     position: fixed;
     z-index: 999;
-        background-color:var(--primary-color);      
-        text-align-last: center;
+    background-color:var(--primary-color);      
+    text-align-last: center;
+}
+
+.menu{
+    width: 100%;
+    padding-left: -10rem;
 }
 nav p{
     font-family:'Blackadder ITC';
@@ -63,7 +68,7 @@ nav p{
     float: left;
     color:rgb(251, 250, 255);    
     text-transform:capitalize;
-    cursor: pointer;
+    cursor: pointer;    
 }
 
 nav li{
@@ -79,13 +84,13 @@ nav li{
     padding-bottom: 8px;
     padding-left: 12px;
     padding-right: 12px;
-    border-radius: 8px;
+    border-radius: 0.2rem;
 }
 
 .Act{
     font-size:1.1rem;
     font-weight: bold;
-    color:var(--third-color);
+    color:white;
     text-decoration: none;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -133,13 +138,7 @@ a{
     padding-right: 0.8rem;
     cursor: pointer;
 }
-.fea{
-    height: 7.5%;
-    padding-left: 11.5%;
-    margin-top: 0.8rem;
-    position:fixed;
-    border-right: 3px solid var(--line-color);
-}
+
 
 .logout{
     display: inline-block;
@@ -147,7 +146,8 @@ a{
     float: right;
 }
 .fe{
-    background-color: #880000;
+    height: 50vh;
+    background:linear-gradient(180deg,rgb(44, 41, 241), rgb(44, 29, 250));
     padding-top: 7px;
     padding-bottom: 7px;
     padding-left: 11px;
@@ -155,8 +155,14 @@ a{
     border-radius: 0.2rem;
     text-decoration: none;
     align-items: center;
+    margin-left: 0.5rem;
 }
-
+.fo{
+    border-left: 3px solid var(--line-color);
+    display: inline-block;
+    height: 8vh;
+    margin-top: 0.5rem;
+}
 .logo{
     width: 3rem;
     height: 3rem;
@@ -164,7 +170,12 @@ a{
     padding-left: 1rem;
     padding-top: 0.5rem;
 }
-
+.dff{
+    display: inline-block;
+    border-left: 3px solid var(--line-color);
+    height: 7.5vh;
+    margin-top: 1rem;
+}
 .content h1{
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     letter-spacing: normal;
