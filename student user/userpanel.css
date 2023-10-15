@@ -138,7 +138,10 @@ a{
     padding-right: 0.8rem;
     cursor: pointer;
 }
-
+.fea{
+    border-right: 3px solid var(--line-color);   
+    font-size: xx-large;
+}
 
 .logout{
     display: inline-block;
@@ -160,8 +163,7 @@ a{
 .fo{
     border-left: 3px solid var(--line-color);
     display: inline-block;
-    height: 8vh;
-    margin-top: 0.5rem;
+    height: 10.5vh;
 }
 .logo{
     width: 3rem;
