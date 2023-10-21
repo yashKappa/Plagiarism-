@@ -1,144 +1,48 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Anti duplicate software</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script name="viewport" content="width=device-width, initial-scale=1"></script>
-<link rel="stylesheet" href="home.css   ">
+    <title>Anti duplicate software</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="stylesheet" href="userpanel.css">   
+    <link rel="database" href="database.js">
+
 </head>
 <body>
-    <div class="sidebar">
-        <h2><img class="logo" src="logo7.png">Piads</h2>
-        <ul>
-            <li><a href="home.html">Home</a></li>
-            <li><a class="active" href="status.html">status</a></li>
-            <li><a href="all logins.html">logins</a></li>
-            <li><a href="Admin.html">Admin</a></li>
-        </ul>
-    </div>
-   <!--navbar-->
-
+    <nav>
+       
+        <div class="Pname">
+            <img class="logo" src="logo7.png">
+                <p>Piads</p>
+        <div class="menu">
+            <span class="feat"><a class="no" href="userpanel.html">Home</a></span>
+            <div class="dropdown">
+                <span class="fet"><a class="no" href="#">Detector</a></span>
+                <div class="dropdown-content">
+                    <a class="drop" href="one-to-one.html">One-to-One</a>
+                    <a class="drop" href="self detect.html">Self Detect</a>
+                    <a class="drop" href="All plagi.html">All Plagi</a>
+                </div>
+            </div>
+            <span class="feat"><a class="no" href="userupload.html">File upload</a></span>
+            <span class="feat"><a class="Active" href="status.html">status</a></span>
+            <span class="feat"><a class="no" href="download.html">downloads</a></span>
+            <span class="feat"><a class="no" href="profile.html">Profile</a></span>
+            <div class="logout">
+            <span class="fea"><img id="dark" src="yash moon.png"></span> 
+            <span class="fe"><a class="no" href="home.html">log out</a></span>
+            </div>
+        </div>
+    </nav><br><br><br><br><br>
     <div class="content">
-        <div class="mode"><img id="dark" src="images 1(2).png"></div>
-        <h1>status</h1>
-    </div>
-
-
+        <h1>This is home page</h1>
+    
     <script src="script.js"></script>
 </body>
 </html>
-const darkModePreference = localStorage.getItem('darkMode');
-const dark = document.getElementById("dark");
-
-if (darkModePreference === 'enabled') {
-    document.body.classList.add('dark-theme');
-    dark.src = "images 2(2).png"; // Set the image to sun.png in dark mode
-    
-} else {
-    dark.src = "images 1(2).png"; // Set the image to moon.png in light mode
-}
-
-dark.onclick = function () {
-    document.body.classList.toggle("dark-theme");
-
-    if (document.body.classList.contains("dark-theme")) {
-        localStorage.setItem('darkMode', 'enabled');
-        dark.src = "images 2(2).png";
-    } else {
-        localStorage.setItem('darkMode', 'disabled');
-        dark.src = "images 1(2).png";
-    }
-}
-
-
-// Prevent the form from automatically redirecting
-document.getElementById("uploadForm").addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    // Use FormData to construct the POST request
-    const formData = new FormData(this);
-
-    // Send the POST request using Fetch API
-    fetch("/upload", {
-        method: "POST",
-        body: formData,
-    })
-    .then(response => {
-        if (response.ok) {
-            // Handle success here, if needed
-            console.log("Files uploaded successfully.");
-        } else {
-            // Handle any errors here, if needed
-            console.error("Error uploading files.");
-        }
-    })
-    .catch(error => {
-        // Handle network errors here, if needed
-        console.error("Network error:", error);
-    });
-    this.reset();
-});
-
-window.addEventListener("load",()=>{
-    const input = document.getElementById("upload");
-    const filewrapper =document.getElementById("filewrapper");
-
-    input.addEventListener("change", (e)=>{
-        let fileName = e.target.files[0].name;
-        let filetype = e.target.value.split(".").pop();
-        fileshow(fileName, filetype);
-    })
-
-    const fileshow=(fileName, filetype)=>{
-        const showfileboxElem= document.createElement("div");
-        showfileboxElem.classList.add("showfilebox");
-        const leftElem = document.createElement("div");
-        leftElem.classList.add("left");
-        showfileboxElem.append(leftElem);
-        const filetypeElem = document.createElement("span");
-        filetypeElem.classList.add("filetype");
-        leftElem.append(filetypeElem);
-        filetypeElem.innerHTML=filetype;
-        filewrapper.append(showfileboxElem);
-    }
-
-})
-
-
-
-fileInput.addEventListener("change", () => {
-    // Clear the previously displayed file names
-    selectedFiles.innerHTML = "";
-
-    // Create an array to store the selected files
-    const selectedFilesArray = Array.from(fileInput.files);
-
-    // Display the names of the selected files
-    selectedFilesArray.forEach((file, index) => {
-        const fileName = file.name;
-        const fileType = fileName.split(".").pop();
-        const fileElement = document.createElement("div");
-        fileElement.textContent = `${fileName} (${fileType})`;
-
-        // Add a remove button for each file
-        const removeButton = document.createElement("button");
-        removeButton.textContent = "Remove";
-        removeButton.addEventListener("click", () => {
-            // Remove the file from the input's files list
-            selectedFilesArray.splice(index, 1);
-
-            // Update the displayed files
-            fileElement.remove();
-        });
-
-        fileElement.appendChild(removeButton);
-        selectedFiles.appendChild(fileElement);
-    });
-});
-
-        
