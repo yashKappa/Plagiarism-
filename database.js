@@ -161,10 +161,10 @@ app.get('/teacher and MU.html', (req, res) => {
 
 /*------------------------------------ university register ---------------------------------*/
 app.post('/MUR', (req, res) => {
-  const { username, email, password, university, country } = req.body;
+  const { username, email, password, university, country, college } = req.body;
 
-  const query = 'INSERT INTO university (username, email, password, university, country) VALUES (?, ?, ?, ?, ?)';
-  connection.query(query, [username, email, password, university, country], (error) => {
+  const query = 'INSERT INTO university (username, email, password, university, country, college) VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(query, [username, email, password, university, country, college], (error) => {
      if (error) {
       console.error('Error inserting data into the database:', error);
       res.sendStatus(500);
