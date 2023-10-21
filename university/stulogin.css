@@ -108,7 +108,7 @@ body {
             padding: 0 0 1px 45px;    
             font-weight:600;
             background-color: rgb(255, 255, 255);
-            border-radius: 10px;
+            border-radius: 0.3rem;
         }
         .input-field{
             width: 80%;
@@ -122,7 +122,7 @@ body {
             padding: 0 0 1px 45px;    
             font-weight:600;
             background-color: rgb(255, 255, 255);
-            border-radius: 10px;
+            border-radius: 0.3rem;
         }
         .input-field1{
             width: 80%;
@@ -136,7 +136,7 @@ body {
             padding: 0 0 1px 45px;    
             font-weight:600;
             background-color: rgb(255, 255, 255);
-            border-radius: 10px;
+            border-radius: 0.3rem;
         }
         .input-field2{
             width: 80%;
@@ -153,7 +153,7 @@ body {
         }
         .stusubmit{
             border: none;
-            border-radius: 10px;
+            border-radius: 0.3rem;
             font-size: 20px;
             height: 35px;
             outline: none;
@@ -163,7 +163,7 @@ body {
             cursor: pointer;
             transition: .3s ;
             font-weight: 900;
-            box-shadow: 2px 3px 0px 0px rgb(0, 0, 0);
+            box-shadow: 1px 2px 0px 0px rgb(0, 0, 0);
         }
         
         .stusubmit:hover{
