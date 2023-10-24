@@ -290,6 +290,7 @@ body {
             font-size: large;
             
         }
+       
 
         .im{
             animation: float 3s infinite;
@@ -317,17 +318,21 @@ body {
 @media only screen and (max-width: 600px) {
     body{
         width: 98%;
+        height: 100vh;
     }
     .main {
         width: 90%; 
-        height: 55vh;
+        height: 68vh;
         padding: 2rem 1rem; 
         box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
     }
 
     .box{
         min-height: 70vh;
-        padding-right: 0.4rem;
+        align-items: center;
+        align-self: center;
+        align-content: center;
+        margin-bottom: 3rem;
     }
 
     .tec{
@@ -409,7 +414,9 @@ body {
     .im {
         display: none; 
     }
-
+    .im1{
+        display: none; 
+    }
     .img {
         display: none; 
     }
@@ -420,5 +427,53 @@ body {
     }
     .stureg{
         padding-right: 3rem;
+    }
+    .msg{
+        display: none;
+    }
+    .se{
+        float: none;
+    }
+    .input-field .input{
+        height: 30px;
+        width: 90%;
+        border: none;
+        font-size:  15px;
+        padding: 0 0 1px 45px;    
+        font-weight:600;
+        background-color: rgb(255, 255, 255);
+        border-radius: 0.3rem;
+    }
+    .input-field{
+        width: 80%;
+        padding-left: 1rem;
+    }
+    .input-field1 .input{
+        height: 30px;
+        width: 90%;
+        border: none;
+        font-size:  15px;
+        padding: 0 0 1px 45px;    
+        font-weight:600;
+        background-color: rgb(255, 255, 255);
+        border-radius: 0.3rem;
+    }
+    .input-field1{
+        width: 80%;
+        padding-left: 1rem;
+    }
+    .input-field2 .input{
+        height: 30px;
+        width: 90%;
+        border: none;
+        font-size:  15px;
+        padding: 0 0 1px 45px;    
+        font-weight:600;
+        background-color: rgb(255, 255, 255);
+        border-radius: 0.3rem;
+    }
+    .input-field2{
+        width: 80%;
+        padding-left: 1rem;
     }
 }
