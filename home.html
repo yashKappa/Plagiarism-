@@ -9,64 +9,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <link rel="stylesheet" href="home.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="stylesheet" href="home.css">   
+    <link rel="database" href="database.js">
+
 </head>
 <body>
-<div class="sidebar">
-    <h2><img class="logo" src="logo7.png">Piads</h2>
-    <ul>
-        <li><a href="home.html" class="active">Home</a></li>
-        <li><a href="status.html">status</a></li>
-        <li><a href="all logins.html">logins</a></li>
-        <li><a href="#">Admin</a></li>
-    </ul>
-</div>
-<div class="content">
-    <div class="mode"><img id="dark" src="images 1(2).png"></div>
-    <h1>Plagiarize two codes with each other</h1>
-    
-    <div class="editor-container">
-        <div id="editor">// testing</div>
-    </div>
-
-    <div class="editor-container1">
-        <div id="editor1">// testing</div>
-    </div>
-
-    <div id="copied-lines" style="display: none;">
-        <h3>Copied Lines:</h3>
-       <ul id="copied-lines-list"></ul>
-    </div>
-    
-
-    <div class="check">
-        <button id="check" onclick="checkPlagiarism()">Check Plagiarism</button>
-    </div>
-    <h2 id="result">Plagiarism</h2>
-
-    <!-- Popup for the message -->
-    <div id="popup" class="popup">
-        <p id="popupMessage"></p>
-        <button onclick="closePopup()">OK</button>
-    </div>
-    
-</div>
-
-
-<script src="script.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const editor = ace.edit("editor");
-        editor.setTheme("ace/theme/cobalt");
-        editor.getSession().setMode("ace/mode/html");
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const editor = ace.edit("editor1");
-        editor.setTheme("ace/theme/cobalt");
-        editor.getSession().setMode("ace/mode/html");
-    });
-</script>
+    <nav>
+       
+        <div class="Pname">
+            <img class="logo" src="logo7.png">
+                <p>Piads</p>
+        <div class="menu">
+            <span class="feat"><a class="Active" href="home.html">Home</a></span>
+            <div class="dropdown">
+                <a class="no" href="#">Detector</a>
+                <div class="dropdown-content">
+                    <a class="drop" href="one-to-one.html">One-to-One</a>
+                    <a class="drop" href="self detect.html">Self Detect</a>
+                    <a class="drop" href="All plagi.html">All Plagi</a>
+                </div>
+            </div>
+            <span class="feat"><a class="no" href="status.html">status</a></span>
+            <span class="feat"><a class="no" href="All logins.html">Login</a></span>
+            <span class="feat"><a class="no" href="Admin.html">Admin</a></span>
+            <div class="logout">
+                <span class="fea"><img id="dark" src="yash moon.png"></span>
+        </div>
+    </nav><br><br><br><br><br>
+   
+    <script src="script.js"></script>
+  
 </body>
 </html>
