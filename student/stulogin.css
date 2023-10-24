@@ -315,19 +315,19 @@ body {
   
         /******************************** MOBILE ********************************************************/
 @media only screen and (max-width: 600px) {
-    body{
-        width: 98%;
-    }
+  
     .main {
         width: 90%; 
-        height: 55vh;
+        height: 68vh;
         padding: 2rem 1rem; 
         box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
     }
 
     .box{
-        min-height: 70vh;
-        padding-right: 0.4rem;
+        min-height: 75vh;
+        align-items: center;
+        align-self: center;
+        align-content: center;
     }
 
     .tec{
@@ -338,7 +338,7 @@ body {
 }
     .main1 {
         width: 90%;
-        height: 89vh;
+        height: 73vh;
         padding: 2rem 1rem; 
         box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
     }
@@ -420,5 +420,15 @@ body {
     }
     .stureg{
         padding-right: 3rem;
+    }
+    .msg{
+        display: none;
+    }
+    .lolo{
+        height: 5rem;
+        background-color: #53fd6a;
+    }
+    .logo{
+        background-color: #39974d;
     }
 }
