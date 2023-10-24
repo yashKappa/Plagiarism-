@@ -145,7 +145,6 @@ document.getElementById('file2').addEventListener('change', function () {
     updateEditorFromFile(this, ace.edit("editor1"));
 });
 
-// Function to check plagiarism between two Ace editor instances
 function checkPlagiarism() {
     // Get the content of both editors
     const editor1 = ace.edit("editor");
@@ -162,12 +161,15 @@ function checkPlagiarism() {
         return; // Exit the function
     }
 
-    // Tokenize the code by lines
-    const lines1 = code1.split('\n').map(line => line.trim());
-    const lines2 = code2.split('\n').map(line => line.trim());
+    // Function to split code into lines and filter out empty lines
+    const getCleanLines = (code) => code.split('\n').filter(line => line.trim().length > 0);
+
+    // Get cleaned lines
+    const cleanLines1 = getCleanLines(code1);
+    const cleanLines2 = getCleanLines(code2);
 
     // Find common lines between the two code snippets
-    const commonLines = getCommonLines(lines1, lines2);
+    const commonLines = getCommonLines(cleanLines1, cleanLines2);
 
     // Check if there are common lines
     if (commonLines.length === 0) {
@@ -179,15 +181,15 @@ function checkPlagiarism() {
     }
 
     // Calculate plagiarism percentage
-    const plagiarismPercentage = (commonLines.length / Math.max(lines1.length, lines2.length)) * 100;
+    const plagiarismPercentage = (commonLines.length / Math.max(cleanLines1.length, cleanLines2.length)) * 100;
 
     // Display the result
     const resultElement = document.getElementById('result');
     resultElement.textContent = `Plagiarism Percentage: ${plagiarismPercentage.toFixed(2)}%`;
 
     // Find not similar lines
-    const notSimilarLines1 = lines1.filter(line1 => !lines2.includes(line1));
-    const notSimilarLines2 = lines2.filter(line2 => !lines1.includes(line2));
+    const notSimilarLines1 = cleanLines1.filter(line1 => !cleanLines2.includes(line1));
+    const notSimilarLines2 = cleanLines2.filter(line2 => !cleanLines1.includes(line2));
 
     // Display copied lines (optional)
     displayCopiedLines(commonLines);
@@ -195,6 +197,8 @@ function checkPlagiarism() {
     // Display not similar lines
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
 }
+
+
 
 // Function to find common lines between two arrays
 function getCommonLines(array1, array2) {
