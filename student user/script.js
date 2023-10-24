@@ -162,12 +162,15 @@ function checkPlagiarism() {
         return; // Exit the function
     }
 
-    // Tokenize the code by lines
-    const lines1 = code1.split('\n').map(line => line.trim());
-    const lines2 = code2.split('\n').map(line => line.trim());
+    // Function to split code into lines and filter out empty lines
+    const getCleanLines = (code) => code.split('\n').filter(line => line.trim().length > 0);
+
+    // Get cleaned lines
+    const cleanLines1 = getCleanLines(code1);
+    const cleanLines2 = getCleanLines(code2);
 
     // Find common lines between the two code snippets
-    const commonLines = getCommonLines(lines1, lines2);
+    const commonLines = getCommonLines(cleanLines1, cleanLines2);
 
     // Check if there are common lines
     if (commonLines.length === 0) {
@@ -179,21 +182,34 @@ function checkPlagiarism() {
     }
 
     // Calculate plagiarism percentage
-    const plagiarismPercentage = (commonLines.length / Math.max(lines1.length, lines2.length)) * 100;
+    const plagiarismPercentage = (commonLines.length / Math.max(cleanLines1.length, cleanLines2.length)) * 100;
 
     // Display the result
     const resultElement = document.getElementById('result');
     resultElement.textContent = `Plagiarism Percentage: ${plagiarismPercentage.toFixed(2)}%`;
 
     // Find not similar lines
-    const notSimilarLines1 = lines1.filter(line1 => !lines2.includes(line1));
-    const notSimilarLines2 = lines2.filter(line2 => !lines1.includes(line2));
+    const notSimilarLines1 = cleanLines1.filter(line1 => !cleanLines2.includes(line1));
+    const notSimilarLines2 = cleanLines2.filter(line2 => !cleanLines1.includes(line2));
 
     // Display copied lines (optional)
     displayCopiedLines(commonLines);
 
     // Display not similar lines
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
+}
+
+// Function to find common lines between two arrays
+function getCommonLines(array1, array2) {
+    const common = [];
+    array1.forEach((line1, index1) => {
+        array2.forEach((line2, index2) => {
+            if (line1 === line2) {
+                common.push({ editor1Line: index1 + 1, editor2Line: index2 + 1, text: line1 });
+            }
+        });
+    });
+    return common;
 }
 
 // Function to find common lines between two arrays
@@ -225,46 +241,29 @@ function displayCopiedLines(commonLines) {
     copiedLinesDiv.style.display = 'block';
 }
 
+// ... (the rest of your code) ...
+
+
 // Function to clear copied lines
-function clearCopiedLines() {
-    const copiedLinesList = document.getElementById('copied-lines-list');
-    copiedLinesList.innerHTML = '';
-
-    // Hide the copied lines div
-    const copiedLinesDiv = document.getElementById('copied-lines');
-    copiedLinesDiv.style.display = 'none';
-}
-
-// Function to display not similar lines
 function displayNotSimilarLines(lines1, lines2) {
     const notSimilarLinesList = document.getElementById('not-similar-lines-list');
     notSimilarLinesList.innerHTML = '';
 
-    lines1.forEach(line => {
+    lines1.forEach((line, index) => {
         const listItem = document.createElement('li');
-        listItem.textContent = `Not Similar (Editor 1): ${line}`;
+        listItem.textContent = `Line ${index + 1} (Editor 1): ${line}`;
         notSimilarLinesList.appendChild(listItem);
     });
 
-    lines2.forEach(line => {
+    lines2.forEach((line, index) => {
         const listItem = document.createElement('li');
-        listItem.textContent = `Not Similar (Editor 2): ${line}`;
+        listItem.textContent = `Line ${index + 1} (Editor 2): ${line}`;
         notSimilarLinesList.appendChild(listItem);
     });
 
     // Show the not similar lines div
     const notSimilarLinesDiv = document.getElementById('not-similar-lines');
     notSimilarLinesDiv.style.display = 'block';
-}
-
-// Function to clear not similar lines
-function clearNotSimilarLines() {
-    const notSimilarLinesList = document.getElementById('not-similar-lines-list');
-    notSimilarLinesList.innerHTML = '';
-
-    // Hide the not similar lines div
-    const notSimilarLinesDiv = document.getElementById('not-similar-lines');
-    notSimilarLinesDiv.style.display = 'none';
 }
 
 // Function to display popup messages
