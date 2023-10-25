@@ -503,11 +503,7 @@ h3{
     border-radius: 0.3rem;
 }
 
- @media only screen and (max-width: 425px) {
-  body{
-    display: none;
-  }
- }
+
 
 /************ UPLOAD FORM OR FILES *************************/
 
