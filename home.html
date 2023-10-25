@@ -38,7 +38,18 @@
         </div>
     </nav><br><br><br><br><br>
    
-    <script src="script.js"></script>
+    <script src="script.js">
+        var referrer = document.referrer;
+
+        // Check if the referrer is from the "student user" directory
+        if (referrer.includes("/student user/")) {
+            // If the referrer is from "student user," block the back button
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                history.go(1);
+            };
+        }
+    </script>
   
 </body>
 </html>
