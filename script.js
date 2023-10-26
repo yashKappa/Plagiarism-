@@ -285,3 +285,15 @@ function displayPopup(message) {
         popup.style.display = 'none';
     });
 }
+
+
+var referrer = document.referrer;
+
+// Check if the referrer is from the "student user" directory
+if (referrer.includes("/student user")) {
+    // If the referrer is from "student user," block the back button
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+}
