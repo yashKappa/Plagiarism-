@@ -24,6 +24,7 @@ connection.connect(function(error) {
     }
 });
 
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname));

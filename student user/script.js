@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function() {
     editor.getSession().setMode("ace/mode/html");
 });
 
+
 // ... (your existing functions) ...
 
 // Function to update Ace editor content from a file input

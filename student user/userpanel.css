@@ -13,7 +13,7 @@ body{
 :root{
     --h1-color:black;
     --primary-color:rgb(241, 43, 43);
-    --secondary-color: #fffefe;
+    --secondary-color: #fce8e8;
     --third-color:rgb(0, 0, 0);
     --study-color:linear-gradient(135deg,rgb(98, 161, 255), rgb(48, 65, 161));;
     --content-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
@@ -28,6 +28,7 @@ body{
     --scroll-color:rgb(184, 184, 184);
     --scroll-hover-color:#868484;
     --scroll-border-color:black;
+    --type-color:linear-gradient(175deg,rgb(245, 161, 52), rgb(219, 180, 136), rgb(234, 236, 103));
 }
 .dark-theme{
     --h1-color:white;
@@ -47,6 +48,7 @@ body{
     --scroll-color:red;
     --scroll-hover-color:#b30000;
     --scroll-border-color:rgb(255, 250, 250);
+    --type-color:linear-gradient(175deg,rgb(0, 153, 255), rgb(160, 203, 228), rgb(238, 83, 83));
 }
 nav{
     width: 100%;
@@ -56,6 +58,7 @@ nav{
     z-index: 999;
     background-color:var(--primary-color);      
     text-align-last: center;
+    transition: background-color 0.3s ease;
 }
 
 .menu{
@@ -85,6 +88,7 @@ nav li{
     padding-left: 12px;
     padding-right: 12px;
     border-radius: 0.2rem;
+    transition: background-color 0.3s ease;
 }
 .Activ{
     font-size:1rem;
@@ -92,6 +96,7 @@ nav li{
     color:var(--third-color);
     text-decoration: underline;
     background-color:var(--navfont-color);
+    transition: background-color 0.3s ease;
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
@@ -152,7 +157,8 @@ a{
     cursor: pointer;
 }
 .fea{
-    border-right: 3px solid var(--line-color);   
+    border-right: 3px solid var(--line-color);  
+    transition: background-color 0.3s ease; 
     font-size: xx-large;
 }
 
@@ -175,6 +181,7 @@ a{
 }
 .fo{
     border-left: 3px solid var(--line-color);
+    transition: background-color 0.3s ease;
     display: inline-block;
     height: 10.5vh;
 }
@@ -188,6 +195,7 @@ a{
 .dff{
     display: inline-block;
     border-left: 3px solid var(--line-color);
+    transition: background-color 0.3s ease;
     height: 7.5vh;
     margin-top: 1rem;
 }
@@ -197,6 +205,7 @@ a{
     font-weight: 130;
     font-size: xx-large;
     color: var(--h1-color);
+    transition: background-color 0.3s ease;
     margin-left: 2rem;
 }
 #text1{
@@ -219,6 +228,7 @@ a{
 }
 #check{
     background-color:var(--check-color);
+    transition: background-color 0.3s ease;
     border-radius: 10px;
     border: none;
     color: var(--third-color);
@@ -227,6 +237,7 @@ a{
 }
 #check:hover{
     background-color: var(--check-hover-color);
+    transition: background-color 0.3s ease;
     text-align-last: center;
 }
 
@@ -359,6 +370,7 @@ a{
     margin-top: 2rem;
     color: var(--third-color);
     background-color: var(--copied-color);
+    transition: background-color 0.3s ease;
     width: 75%;
     border-radius: 0.5rem;
     padding-bottom: 1rem;
@@ -614,4 +626,36 @@ h3{
     padding: 0.5rem;
     text-align: center;
 }
+
+.type{
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+    background:var(--study-color);
+    width: 20%;
+    text-align-last: center;
+    height: 10vh;
+    padding-top: 2rem;
+    border-radius: 0.5rem;
+}
+.ty{
+    padding-left: 1rem;
+    color:var(--h1-color);
+    font-family: "Segoe UI";
+    font-size:1.2rem;
+}
+
+.Acc{
+    font-family: "Segoe UI";
+    font-size:1.2rem;
+    font-weight:bold;
+    color:black;
+    text-decoration:underline;
+    background:var(--type-color);
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 0.2rem;
+    transition: background-color 0.3s ease;
+    }
 
