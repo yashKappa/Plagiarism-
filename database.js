@@ -27,7 +27,7 @@ const sessionStoreOptions = {
 const sessionStore = new MySQLStore(sessionStoreOptions);
 
 app.use(session({
-    secret: 'your_secret_key',
+    secret: 'kappa3000+',
     store: sessionStore,
     resave: false,
     saveUninitialized: false
