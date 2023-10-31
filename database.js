@@ -2,28 +2,39 @@ const express = require("express");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const multer = require('multer');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session); // For session storage
 const path = require('path');
 const app = express();
 const PORT = 9000;
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
+    connectionLimit: 10,
     host: "localhost",
     user: "root",
     password: "",
     database: "ads"
 });
 
+const sessionStoreOptions = {
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "",
+    database: "sessiondb" // Create a separate database for session storage
+};
+
+const sessionStore = new MySQLStore(sessionStoreOptions);
+
+app.use(session({
+    secret: 'your_secret_key',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
+}));
+
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }); // Declare upload once
-
-connection.connect(function(error) {
-    if (error) {
-        console.error("Error connecting to the database: ", error);
-    } else {
-        console.log("Connected to the database successfully");
-    }
-});
-
+const upload = multer({ storage: storage });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -42,11 +53,13 @@ app.post("/student", function(req, res) {
     const password = req.body.password;
 
     const query = "SELECT * FROM student WHERE username = ? AND password = ?";
-    connection.query(query, [username, password], function(error, results) {
+    pool.query(query, [username, password], function(error, results) {
         if (error) {
             console.error("Error occurred during login:", error);
             res.redirect("/");
         } else if (results.length > 0) {
+            // Store user data in the session
+            req.session.user = { username: results[0].username };
             res.redirect("/student user/userpanel.html");
         } else {
             res.redirect("/student/student login.html");
@@ -55,7 +68,22 @@ app.post("/student", function(req, res) {
 });
 
 app.get("/student user/userpanel", function(req, res) {
-    res.sendFile(__dirname + "/student user/userpanel.html");
+    // Check if the user is authenticated
+    if (req.session.user) {
+        res.sendFile(__dirname + "/student user/userpanel.html");
+    } else {
+        res.redirect("/login");
+    }
+});
+
+app.get("/logout", function(req, res) {
+    // Destroy the session on logout
+    req.session.destroy(function(error) {
+        if (error) {
+            console.error("Error occurred during logout:", error);
+        }
+        res.redirect("/");
+    });
 });
 
 // Start the server
