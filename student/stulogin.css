@@ -35,7 +35,7 @@ body {
             box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
         }
         .main1{
-            background-color: rgb(222, 223, 235);
+            background-color:rgb(88, 110, 233);
             width: 35%;
             height: 80vh;
             border-radius: 5% 5% 5% 5%;
@@ -53,7 +53,7 @@ body {
         }
         .tech{
             width: 70%;
-            background-color: rgb(222, 223, 235);
+            background-color:rgb(110, 129, 235);
             float: right;
             height: 80vh;
             border-radius: 5% 5% 5% 5%;

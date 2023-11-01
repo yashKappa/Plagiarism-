@@ -6,10 +6,8 @@
     padding: 0px;
 }
 body {
-    background-image: url("back.png");
-    background-repeat: no-repeat;
-    height: 100vh; /* Set the height to 100% of the viewport height */
-    width: 100vw; /* Set the width to 100% of the viewport width */
+    height: 100vh;
+    width: 100vw;
 }
 
 :root{
