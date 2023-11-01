@@ -32,7 +32,8 @@ body{
     --scroll-color:rgb(184, 184, 184);
     --scroll-hover-color:#868484;
     --scroll-border-color:black;
-    --navfont-color:rgb(0, 0, 0);
+    --navfont-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
+    --type-color:linear-gradient(175deg,rgb(245, 161, 52), rgb(219, 180, 136), rgb(234, 236, 103));
 }
 .dark-theme{
     --study-color: #3A3B3C;
@@ -56,7 +57,7 @@ body{
     --scroll-hover-color:#b30000;
     --scroll-border-color:rgb(255, 250, 250);
     --font-color:rgb(255, 255, 255);
-    
+    --type-color:linear-gradient(175deg,rgb(0, 153, 255), rgb(160, 203, 228), rgb(238, 83, 83));
 }
 
 
@@ -91,7 +92,7 @@ nav li{
     font-weight: bold;
     color:var(--third-color);
     text-decoration: underline;
-    background-color:var(--navfont-color);
+    background:var(--navfont-color);
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
@@ -103,7 +104,7 @@ nav li{
     font-weight: bold;
     color:var(--third-color);
     text-decoration: underline;
-    background-color:var(--navfont-color);
+    background:var(--navfont-color);
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
@@ -115,7 +116,7 @@ nav li{
 .Act{
     font-size:1rem;
     font-weight: bold;
-    color:white;
+    color:var(--font-color);
     text-decoration: none;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -380,7 +381,7 @@ a{
     list-style: none;
     margin-top: 1rem;
     width: 92.5%;
-    color: var(--third-color);
+    color: var(--font-color);
     background-color:var(--list-color);
     border-right: 3px solid rgb(19, 18, 18);
     border-left: 3px solid rgb(19, 18, 18);
@@ -407,7 +408,7 @@ a{
     list-style: none;
     margin-top: 1rem;
     width: 92.5%;
-    color: var(--third-color);
+    color: var(--font-color);
     background-color:var(--list-color);
     border-right: 3px solid rgb(19, 18, 18);
     border-left: 3px solid rgb(19, 18, 18);
@@ -420,7 +421,7 @@ a{
     transition: background-color 0.5s ease;
 }
 #result{
-    color: var(--third-color);
+    color: var(--font-color);
     margin-left: 30rem;
     width: 25%;
     background-color: var(--result-color);
@@ -461,7 +462,7 @@ h3{
     margin-left: 2rem;
     margin-top: 2rem;
     position: relative;
-    border: 3px solid var(--third-color);
+    border: 3px solid var(--font-color);
     border-radius: 0.5rem;
     transition: background-color 0.3s ease;
     
@@ -485,7 +486,7 @@ h3{
     margin-left: 2rem;
     margin-top: 2rem;
     position: relative;
-    border: 3px solid var(--third-color);
+    border: 3px solid var(--font-color);
     border-radius: 0.5rem;
     transition: background-color 0.3s ease;
     float: right;
@@ -722,3 +723,82 @@ h3{
 }
 /* ... (previous CSS code) */
 
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    line-height: 3vh;
+    margin-left: 2rem;
+}
+
+.dropbtn {
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    line-height: 5vh;
+    padding-top: 1rem;
+}
+
+.dropdown-content a {
+    text-decoration: dashed;
+    display: block;
+    color: #f1e9e9;
+}
+
+.dropdown-content a:hover {
+    background-color: #e02020;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+.drop{
+    width:20vh;
+    background-color: #060025;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.type{
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+    background:var(--study-color);
+    width: 20%;
+    text-align-last: center;
+    height: 10vh;
+    padding-top: 2rem;
+    border-radius: 0.5rem;
+}
+.ty{
+    padding-left: 1rem;
+    color:var(--h1-color);
+    font-family: "Segoe UI";
+    font-size:1.2rem;
+}
+
+.Acc{
+    font-family: "Segoe UI";
+    font-size:1.2rem;
+    font-weight:bold;
+    color:black;
+    text-decoration:underline;
+    background:var(--type-color);
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 0.2rem;
+    transition: background-color 0.3s ease;
+    }
