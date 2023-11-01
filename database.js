@@ -7,6 +7,7 @@ const MySQLStore = require('express-mysql-session')(session); // For session sto
 const path = require('path');
 const app = express();
 const PORT = 9000;
+const nodemailer = require('nodemailer');
 
 const pool = mysql.createPool({
     connectionLimit: 10,
@@ -86,6 +87,56 @@ app.get("/logout", function(req, res) {
     });
 });
 
+app.post('/forgot-password', function(req, res) {
+  const username = req.body.username;
+  const email = req.body.email;
+  const new_password = req.body.new_password;
+
+  // Check if the username exists in the database
+  pool.query('SELECT * FROM student WHERE username = ?', [username], (error, results) => {
+      if (error) {
+          console.error('Error occurred during password reset:', error);
+          res.send('Error occurred. Please try again later.');
+      } else if (results.length > 0) {
+          const verificationCode = Math.floor(1000 + Math.random() * 9000);
+
+          const transporter = nodemailer.createTransport({
+              service: 'Gmail', 
+              port:'9000',
+              auth: {
+                  user: 'yash0@gmail.com', 
+                  pass: 'yash@2003' 
+              }
+            
+          });
+          // Email message
+          const mailOptions = {
+              from: 'yash0@gmail.com', // Your email
+              to: email,
+              subject: 'Password Reset Verification Code',
+              text: `Your verification code is: ${verificationCode}`
+          };
+
+          // Send the verification email
+          transporter.sendMail(mailOptions, (err, info) => {
+              if (err) {
+                  console.error('Error sending verification email:', err);
+                  res.send('Error sending verification email.');
+              } else {
+                  // Store the verification code, username, and new password in the session
+                  req.session.verificationCode = verificationCode;
+                  req.session.username = username;
+                  req.session.newPassword = new_password;
+
+                  res.send('Verification code sent to your email. <a href="/verify-code">Verify Code</a>');
+              }
+          });
+      } else {
+          res.send('Invalid username.');
+      }
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
@@ -109,7 +160,6 @@ app.post('/register', (req, res) => {
 app.get('/student user/userpanel.html', (req, res) => {
     res.sendFile(__dirname + '/student user/userpanel.html');
 });
-
 /*------------------------------------student register ---------------------------------*/
 
 /*------------------------------------teacher login ---------------------------------*/
@@ -211,7 +261,7 @@ app.get('/mu.html', (req, res) => {
 
 
 /*------------------------------------file or folder upload---------------------------------*/
-// Handle file uploads
+/* Handle file uploads
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
   const projectName = req.body.projectName; // Get the project name from the form
@@ -241,3 +291,4 @@ app.post("/upload", upload.array("files"), (req, res) => {
   });
 });
 
+*/

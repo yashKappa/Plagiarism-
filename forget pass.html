@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anti duplicate software</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="stylesheet" href="home.css">   
+    <link rel="database" href="database.js">
+
+</head>
+<body>
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>Forgot Password</title>
+</head>
+<body>
+    <h1>Forgot Password</h1>
+    <form action="/forgot-password" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <div class="input-field">
+            <input type="email" name="email" class="input" placeholder="Email" required>
+            <div class="tag"><i class='bx bx-mail-send'></i></div>
+        </div>
+        
+        <label for="new_password">New Password:</label>
+        <input type="password" id="new_password" name="new_password" required>
+        <button type="submit">Reset Password</button>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+</html>
