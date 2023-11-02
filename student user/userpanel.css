@@ -12,14 +12,14 @@ body{
 }
 :root{
     --h1-color:black;
-    --primary-color:rgb(241, 43, 43);
-    --secondary-color: #fce8e8;
+    --primary-color:rgb(252, 245, 245);
+    --secondary-color: #dad8d8;
     --third-color:rgb(0, 0, 0);
     --study-color:linear-gradient(135deg,rgb(98, 161, 255), rgb(48, 65, 161));;
     --content-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
     --study-hover-color:linear-gradient(133deg,rgb(48, 65, 161), rgb(98, 161, 255),rgb(48, 65, 161));
     --shadow-color:rgb(0, 0, 0);
-    --line-color:rgb(223, 223, 223);
+    --line-color:rgb(0, 0, 0);
     --result-color:rgb(255, 255, 255);
     --copied-color:rgb(176, 193, 230);
     --list-color:rgb(255, 252, 252);
@@ -27,6 +27,7 @@ body{
     --check-hover-color:rgb(163, 94, 3);
     --scroll-color:rgb(184, 184, 184);
     --scroll-hover-color:#868484;
+    --navfont-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
     --scroll-border-color:black;
     --type-color:linear-gradient(175deg,rgb(245, 161, 52), rgb(219, 180, 136), rgb(234, 236, 103));
 }
@@ -69,7 +70,7 @@ nav p{
     font-family:'Blackadder ITC';
     font-size: 45px;
     float: left;
-    color:rgb(251, 250, 255);    
+    color:var(--third-color);    
     text-transform:capitalize;
     cursor: pointer;    
 }
@@ -80,9 +81,9 @@ nav li{
 .Active{
     font-size:1rem;
     font-weight: bold;
-    color:var(--third-color);
+    color:white;
     text-decoration: underline;
-    background-color:var(--navfont-color);
+    background:var(--navfont-color);
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
@@ -93,9 +94,9 @@ nav li{
 .Activ{
     font-size:1rem;
     font-weight: bold;
-    color:var(--third-color);
+    color:white;
     text-decoration: underline;
-    background-color:var(--navfont-color);
+    background:var(--navfont-color);
     transition: background-color 0.3s ease;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -108,7 +109,7 @@ nav li{
 .Act{
     font-size:1rem;
     font-weight: bold;
-    color:white;
+    color:var(--third-color);
     text-decoration: none;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -121,7 +122,7 @@ nav li{
 a{
     font-size:1rem;
     font-weight: bold;
-    color: #ffffff;
+    color: var(--third-color);
     position:relative;
     text-decoration: none;
 }
@@ -138,7 +139,7 @@ a{
     width: 100%;
     height: 3px;
     border-radius: 2rem;
-    background-color: rgb(255, 255, 255);   
+    background:var(--third-color);   
     bottom: -2px;
     transform: scaleX(0);
     transform-origin: right;
@@ -169,7 +170,7 @@ a{
 }
 .fe{
     height: 50vh;
-    background:linear-gradient(180deg,rgb(44, 41, 241), rgb(44, 29, 250));
+    background:rgb(243, 25, 25);
     padding-top: 7px;
     padding-bottom: 7px;
     padding-left: 11px;

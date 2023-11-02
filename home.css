@@ -40,7 +40,7 @@ body{
     --h1-color:white;
     --primary-color:rgb(0, 0, 0);
     --secondary-color: #171718;;
-    --third-color:rgb(255, 255, 255);
+    --third-color:rgb(0, 0, 0);
     --study-color:linear-gradient(135deg,rgb(51, 50, 50), rgb(117, 117, 121), rgb(68, 67, 67));
     --content-color:rgb(165, 159, 159);
     --study-hover-color:linear-gradient(133deg,rgb(34, 34, 36), rgb(43, 44, 44),rgb(41, 41, 46));
@@ -88,7 +88,7 @@ nav li{
 .Active{
     font-size:1rem;
     font-weight: bold;
-    color:var(--third-color);
+    color:white;
     text-decoration: underline;
     background:var(--navfont-color);
     padding-top: 8px;
@@ -100,7 +100,7 @@ nav li{
 .Activ{
     font-size:1rem;
     font-weight: bold;
-    color:var(--third-color);
+    color:white;
     text-decoration: underline;
     background:var(--navfont-color);
     padding-top: 8px;
@@ -943,18 +943,50 @@ h3{
   display: none;
 }
 
-.slide{
-  width: 20%;
-  transition: 2s;
-  
-}
+
 
 .slide img{
     width: 100%;
     height: 500px;
 }
 
-.first{
+.slide {
+    width: 20%;
+    transition: 2s;
+    position: relative;
+}
+
+.text {
+    font-size: larger;
+    position: absolute;
+    top: 27%;
+    margin-left: 10rem;
+    width: 20%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 20px 20px 20px 20px;
+    opacity: 1; /* Set the opacity to 1 by default */
+    transition: opacity 1s;
+    border-radius: 0.2rem;
+    text-align: center;
+}
+.text:hover {
+    font-size: x-large;
+    position: absolute;
+    top: 28%;
+    margin-left: 12rem;
+    width: 25%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 20px 20px 20px 20px;
+    opacity: 1; /* Set the opacity to 1 by default */
+    transition: opacity 1s;
+    border-radius: 0.2rem;
+    text-align: center;
+}
+.first {
     animation-name: slide;
     animation-iteration-count: infinite;
     animation-duration: 25s;
@@ -962,16 +994,19 @@ h3{
     background-size: cover;
     background-position: top center;
 }
-.second{
+
+.second {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: top center;
 }
-.third{
+
+.third {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: top center;
 }
+
 @keyframes slide {
     0%{
         margin-left: 0;
@@ -996,3 +1031,5 @@ h3{
     }
 }
 /* Slide section */
+
+
