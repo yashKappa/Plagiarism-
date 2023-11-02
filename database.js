@@ -9,7 +9,7 @@ const app = express();
 const PORT = 9000;
 const nodemailer = require('nodemailer');
 
-const pool = mysql.createPool({
+const connection = mysql.createConnection({
     connectionLimit: 10,
     host: "localhost",
     user: "root",
@@ -50,23 +50,24 @@ app.get("/login", function(req, res) {
 });
 
 app.post("/student", function(req, res) {
-    const username = req.body.username;
-    const password = req.body.password;
+  const username = req.body.username;
+  const password = req.body.password;
 
-    const query = "SELECT * FROM student WHERE username = ? AND password = ?";
-    pool.query(query, [username, password], function(error, results) {
-        if (error) {
-            console.error("Error occurred during login:", error);
-            res.redirect("/");
-        } else if (results.length > 0) {
-            // Store user data in the session
-            req.session.user = { username: results[0].username };
-            res.redirect("/student user/userpanel.html");
-        } else {
-            res.redirect("/student/student login.html");
-        }
-    });
+  const query = "SELECT * FROM student WHERE username = ? AND password = ?";
+  connection.query(query, [username, password], function(error, results) {
+      if (error) {
+          console.error("Error occurred during login:", error);
+          res.redirect("/");
+      } else if (results.length > 0) {
+          // Store user data in the session
+          req.session.user = { username: results[0].username };
+          res.redirect("/student user/userpanel.html");
+      } else {
+          res.redirect("/student/student login.html");
+      }
+  });
 });
+
 
 app.get("/student user/userpanel", function(req, res) {
     // Check if the user is authenticated
@@ -261,25 +262,30 @@ app.get('/mu.html', (req, res) => {
 
 
 /*------------------------------------file or folder upload---------------------------------*/
-/* Handle file uploads
+
+connection.connect((err) => {
+  if (err) {
+      console.error('Error connecting to the database:', err);
+      return;
+  }
+  console.log('Connected to the database');
+});
+
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
-  const projectName = req.body.projectName; // Get the project name from the form
+  const projectName = req.body.projectName;
 
   if (!files || files.length === 0 || !projectName) {
       return res.status(400).send("Please provide a project name and select files to upload.");
   }
 
-  // Create a variable to keep track of the number of files successfully uploaded
   let filesUploaded = 0;
 
-  // Loop through the uploaded files and insert each one into the database with the project name
   files.forEach((file) => {
       const filename = file.originalname;
       const mimeType = file.mimetype;
       const fileData = file.buffer;
 
-      // Insert file data and project name into the database
       const query = "INSERT INTO file (filename, mime_type, data, project_name) VALUES (?, ?, ?, ?)";
       connection.query(query, [filename, mimeType, fileData, projectName], (err, result) => {
           if (err) {
@@ -290,5 +296,3 @@ app.post("/upload", upload.array("files"), (req, res) => {
       });
   });
 });
-
-*/

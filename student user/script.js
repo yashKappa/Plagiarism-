@@ -94,6 +94,19 @@ function showPopupMessage(message) {
         popup.style.display = 'none';
     });
 }
+function showPopupMessage(message) {
+    const popupMessage = document.getElementById('popupMessage');
+    popupMessage.textContent = message;
+    const popup = document.getElementById('popup');
+    popup.style.display = 'block';
+
+    // Add an event listener to the OK button
+    const popupOKButton = document.getElementById('popupOKButton');
+    popupOKButton.addEventListener('click', () => {
+        // Hide the popup when the OK button is clicked
+        popup.style.display = 'none';
+    });
+}
 
 
 document.addEventListener("DOMContentLoaded", function() {
