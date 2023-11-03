@@ -97,7 +97,7 @@ nav li{
     color:white;
     text-decoration: underline;
     background:var(--navfont-color);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease; 
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
@@ -114,7 +114,7 @@ nav li{
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
-    padding-right: 12px;
+    padding-right: 18px;
     border-radius: 8px;
 }
 
@@ -508,24 +508,50 @@ h3{
 }
 
  @media only screen and (max-width: 425px) {
-  body{
-    display: none;
-  }
+
+
  }
 
 /************ UPLOAD FORM OR FILES *************************/
-
+.up{
+    width: 60%;
+    line-height: 75vh;
+    margin-left: 30rem;
+    padding-bottom: 30rem;
+}
 .upload {
     text-align: center;
+    width: 50%;
+    background-color: #dba134;
+    line-height: 10vh;
+    text-align-last: center;
+    border-radius: 0.3rem;
+    padding-bottom: 2rem;
 }
 
-#filewrapper {
+.upload img{
+    align-content: center;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+#filewrapper li{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
+    list-style: none;
+    background-color: antiquewhite;
+    padding: -2rem -2rem -2rem -2rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
 }
-
+#filewrapper li:hover{
+    background-color:  rgb(218, 205, 189);
+    cursor: pointer;
+}
 .showfilebox {
     display: flex;
     align-items: center;
@@ -545,11 +571,28 @@ h3{
     margin-left: 10px;
 }
 
-.logo {
-    width: 40px;
-    height: 40px;
+.upload .logo {
+    width: 100%;
+    margin-bottom: 5rem;
+    cursor: pointer;
+    align-items: center;
 }
-
+.upload .submit{
+    background: var(--navfont-color);
+    border: none;
+    padding: 4px 4px 4px 4px;
+    font-size:medium;
+    font-family:"Segoe UI";
+    border-radius: 0.2rem;
+    color:white;
+   
+}
+#projectName{
+    width: 60%;
+    line-height: 4vh;
+    border-radius: 0.3rem;
+    border: none;
+}
 @media screen and (max-width: 820px) {
     .logo {
         width: 30px;

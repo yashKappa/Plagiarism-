@@ -115,11 +115,11 @@ nav li{
     font-size:1rem;
     font-weight: bold;
     color:var(--font-color);
-    text-decoration: none;
+    text-decoration: underline;
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
-    padding-right: 12px;
+    padding-right: 18px;
     border-radius: 8px;
 }
 
@@ -952,7 +952,7 @@ h3{
 
 .slide {
     width: 20%;
-    transition: 2s;
+    transition: 5   s;
     position: relative;
 }
 
