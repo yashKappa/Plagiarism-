@@ -10,12 +10,26 @@ const PORT = 9000;
 const nodemailer = require('nodemailer');
 
 const connection = mysql.createConnection({
-    connectionLimit: 10,
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "ads"
+  host: 'localhost', // Replace with your MySQL host
+  user: 'root', // Replace with your MySQL username
+  password: '', // Replace with your MySQL password
+  database: 'ads' // Replace with your MySQL database name
 });
+
+// Connect to the database
+connection.connect((err) => {
+  if (err) {
+      console.error('Error connecting to the database: ' + err.stack);
+      return;
+  }
+  console.log('Connected to the database as ID ' + connection.threadId);
+});
+
+// Perform database operations here
+// For example, you can run SQL queries, insert, update, or retrieve data
+
+// Close the database connection when done
+
 
 const sessionStoreOptions = {
     host: "localhost",
@@ -263,13 +277,6 @@ app.get('/mu.html', (req, res) => {
 
 /*------------------------------------file or folder upload---------------------------------*/
 
-connection.connect((err) => {
-  if (err) {
-      console.error('Error connecting to the database:', err);
-      return;
-  }
-  console.log('Connected to the database');
-});
 
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
