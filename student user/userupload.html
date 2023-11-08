@@ -46,17 +46,23 @@
     <div class="upload">
         <h1>File Upload</h1>
         <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" id="fileInput" name="files" multiple hidden>
+            
             <div class="file">
                 <label for="fileInput" class="uploadlabel">
-                    <div class="logo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload"></div>
+                    <div class="logo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
+                    <input type="file" id="fileInput" name="files" multiple required>
+                </label>
             </div>
-            <input  type="text" id="projectName" name="projectName" placeholder="Project Name" />
+            <input type="text" id="projectName" name="projectName" placeholder="Project Name" required />
             <input class="submit" type="submit" value="Upload" />
+            
             <div class="wrapper">
-                <ul id="filewrapper"> </ul>
+                <span class="non"><ul id="filewrapper"></ul></span>
             </div>
+        
         </form>
+        <div id="successMessage" class="hidden">Your Files Uploaded Successfully</div>
+        
     </div>
 </div>
    
