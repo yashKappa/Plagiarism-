@@ -24,6 +24,7 @@ dark.onclick = function () {
 window.addEventListener("load", () => {
     const input = document.getElementById("fileInput");
     const filewrapper = document.getElementById("filewrapper");
+    const successMessage = document.getElementById("successMessage");
 
     input.addEventListener("change", (e) => {
         const fileList = e.target.files;
@@ -38,6 +39,15 @@ window.addEventListener("load", () => {
         for (const file of fileList) {
             const listItemElem = document.createElement("li");
             listItemElem.textContent = file.name;
+
+            // Add a delete button for each file
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", () => {
+                listElem.removeChild(listItemElem);
+            });
+
+            listItemElem.appendChild(deleteButton);
             listElem.appendChild(listItemElem);
         }
 
@@ -48,38 +58,40 @@ window.addEventListener("load", () => {
 
         filewrapper.appendChild(listElem);
     }
-});
 
-// Prevent the form from automatically redirecting
-document.getElementById("uploadForm").addEventListener("submit", function (event) {
-    event.preventDefault();
+    // Prevent the form from automatically redirecting
+    document.getElementById("uploadForm").addEventListener("submit", function (event) {
+        event.preventDefault();
 
-    // Use FormData to construct the POST request
-    const formData = new FormData(this);
+        // Use FormData to construct the POST request
+        const formData = new FormData(this);
 
-    // Send the POST request using Fetch API
-    fetch("/upload", {
-        method: "POST",
-        body: formData,
-    })
-    .then(response => {
-        if (response.ok) {
-            // Handle success here
-            showPopupMessage("Your Files Uploaded Successfully");
-            console.log("Files uploaded successfully.");
-        } else {
-            // Handle any errors here
-            showPopupMessage("Error uploading files.");
-            console.error("Error uploading files.");
-        }
-    })
-    .catch(error => {
-        // Handle network errors here
-        showPopupMessage("Network error");
-        console.error("Network error:", error);
+        // Send the POST request using Fetch API
+        fetch("/upload", {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                // Handle success here
+                successMessage.classList.remove("hidden");
+                console.log("Files uploaded successfully.");
+            } else {
+                // Handle any errors here
+                showPopupMessage("Error uploading files.");
+                console.error("Error uploading files.");
+            }
+        })
+        .catch(error => {
+            // Handle network errors here
+            showPopupMessage("Network error");
+            console.error("Network error:", error);
+        });
+        this.reset();
     });
-    this.reset();
 });
+
+
 
 function showPopupMessage(message) {
     const popupMessage = document.getElementById('popupMessage');
