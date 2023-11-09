@@ -277,6 +277,7 @@ app.get('/mu.html', (req, res) => {
 
 /*------------------------------------file or folder upload---------------------------------*/
 
+// database.js
 
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
@@ -288,7 +289,7 @@ app.post("/upload", upload.array("files"), (req, res) => {
 
   let filesUploaded = 0;
 
-  files.forEach((file) => {
+  files.forEach((file, index, array) => {
       const filename = file.originalname;
       const mimeType = file.mimetype;
       const fileData = file.buffer;
@@ -299,10 +300,15 @@ app.post("/upload", upload.array("files"), (req, res) => {
               console.error("Error uploading file: ", err);
           } else {
               filesUploaded++;
+
+              if (filesUploaded === array.length) {
+                  // All files have been uploaded
+                  res.status(200).send("Files uploaded successfully");
+              }
           }
       });
   });
-
 });
+
 
 

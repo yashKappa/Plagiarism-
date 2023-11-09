@@ -21,6 +21,8 @@ dark.onclick = function () {
     }
 }
 
+
+// client-side JavaScript (browser)
 window.addEventListener("load", () => {
     const input = document.getElementById("fileInput");
     const filewrapper = document.getElementById("filewrapper");
@@ -57,6 +59,7 @@ window.addEventListener("load", () => {
         }
 
         filewrapper.appendChild(listElem);
+        filewrapper.style.display = "block"; // Show the file list
     }
 
     // Prevent the form from automatically redirecting
@@ -76,6 +79,7 @@ window.addEventListener("load", () => {
                 // Handle success here
                 successMessage.classList.remove("hidden");
                 console.log("Files uploaded successfully.");
+                filewrapper.style.display = "none"; // Hide the file list
             } else {
                 // Handle any errors here
                 showPopupMessage("Error uploading files.");
@@ -90,8 +94,6 @@ window.addEventListener("load", () => {
         this.reset();
     });
 });
-
-
 
 function showPopupMessage(message) {
     const popupMessage = document.getElementById('popupMessage');

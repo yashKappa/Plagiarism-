@@ -592,6 +592,7 @@ h3{
 
 #filewrapper li{
     padding-top: 1rem;
+    text-align: start;
     background:var(--file-color);
     margin-top: 0.3rem;
     margin-bottom: 0.3rem;
@@ -604,7 +605,9 @@ h3{
     width: 32vw;
     float: left;
 }
-
+.remove{
+    display: none;
+}
 .showfilebox {
     display: flex;
     align-items: center;
@@ -675,12 +678,15 @@ button:hover {
 
 
 #successMessage {
-    display: none;
+    width: 32vw;
     background-color: #4CAF50;
     color: white;
     padding: 10px;
     text-align: center;
     margin-top: 10px;
+    line-height: 18px;
+    border-radius: 0.3rem;
+    margin-left: 0.8rem;
 }
 
 
