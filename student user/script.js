@@ -21,8 +21,8 @@ dark.onclick = function () {
     }
 }
 
+//// file uploaded code /////
 
-// client-side JavaScript (browser)
 window.addEventListener("load", () => {
     const input = document.getElementById("fileInput");
     const filewrapper = document.getElementById("filewrapper");
@@ -79,6 +79,12 @@ window.addEventListener("load", () => {
                 // Handle success here
                 successMessage.classList.remove("hidden");
                 console.log("Files uploaded successfully.");
+
+                // Set a timer to hide the successMessage after 3000 milliseconds (3 seconds)
+                setTimeout(() => {
+                    successMessage.classList.add("hidden");
+                }, 3000);
+
                 filewrapper.style.display = "none"; // Hide the file list
             } else {
                 // Handle any errors here
@@ -94,6 +100,7 @@ window.addEventListener("load", () => {
         this.reset();
     });
 });
+//// file uploaded code /////
 
 function showPopupMessage(message) {
     const popupMessage = document.getElementById('popupMessage');
