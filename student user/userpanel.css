@@ -33,6 +33,8 @@ body{
     --about-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
     --file-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
     --file-back-color:white;
+    --success-color:linear-gradient(133deg,rgb(76, 247, 90), rgb(105, 231, 132),rgb(47, 189, 78));;
+    --time-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
 }
 .dark-theme{
     --h1-color:white;
@@ -56,6 +58,8 @@ body{
     --about-color:rgb(179, 7, 7);
     --file-color:linear-gradient(133deg,rgb(27, 35, 56), rgb(42, 52, 66),rgb(34, 41, 80));
     --file-back-color:rgb(128, 124, 124);
+    --success-color: linear-gradient(133deg,rgb(22, 31, 59), rgb(30, 37, 48),rgb(10, 14, 37));;
+    --time-color:linear-gradient(135deg, rgb(245, 18, 18),rgb(243, 83, 83),rgb(170, 2, 2));
 }
 nav{
     width: 100%;
@@ -572,6 +576,7 @@ h3{
     align-content: center;
     align-items: center;
     margin-right: 1rem;
+    
 }
 .wrapper{
     line-height: 2vh;
@@ -678,15 +683,36 @@ button:hover {
 
 
 #successMessage {
+    position: relative;
     width: 32vw;
-    background-color: #4CAF50;
-    color: white;
+    background:var(--success-color);
+    color:var(--third-color);
     padding: 10px;
     text-align: center;
-    margin-top: 10px;
-    line-height: 18px;
-    border-radius: 0.3rem;
     margin-left: 0.8rem;
+    border-radius: 0.3rem;
+    line-height: 20px;
+    font-weight: 900;
+}
+
+#successMessage::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background:var(--time-color); /* Adjust the color and transparency as needed */
+    animation: timeline 3s linear infinite; /* Adjust the duration as needed */
+}
+
+@keyframes timeline {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
 }
 
 
@@ -990,7 +1016,7 @@ animation-name: slide;
 animation-iteration-count: infinite;
 animation-duration: 25s;
 background-repeat: no-repeat;
-background-size: cover;
+background-size: cover;--study-hover-color
 background-position: top center;
 }
 
