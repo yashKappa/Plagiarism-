@@ -53,8 +53,11 @@
                     <input type="file" id="fileInput" name="files" multiple required>
                 </label>
             </div>
-            <input type="text" id="projectName" name="projectName" placeholder="Project Name" required />
-            <input class="submit" type="submit" value="Upload" />
+            <div class="info">
+            <input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
+            <input type="text" id="username" name="username" placeholder="username" required />
+        </div>
+            <input class="submit" type="submit" value="UPLOAD" />
             
             <div class="wrapper" class="lost">
                 <span class="non"><ul id="filewrapper" ></ul></span>
@@ -74,7 +77,187 @@
             <button id="popupOKButton">OK</button>
         </div>
     </div>
+<style>
+    
+/************ UPLOAD FORM OR FILES *************************/
+.up{
+    width: 70%;
+    line-height: 75vh;
+    margin-left: 22.5rem;
+    padding-bottom: 10rem;
+    margin-top: 1rem;
+}
+.upload {
+    width: 70%;
+    background:var(--study-color);
+    line-height: 10vh;
+    text-align-last: center;
+    border-radius: 0.3rem;
+    padding-bottom: 2rem;
+}
 
+.upload img{
+    align-content: center;
+    align-items: center;
+    margin-right: 1rem;
+    
+}
+.wrapper{
+    line-height: 2vh;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    background:var(--file-back-color);
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    overflow-x: auto; 
+    font-weight: 900;
+    text-align: left;
+    color: white;
+}
+
+#filewrapper li{
+    padding-top: 1rem;
+    text-align: start;
+    background:var(--file-color);
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    margin-right: 4rem;
+    margin-left: 0.3rem;
+    line-height: -1vh;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    border-radius: 0.3rem;
+    width: 44.8vw;
+    float: left;
+}
+
+.remove{
+    display: none;
+}
+.showfilebox {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: #f30c0c;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.filetype {
+    margin-left: 10px;
+}
+
+.upload .logo {
+    width: 100%;
+    margin-bottom: 5rem;
+    cursor: pointer;
+    align-items: center;
+}
+.upload .submit{
+    background: var(--navfont-color);
+    border: none;
+    padding: 4px 20px 4px 20px;
+    font-size:medium;
+    font-family:"Segoe UI";
+    border-radius: 0.2rem;
+    color:white;
+    cursor: pointer;
+    font-weight: 500;
+}
+.upload .submit:hover{
+    background: var(--navfont-hover-color);
+    border: none;
+    padding: 4px 20px 4px 20px;
+    font-size:medium;
+    font-family:"Segoe UI";
+    border-radius: 0.2rem;
+    color:white;
+    cursor: pointer;
+}
+
+#projectName{
+    width: 70%;
+    line-height: 4vh;
+    border-radius: 0.3rem;
+    border: none;
+}
+#username{
+    width: 70%;
+    line-height: 4vh;
+    border-radius: 0.3rem;
+    border: none;
+}
+.hidden {
+    display: none;
+}
+
+button {
+    margin-left: 16rem;
+    cursor: pointer;
+    background-color: var(--check-color);
+    color: white;
+    border: none;   
+    margin-bottom: 1rem;
+    padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+    border-radius: 0.2rem;
+    float: right;
+}
+
+button:hover {
+    margin-left: 13px;
+    cursor: pointer;
+    background-color: var(--check-hover-color);
+    color: white;
+    border: none;   
+    margin-bottom: 1rem;
+}
+
+
+#successMessage {
+    position: relative;
+    width: 44.8vw;
+    background:var(--success-color);
+    color:var(--third-color);
+    padding: 10px;
+    text-align: center;
+    margin-left: 0.8rem;
+    border-radius: 0.3rem;
+    line-height: 20px;
+    font-weight: 900;
+}
+
+#successMessage::after {
+    justify-content: center;
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background:var(--time-color); /* Adjust the color and transparency as needed */
+    animation: timeline 3s linear infinite; /* Adjust the duration as needed */
+}
+
+@keyframes timeline {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+</style>
     <script src="script.js"></script>
 
     <footer class="footer">
