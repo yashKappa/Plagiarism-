@@ -10,11 +10,15 @@ body {
     background-size: cover;
 }
 
+.loli img{
+    width: 7rem;
+}
 
         .box{
             display: flex;
             justify-content: center;
             align-items: center;
+            padding-right: 5rem;
             min-height: 90vh;
             padding-top: 1rem;
             padding-bottom: 1rem;

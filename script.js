@@ -1,12 +1,14 @@
 const darkModePreference = localStorage.getItem('darkMode');
 const dark = document.getElementById("dark");
+const loo = document.getElementById("loo");
 
 if (darkModePreference === 'enabled') {
     document.body.classList.add('dark-theme');
     dark.src = "moons.png"; // Set the image to sun.png in dark mode
-    
+    loo.src = "dark1.png";
 } else {
     dark.src = "suns.png"; // Set the image to moon.png in light mode
+    loo.src = "light1.png";
 }
 
 dark.onclick = function () {
@@ -15,9 +17,11 @@ dark.onclick = function () {
     if (document.body.classList.contains("dark-theme")) {
         localStorage.setItem('darkMode', 'enabled');
         dark.src = "moons.png";
+        loo.src = "dark1.png";
     } else {
         localStorage.setItem('darkMode', 'disabled');
         dark.src = "suns.png";
+        loo.src = "light1.png";
     }
 }
 
