@@ -282,6 +282,7 @@ app.get('/mu.html', (req, res) => {
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
   const projectName = req.body.projectName;
+  const username = req.body.username;
 
   if (!files || files.length === 0 || !projectName) {
       return res.status(400).send("Please provide a project name and select files to upload.");
@@ -294,8 +295,8 @@ app.post("/upload", upload.array("files"), (req, res) => {
       const mimeType = file.mimetype;
       const fileData = file.buffer;
 
-      const query = "INSERT INTO file (filename, mime_type, data, project_name) VALUES (?, ?, ?, ?)";
-      connection.query(query, [filename, mimeType, fileData, projectName], (err, result) => {
+      const query = "INSERT INTO file (filename, mime_type, data, project_name, username) VALUES (?, ?, ?, ?, ?)";
+      connection.query(query, [filename, mimeType, fileData, projectName, username], (err, result) => {
           if (err) {
               console.error("Error uploading file: ", err);
           } else {
