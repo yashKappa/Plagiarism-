@@ -40,18 +40,19 @@
     </nav><br><br><br><br><br>
     <div class="content">
         <div class="type">
-            <a class="ty" href="one-to-one.html">HTML</a>
-            <span class="ty"><a class="Acc" href="css.html">CSS</a></span>
-            <a class="ty" href="js.html">JS</a>
+        <a class="ty" href="one-to-one.html">HTML</a>
+        <span class="ty"><a class="Acc" href="css.html">CSS</a></span>
+        <a class="ty" href="js.html">JS</a>
+    
     </div>
         <h1>One-To-One <br> Plagiarize two codes with each other</h1>
         
         <div class="editor-container1">
-            <div id="css1">// testing 1</div>
+            <div id="editor1">#testing 1</div>
         </div>
         
         <div class="editor-container">
-            <div id="css">// testing 1</div>
+            <div id="editor">#testing 1</div>
         </div>
     
         <div class="check">
@@ -126,13 +127,13 @@
         document.addEventListener("DOMContentLoaded", function() {
             const editor = ace.edit("editor");
             editor.setTheme("ace/theme/cobalt");
-            editor.getSession().setMode("ace/mode/html");
+            editor.getSession().setMode("ace/mode/css");
         });
-    
+        
         document.addEventListener("DOMContentLoaded", function() {
             const editor = ace.edit("editor1");
             editor.setTheme("ace/theme/cobalt");
-            editor.getSession().setMode("ace/mode/html");
+            editor.getSession().setMode("ace/mode/css");
         });
     </script>
 </body>

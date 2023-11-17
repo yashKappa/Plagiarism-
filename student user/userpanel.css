@@ -40,7 +40,7 @@ body{
 .dark-theme{
     --h1-color:white;
     --primary-color:rgb(0, 0, 0);
-    --secondary-color: #171718;;
+    --secondary-color: #171718;
     --third-color:rgb(255, 255, 255);
     --study-color:linear-gradient(135deg,rgb(51, 50, 50), rgb(117, 117, 121), rgb(68, 67, 67));
     --content-color:rgb(165, 159, 159);
@@ -389,14 +389,22 @@ a{
 }
 
 #copied-lines-list{
+    font-family: 'Segoe UI';
     width: 50%;
-    height: 40vh;
-    overflow-x: auto; 
+    height: 60vh;
+    overflow: auto; 
 }
+.repeatedCodeList{
+    font-family: 'Segoe UI';
+    width: 50%;
+    height: 60vh;
+    overflow: auto; 
+}
+
 #not-similar-lines-list{
     width: 50%;
-    height: 40vh;
-    overflow-x: auto; 
+    height: 60vh;
+    overflow: auto; 
 }
 .line-numbers {
     float: left;
@@ -422,7 +430,38 @@ a{
     padding-bottom: 1rem;
     transition: background-color 0.3s ease;
 }
+
+.result{
+    margin-left: 2rem;
+    margin-top: 2rem;
+    color: var(--third-color);
+    background-color: var(--copied-color);
+    transition: background-color 0.3s ease;
+    width: 75%;
+    border-radius: 0.5rem;
+    padding-bottom: 1rem;
+    transition: background-color 0.3s ease;
+}
+
 #copied-lines-list{
+    margin-left: 2rem;
+    list-style: none;
+    margin-top: 1rem;
+    width: 92.5%;
+    color: var(--third-color);
+    background-color:var(--list-color);
+    border-right: 3px solid rgb(19, 18, 18);
+    border-left: 3px solid rgb(19, 18, 18);
+    border-top: 3px solid rgb(19, 18, 18);
+    border-bottom: 3px solid rgb(19, 18, 18);
+    border-radius: 0.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    transition: background-color 0.5s ease;
+}
+
+#repeatedCodeList{
     margin-left: 2rem;
     list-style: none;
     margin-top: 1rem;
@@ -466,6 +505,8 @@ a{
     padding-left: 0.5rem;
     transition: background-color 0.5s ease;
 }
+
+
 #result{
     color: var(--third-color);
     margin-left: 30rem;
@@ -511,7 +552,6 @@ h3{
     border: 3px solid var(--third-color);
     border-radius: 0.5rem;
     transition: background-color 0.3s ease;
-    
 }
 
 #editor {
@@ -552,6 +592,16 @@ h3{
     border-radius: 0.3rem;
 }
 
+.html-container {
+    width: 68.5%;
+    height: 400px;
+    margin-left: 2rem;
+    margin-top: 2rem;
+    position: relative;
+    border: 3px solid var(--third-color);
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+}
  @media only screen and (max-width: 425px) {
 
 
