@@ -347,3 +347,9 @@ if (referrer.includes("/student user/")) {
         history.go(1);
     };
 }
+
+
+const ejs = require('ejs');
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');

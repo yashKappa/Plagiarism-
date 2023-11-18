@@ -312,4 +312,19 @@ app.post("/upload", upload.array("files"), (req, res) => {
 });
 
 
+app.get('/status', (req, res) => {
+  // Fetch files from the database
+  const query = 'SELECT * FROM file';
+  connection.query(query, (err, results) => {
+      if (err) {
+          console.error('Error fetching files: ', err);
+          res.status(500).send('Internal Server Error');
+      } else {
+          // Send file data to the status page
+          res.render('status', { files: results });
+      }
+  });
+});
+
+
 

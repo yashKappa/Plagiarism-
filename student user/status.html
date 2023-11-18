@@ -40,7 +40,17 @@
         </div>
     </nav><br><br><br><br><br>
     <div class="content">
-        <h1>This is home page</h1>
+        <h1>File Status</h1>
+        <ul>
+            <% files.forEach(file => { %>
+                <li>
+                    <strong>Filename:</strong> <%= file.filename %><br>
+                    <strong>MIME Type:</strong> <%= file.mime_type %><br>
+                    <!-- Display other file information as needed -->
+                </li>
+            <% }); %>
+        </ul>
+    </div>
     
         <footer class="footer">
             <div class="container">
