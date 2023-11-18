@@ -1,79 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Anti duplicate software</title>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script name="viewport" content="width=device-width, initial-scale=1"></script>
-<link rel="stylesheet" href="home.css   ">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>user Login</title>
+
 </head>
 <body>
-    <div class="sidebar">
-        <h2><img class="logo" src="https://www.freeiconspng.com/uploads/red-and-black-wings-with-x-gaming-logo-png-21.png">Piads</h2>
-        <ul>
-        <li><a href="home.html" >Home</a></li>
-        <li><a href="status.html">status</a></li>
-        <li><a href="all logins.html">logins</a></li>
-        <li><a class="active" href="Admin.html">Admin</a></li>
-        </ul>
-    </div>
-   <!--navbar-->
+    <img class="logo" id="loo" src="../dark1.png">
+   <div class="box">
+    <div class="container">
 
-    <div class="content">
-        <div class="mode"><img id="dark" src="images 1(2).png"></div>
-        <h1>Admin</h1>
-    </div>
+        <div class="top">
+            <span>Have an account?</span>
+            <header>Admin Login</header>
+        </div>
 
+        <div class="input-field">
+            <input type="text" class="input" name="username" placeholder="Username" id="name" required>
+            <i class='bx bx-user' ></i>
+        </div>
 
-    <script src="script.js"></script>
+        <div class="input-field">
+            <input type="Password" class="input" name="password" placeholder="Password" id="password" required>
+            <i class='bx bx-lock-alt'></i>
+        </div>
 
+        <div class="input-field">
+            <input type="submit" class="submit" value="Login" id="" onclick="auth()">
+        </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="footer-col">
-                    <h4 class="About">About</h4>
-                    <ul>
-                        <li><a href="#">company</a></li>
-                        <li><a href="#">our services</a></li>
-                        <li><a href="#">privacy policy</a></li>
-                        <li><a href="#">affiliate program</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4 class="About">BLOG</h4>
-                    <ul>
-                        <li><a href="#">Plagiarism</a></li>
-                        <li><a href="#">detection</a></li>
-                        <li><a href="#">Request for project</a></li>
-                        <li><a href="#">status</a></li>
-                        <li><a href="#">repeated code</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4 class="About">contact</h4>
-                    <ul>
-                        <li><a href="#">3698521470</a></li>
-                        <li><a href="#">Anti_Duplicate_32111@gmail.in</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4 class="About">follow us</h4>
-                    <div class="social-links">
-                        <a class="face" href="https://www.facebook.com/"><img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Facebook_icon.svg/640px-Facebook_icon.svg.png"></a>
-                        <a href="https://www.snapchat.com/add/yashsaundalkar?share_id=cYg_jUWXxA4&locale=en-IN"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAz1BMVEX//AD///8AAAD//wAAAAPAvwCiogD39/fs7Oz6+vrm5ubx8fHp6QDm5gH39wD8/ADZ2dk8PDwpKSnf3gGzs7Otra3U1NTv7wCkpKSAgICWlpZbW1uMjIxJSUnAwMD4+AAgHwMwMDBTU1OGhQCSkQCzswBeXQAMDAxsbGwbGxsdHR28vLw1NAPJyclhYWFVVAPMywAuLQAQEABJSAIpKAOYlwE8OwMSEhJzc3N9fALJyADX1QBnZQB+fQCurQBCQgBvbwAbGgIlJANXVwAWFgPRVS+mAAAOcElEQVR4nO2d53byOBCGQTK9YwglQEIxkELofLQACbn/a1qNBAFCsy3JGJ99/+3uWeMnsqRpGrnQBX2P2vNVtVrz2lW1anU1b4++L0G4zv6X5ediGolh+ysWmS4+l4YJ59PwE/zvLvsLXvMpPJ0bIVwunu4DbiegXJwcyBOE/UX4zvCYMA4v+noIq5m75ANhnKleJZyrd8sHwlj9Ox//EFaj98wHwtHqBcKGdtcDyISx1jhH2FXvnw+E1e5pwuXMGYAEcbY8Rdh1DCAgdo8Jew75RJmw2vtL2NOcBEgQtd4fwpqzAAli7ZBwFXMcYWx1QBh2GiBBDO8TDp0HSBCHO8L63dtqp4Sj9S2h09bRrdh6CoRtRw4hDGJ7Q+hxJiBB9DDCLwc4FKeF8RcldNxmvxNs+y6HGaSHAvPUheqZW7+HRGXqhNCRu/1WZNd3/Th2JQVhz49r5OBpCBNx5HLqds9ENn3XysmABHHl+nQ44afLqqX0KClm0c8OXRb4FZDjy4Qj6syz1UyNZKKWYGLNJXuzIBjqdFGd9797yk69bntS0zoZ6ZDYI5cQ8Lzz0RfD2gtEs38e9CeaZEiphBhHZ7Xvv2yo0TjAVNpaRGIYTCIhxhlt9UvXSHzk8tkU6O0tlcoWcpXyL2a31pE2jvIIMdb6jQ1eOZcKBkMB9758/uBDtvlvAzlYRSQxyiLEUa3Lhq/cTPvd5/WQf3xhn+t8JoVRDiHGsxUbvsfswwU8NpilQoKO4483IwFRCiHGwwEFLJZC1/hAAX+BfatrCcMogxCrbfqBVq4O395AZsv0W/U+CX8b8YTYM4LxS6R9+gGJ4jk6jCvR6QXxhFjrAeCjru9zX4EWRVwKnoyiCXGsBh9oOWWUjzLmAPG7IxRROCEFTMTNABLENAzjSCiiYELspUuMSUCiFCB+R0S+klBCBpgztsQc6oHsjcq7wNCRUELsgUWmGbjOcUFxYsgpdXHLjUhCnAHAx0s2mh690U3DjoQ40xcB6HaX/hFEr7C/uzhCtk8EuQHd7iwZxYGo8iVxhHgG36ipffBIFfhOo0JeSxwhxs8EMC8E0O1PiPtOxRF6CWCRfxIypWAqillPRRHiyJIQtgQBut0fZCpWbUVIlhmyEwoDdIcI4fNUyN9eDCFWBwpKmjfWjlUgn+nnE/+bCSOskp2iwGfMHCpYRsqPCONNDCGOEkCzDsUZwaYowrIRRAgLaU4ooDsIO4aAmIYYwlidEIodQrcb3GERf30RhHjWVVBRMKA7LuYzFUOokWmYFU3ofkVKnz8uJYSQboYGQoc61UQiYjYiCHGGTENhBttO4Cgu7EEYGSmoaTh6eFUwEflL7oQQqg1FlFexL9j0+X0oIYQdMg3T4gn9j0hZczsYQggXCmq8iScMkaVmyb2YCiEcKui1JJ4wkEPKgDt0KoSwqqCy+M3C7c4jBXEb30IIV8LNbiYwvu1BWJdEmCaE3Fu+MEIRUcRThNx+vhDCpRSThqZpbEI4kkT41hDgP9mekNsw/Z/w5oTctaG2JrTPSrOWRGif3ULmju98QnvYNM63SyeSfIssUmxCKNF7+rKHf1gjHrC41OGvAgWkPNuD0KugFwk+vo/4+O/2IJQUp/GNkTKyR5zGI6wI40ChD6S07RFrm0qKJlZElH+JiQhLScy4/UXbRIRVJCfmnUDK5DaEfw7X4ciP4CT+hjCJ9ooVzB7pM0GIcUb1LDxqdPtzOPKu8BWVniH8h5Ra7PdHO97h0KMaznsbJ8Rhb50er5t7wuyPisN9BY3FE0LuyUt+AH5l5m3TU2A/E4/BcTRMiGdLdtqHMPY/O/SU5JSM4Yf47NoD+ZEJ/BUji9X75oQYYVwZQzRKCAlt+Kl/27N1X6NRj9Z2i3eB2emEQbe3Od/XSL7Qf2Ms9W2QkCZDEcql37KVvYOSRHkJK01l/wdQ7q1Vgl9VlGpMIiGUqpdbQONvPe6dmkyLBySI49/nJwtxOtFDBWQwIWWUkAxheefstgrjx2LxMZeSwQeK55uVymMuu+df5w2W2Rgl7P4NOvlCIfGr6L5CvsPnQwDOSIjRKCEUP0kw0PTLBxXSRoI3RgmnMO0LckftkvxlehpD/xsb3i2iE0AcS/DodfHRU4rG2s0Y3g+J/UIQX5sy4jJX5MsW2SlMqTs+MaFWDWWzfsuIc5+jC5Y+2P77bjCTYcIujWn9zR5cybdkbROHCr6Nyxv74tNoeNGcbzH82lgayQ8Jvv1fhQrFxsa6WXcs8C0oI/bMt7Zw+U3uOAY357yV5/6nma4EJn18aOihTTY9Bcbi3YqdHthZfaVdm5prhm8+ioFxNLIYUMamvCWnlKR885npDihccRpwDeuAaPzgtk5RB+qrFuZo8MIbicLRWk+iIQcbfN+oVy+WkIwjOFQNOYBQJczbTk5ANBGSa0hC2sIN57sUhfekpQhCsMYlhEtZSHhgg5g3zhBCwQdmmOIJ4kfYgRCC+gUZhBD0btuBUJO1mIK32+DtWCNqpZHjTI1tsdLQQ08vUgDdJQFHnwQQDmVNQ7c7QAh57xXh3/HDIzKEMqppQHBWlvPYDD9hFUJTkgAh8MR7VpbbLoXNUEoxDVOeeyZyE8IQjqUBuuNl3rooTkLs+SGEMj1gqG1b83Q65iPE0bq4ZhinFXglg8hTCs1JCDuFlKMWO0Ge4p2jbojPxweL9J8cx+lXtMVZ+zY+Ps6sxR/DP1a8zHValouQNhWSucwwZbksGw5CFr6Q/I1SffAEMziiiTMYQQnp+2MFISNTtzqaiCPQ2asi/xsF0e5fNXOIZgmxCoBJq1KlsGUo5prHm43qZ9oAaF2ilHbFNNUbyxwhzqwgYSGhavacQk1ANDUYpnJPKowgklD4fF4+ijg03trcDCFbZOSao8fy0xS38eXGTIZ0dgtAVgSmKFWjKVLjefwY7VFq7SfKFBrTuj2D1o3hWowIdPVCSQsXmZ18UOemPHsMTUZjhBh7loq128QhImS8ld7ESDbYCCHrJQ8J0dvVRLVYTnihn1E/IcZqjfaSf8nfDtDtfvigef32IqqTUSchVCZUR3QAhfYONCFflpUurBf6SvevE8JzohGtzSpoEjctTGQKwq0Y8DrVTjh2lfIaIcaxsMc7+WZ1Ja85uTEZnQqw8mTyTn12GQ8HIY5W68uv30rruDVFXtcVKhU3jKjbnl+sdLtMiNX3bSH5y2P2lgvMsVq5xG8p/aXUxmVC1t4ZocZjvmQvPlAwxSAvN667TAit5hqJXCpujStvWAH/Q7aZvBwyvkwYJW7gyw1qZQ2pgBR0YSZemYdgZcs4xCxO/vyVmwauEMKpNLJHWFgMbFCpCrqSRL22W6jPdK1ptmwI6QtCYTsBnF/aEa/u+J02W06L+dKNzbVD+Vrp8StdSBu1i8m3q1Ybzgw3W+K/RDPfsseeEUznKsnNbjjoXHYX9dilmVp/d/td8iNbivtvZduEgg/pQmJ38973/Gppph7fAuOw9vlr3IAShdtMy9LH645OUerDK+OnlxAYn8IeWta95RTYYF6/go1fOILnVXW5wbo9YHCiMp7avN+lR0YFXhKgXx+sZn+0nixmus91G4rTUMoZcaasSIweC+oynr3aVH0ycmzdxKkgIjKKFmWd9pWifYWNHso3F9Un5qr14TZoV2OiUtEc4UJOq4/LglYnJpq5mCOcyStHPC9oIjE33ibDHCHUI+6fIgn4fD7h1g596J5p0aItFqwhpH7jKw1K+eOlVDafG4/HuUI+/dYSEqnyPbTIQwvkoWPy0FSLOeBkGvbM5DrNZUjhPotsvJRvFhMve6fy/yUTzSyvudMqPJZf9x6KXhOVZv6tRfaKdxM1JyYJO89HN1DvjLrmg/kvNpgun34o/Vdzq3LALvw0V/ZeozF4J/r5faPG2KSj5Uvt4mfKNzz0eY/Twiw3OP+be9Kf6zVtpkao1Kl3sjHQy6byp/GP7VHR6u6hs0Vtvbm43FQ9tOlqE+ypDResecuBIkPmav0zHMAK5RHrzqK5jp4a7WgLzVxTLPMVQ2eaGhHL1TuiiHljdl2LDeDKc/qppjoo0f9V3O2Au7eJfNJhLBrZOtKv9AP18JQDn34d8YTAuInu6E4ExCHVovx8CueTRAhWD8sHNHUNY+CNZna7U+PVMjpeRQ4h9CX4oflGHSUNoXGDxgQFXiC7/yaSCCFIR5uEXO1OG6JXACvfmvhr1dl7SCOEE8LvNK1auLBxBFKPLKgr9qrq/deQRwi1DXWW+i+cm46ljwZrVyJhidm+hURCYFwsNyHzt+Cf7THgf8ijzR5vphuE7neQSgjm3fCHMSabeeIHBf3+YCgYfCilC8WNZdueCrgh78IbSCaET/Xz10VIJhLFYqJSTJRftob7u0ljTP8LyCak4eRh+/vQD9pY2O+nbTSxPy+fEBij0+F8oBxqOVmosvFcFhFSyzkT6Syq8zbVejX0qOEnC/goobA7vq/91F9Z9LNel5iLhW0rXHVNHE44ca2N9Mq8P8XWLv7r6ewsHF66BtKMXjsIdwYuxH/Xp42FF8iF+LuC21jRCSHkOUdsd+HwOyG8VPd278IaAkLuPj72FW5TQsR9EYhdhcOIETrWrMGrDSFvlxu7Cs+6G0JUc6blFquhLSFypF2DO2hHuHQk4XKPEFnlB1so7EX7hMaaZN+DsOfngBD1HbYp4kgfHRKitVWRE0uE8Rr9JUQrGem7GwnHVuiYEFUdg4hjVXSKEBm8pMa2wniFThOiuiNcRRyuo3OEqM19d+vthadtdJ4QPcvKNlsljLVndImQ7BqzO2bEeLb+C3REiHpDK3JCMoSxOuwd8RwTIjSq6j3Pbydh/FQdnaA5RUg0gVPgd4NJT4J0VqdRzhCS+Tj0qLE7oIRXjKme4dH8u0pIJuRovRpqM3sHjKMzbbhaj46n36/+A2pRSpG3hlZFAAAAAElFTkSuQmCC"></a>
-                        <a class="insta" href="https://www.instagram.com/yash.kappa300/"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png"></i></a>
-                        
-                    </div>
-                   
-                </div>
+        <div class="two-col">
+            <div class="one">
+               <input type="checkbox" name="" id="check">
+               <label for="check"> Remember Me</label>
+            </div>
+            <div class="two">
+                <label><a href="#">Forgot password?</a></label>
             </div>
         </div>
-       
-   </footer>
-   
+    </div>
+</div>  
+<script>
+    function auth(){
+    var name = document.getElementById("name").value;
+    var password = document.getElementById("password").value;
+    if(name == "YASH" && password == "yash@2003"){
+        window.location.assign("/student user/userpanel.html");
+        alert("login sucessfully");
+    }
+}
+</script>
+<style>
+    /*login page*/
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap');
+*{
+    font-family: 'poppins' ,sans-serif;
+}
+body{
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Vn2w2-RF61NYQb--tJGoOB0E6ioGTeG2Hw&usqp=CAU");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    
+}
+
+.logo{
+    width: 7rem;
+    height: 3rem;
+    float: left;
+    padding-top: 1rem;
+    padding-left: 1rem;
+}
+.box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+}
+.container{
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 18px 18px 18px 18px;
+    background-color:rgb(88, 110, 233);
+    margin-right: 5rem;
+}
+span{
+    color: #000000;
+    font-size: small;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 10px 0;
+}
+header{
+    color: #000000;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 10px 0;
+}
+
+.input-field .input{
+    height: 45px;
+    width: 87%;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 0 0 0 45px;
+    background: rgba(0, 0, 0, 0.418);
+    outline: none;
+}
+i{
+    position: relative;
+    top: -33px;
+    left: 17px;
+    color: #fff;
+}
+::-webkit-input-placeholder{
+    color: #fff;
+}
+.submit{
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    height: 45px;
+    outline: none;
+    width: 100%;
+    color: rgb(0, 0, 0);
+    background: rgba(0, 255, 76, 0.534);
+    cursor: pointer;
+    transition: .3s ;
+    font-weight: 900;
+}
+.submit:hover{
+    box-shadow: 1px 5px 7px 1px rgb(0, 0, 0);
+    background-color: rgba(10, 167, 31, 0.568);
+}
+.two-col{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: #fff;
+    font-size: small;
+    margin-top: 10px;
+}
+.one{
+    display: flex;
+}
+label a{
+    text-decoration: none;
+    color: #fff;
+}
+
+/*login page*/
+</style>
 </body>
 </html>

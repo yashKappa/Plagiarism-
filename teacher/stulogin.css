@@ -5,8 +5,9 @@
 }
 
 body {
-    background:linear-gradient(135deg,rgb(0, 0, 0),rgb(151, 149, 149),rgb(0, 0, 0));
-    height: 100vh;
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Vn2w2-RF61NYQb--tJGoOB0E6ioGTeG2Hw&usqp=CAU");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .loli img{
     width: 7rem;
@@ -31,14 +32,14 @@ body {
             margin-right: 3rem;
         }
         .main{
-            background-color: rgb(222, 223, 235);
+            background-color: rgb(88, 110, 233);
             width: 35%;
             height: 70vh;
             border-radius: 5% 5% 5% 5%;
             box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
         }
         .main1{
-            background-color: rgb(222, 223, 235);
+            background-color: rgb(88, 110, 233);
             width: 45%;
             height: 80vh;
             border-radius: 5% 5% 5% 5%;
@@ -46,7 +47,7 @@ body {
         }
         .tec{
             width: 70%;
-            background-color: rgb(222, 223, 235);
+            background-color: rgb(110, 129, 235);
             float: right;
             height: 70vh;
             border-radius: 5% 5% 5% 5%;
@@ -56,7 +57,7 @@ body {
         }
         .tech{
             width: 85%;
-            background-color: rgb(222, 223, 235);
+            background-color: rgb(110, 129, 235);
             float: right;
             height: 80vh;
             border-radius: 5% 5% 5% 5%;
