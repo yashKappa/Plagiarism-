@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="student">
-                        <input type="submit" class="stusubmit" value="login">
+                        <input type="submit" class="stusubmit" value="login" onclick="auth()">
                     </div>
 
                     <div class="register">
@@ -67,6 +67,14 @@
             var element = document.body;
             element.classList.toggle("dark-mode");
         }
+          function auth(){
+    var name = document.getElementById("name").value;
+    var password = document.getElementById("password").value;
+    if(name == "Admin" && password == "1234"){
+        window.location.assign("userpanal.html");
+        alert("login sucessfully");
+    }
+}
     </script>
 </body>
 
