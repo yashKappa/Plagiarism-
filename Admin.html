@@ -46,14 +46,21 @@
     </div>
 </div>  
 <script>
-    function auth(){
+   
+
+function auth() {
     var name = document.getElementById("name").value;
     var password = document.getElementById("password").value;
-    if(name == "YASH" && password == "yash@2003"){
-        window.location.assign("home.html");
-        alert("login sucessfully");
+
+    if (name === "yash" && password === "yash@2003") {
+       
+        window.location.assign("../student user/userpanel.html");
+        alert("Login successfully");
+    } else {
+        alert("Invalid credentials");
     }
 }
+
 </script>
 <style>
     /*login page*/
