@@ -215,6 +215,7 @@ app.post('/go', (req, res) => {
     if (error) {
       console.error('Error inserting data into the database:', error);
       res.status(500).send('Error registering teacher. Please try again later.');
+      alert("ALready exist")
     } else {
       res.redirect('/teacher and MU.html');
     }
