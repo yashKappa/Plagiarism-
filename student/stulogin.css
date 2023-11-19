@@ -319,121 +319,67 @@ body {
         }
   
         /******************************** MOBILE ********************************************************/
-@media only screen and (max-width: 600px) {
   
-    .main {
-        width: 90%; 
-        height: 68vh;
-        padding: 2rem 1rem; 
-        box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
+    /* Mobile Styles */
+@media screen and (max-width: 400px) {
+    .body{
+        min-height: 3vh;
     }
 
-    .box{
-        min-height: 75vh;
-        align-items: center;
-        align-self: center;
-        align-content: center;
+    .loli img{
+        width: 5rem;
+        height: 2rem;
+        padding-top: 0.5rem;
+        padding-left: 0.5rem;
     }
-
-    .tec{
-        width: 84%;
-        background-color: rgb(255, 255, 255);
-        float: right;
-        box-shadow: none;
+.tec .im{
+    display: none;
 }
-    .main1 {
-        width: 90%;
-        height: 73vh;
-        padding: 2rem 1rem; 
-        box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
-    }
-    .tech{
-        width: 84%;
-        background-color: rgb(222, 223, 235);
-        float: right;
-        box-shadow: none;
-    }
-    .top {
-        padding: 10px; 
-        padding-left: 2.5rem;
-    }
-    .top1{
-        padding: 10px; 
-        padding-left: 2.5rem;
-    }
-    span{
-        color: #000000;
-        font-size: small;
-        padding-left: 20%;
-    }
-    header{
-        color: #000000;
-        font-size: 30px;
-        display: flex;
-        padding-left: 30%;
-        padding-bottom: 10%;
-    }
-    .input-field {
-        width: 85%;
-    }
+.tec .msg{
+    display: none;
+}
+.tec{
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+.box{
+    width: 80%;
+    min-height: 100vh;
+}
+.main{
+    margin-top: -3rem;
+    width: 70vw;
+    height: 50vh;
+    background-color: rgba(32, 68, 131, 0.822);
+}
+.top span{
+    padding-top:  1rem;
+    padding-left: 3rem;
+}
+.top header{
+    padding-left: 5rem;
+}
+.stusubmit{
+    width: 105%;
+    padding-left: 0;
+    height: 4.5vh;
+    box-shadow: none;
+}
+.student{
+    padding-left: 1rem;
+    border: none;
+    box-shadow: none;
+}
 
-    .stusubmit {
-        width: 50%; 
-        box-shadow: 2px 3px 0px 0px rgb(0, 0, 0);
-    }
+.two-col{
+    width: 85%;
+    display: flex;
+    justify-content: space-between;
+    color: #000000;
+    font-size:small;
+    padding-left: 4.5%;
+    margin-bottom: -1rem;
+}
 
-    .two-col{
-        width: 95%;
-        display: flex;
-        justify-content: space-between;
-        color: #000000;
-        font-size:small;
-        padding-left: 2%;
-    }
-    .one{
-        display: flex;
-    }
-
-    .mob {
-        display: block; 
-        text-align: center; 
-    }
-
-    .mob .mo {
-        width: 30%;
-    }
-
-    .stu {
-        padding-top: 1rem; 
-    }
-
-    .p {
-        padding-left: 1rem; 
-    }
-
-    .im {
-        display: none; 
-    }
-
-    .img {
-        display: none; 
-    }
-
-    .register{
-        width: 100%;
-        justify-content: center;
-    }
-    .stureg{
-        padding-right: 3rem;
-    }
-    .msg{
-        display: none;
-    }
-    .lolo{
-        height: 5rem;
-        background-color: #53fd6a;
-    }
-    .logo{
-        background-color: #39974d;
-    }
 }
