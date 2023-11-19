@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>user Login</title>
+    <title>Admin login</title>
 
 </head>
 <body>
@@ -166,6 +167,43 @@ i{
 label a{
     text-decoration: none;
     color: #fff;
+}
+/* Mobile Styles */
+@media screen and (max-width: 480px) {
+    .body{
+        min-height: 3vh;
+    }
+    .logo {
+        width: 5rem;
+        height: 2rem;
+        padding-top: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    .box {
+        width: 105vw;
+        margin-right: 0rem; /* Adjust margin for smaller screens */
+        min-height: 70vh;
+    }
+
+    .container {
+        width: 100%; /* Adjust the width as needed */
+        margin-left: 2.5rem;
+        background-color: rgb(40, 83, 158);
+    }
+
+    header {
+        font-size: 24px;
+    }
+
+    .input-field .input {
+        height: 40px;
+        width: 80%;
+    }
+
+    .submit {
+        height: 40px;
+    }
 }
 
 /*login page*/
