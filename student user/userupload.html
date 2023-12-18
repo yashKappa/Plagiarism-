@@ -46,22 +46,23 @@
         <h1>File Upload</h1>
         <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
             
-            <div class="file">
-                <label for="fileInput" class="uploadlabel">
-                    <div class="UPlogo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
-                    <input type="file" id="fileInput" name="files" multiple required>
-                </label>
-            </div>
             <div class="info">
             <input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
             <input type="text" id="username" name="username" placeholder="username" required />
         </div>
-            <input class="submit" type="submit" value="UPLOAD" />
-            
-            <div class="wrapper" class="lost">
-                <span class="non"><ul id="filewrapper" ></ul></span>
-            </div>
-        
+        <div class="file">
+            <label for="fileInput" class="uploadlabel">
+                <div class="UPlogo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
+                <input type="file" id="fileInput" name="files" multiple required onchange="handleFileSelect()">
+            </label>
+        </div>
+    
+        <div class="wrapper" id="lost">
+            <span class="non"><ul id="filewrapper"></ul></span>
+        </div>
+        <input class="submit" type="submit" value="UPLOAD" id="uploadButton" style="display: none;" />
+    
+          
         </form>
         <div id="successMessage" class="hidden">Your Files Uploaded Successfully</div>
         
@@ -80,27 +81,52 @@
     
 /************ UPLOAD FORM OR FILES *************************/
 .up{
-    width: 70%;
     line-height: 75vh;
-    margin-left: 22.5rem;
     padding-bottom: 10rem;
     margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .upload {
-    width: 70%;
+    width: 80%;
     background:var(--study-color);
     line-height: 10vh;
-    text-align-last: center;
     border-radius: 0.3rem;
     padding-bottom: 2rem;
+    padding-left: 1rem;
+}
+#successMessage.success {
+    /* Add your styles for the success message here */
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* White text color */
+    padding: 15px; /* Padding */
+    margin: 10px 0; /* Margin */
+    border-radius: 5px; /* Border radius */
 }
 
 .upload img{
     align-content: center;
     align-items: center;
-    margin-right: 1rem;
-    
+    border-radius: 10rem;
 }
+/* Hide the default file input button */
+input[type="file"] {
+    display: none;
+}
+
+/* Style the custom button as you like */
+.uploadlabel {
+    background-color: var(--navfont-color);
+    border-radius: 10rem;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 0vh;
+    margin-left: 2rem;
+}
+
+/* Optionally, add some hover effect */
+
 .wrapper{
     line-height: 2vh;
     display: flex;
@@ -116,6 +142,7 @@
     font-weight: 900;
     text-align: left;
     color: white;
+    width: 65%;
 }
 
 #filewrapper li{
@@ -130,10 +157,12 @@
     padding-left: 0.2rem;
     padding-right: 0.2rem;
     border-radius: 0.3rem;
-    width: 44.8vw;
+    width: 50vw;
     float: left;
 }
-
+#filewrapper li:hover{
+    background:var(--study-hover-color);
+}
 .remove{
     display: none;
 }
@@ -185,13 +214,13 @@
 }
 
 #projectName{
-    width: 70%;
+    width: 25%;
     line-height: 4vh;
     border-radius: 0.3rem;
     border: none;
 }
 #username{
-    width: 70%;
+    width: 25%;
     line-height: 4vh;
     border-radius: 0.3rem;
     border: none;
@@ -199,12 +228,19 @@
 .hidden {
     display: none;
 }
-
+.Error{
+    display: none;
+    justify-content: center;
+    margin-right: 10rem;
+}
+.Er{
+    display: none;
+}
 button {
     margin-left: 16rem;
     cursor: pointer;
     background-color: var(--check-color);
-    color: white;
+    color: rgb(255, 255, 255);
     border: none;   
     margin-bottom: 1rem;
     padding: 0.3rem 0.5rem 0.3rem 0.5rem;
@@ -234,7 +270,18 @@ button:hover {
     line-height: 20px;
     font-weight: 900;
 }
-
+#ErrorMessage {
+    position: relative;
+    width: 44.8vw;
+    background:var(--success-color);
+    color:var(--third-color);
+    padding: 10px;
+    text-align: center;
+    margin-left: 0.8rem;
+    border-radius: 0.3rem;
+    line-height: 20px;
+    font-weight: 900;
+}
 #successMessage::after {
     justify-content: center;
     content: "";

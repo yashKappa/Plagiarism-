@@ -92,8 +92,8 @@ window.addEventListener("load", () => {
                 filewrapper.style.display = "none"; // Hide the file list
             } else {
                 // Handle any errors here
-                showPopupMessage("Error uploading files.");
-                console.error("Error uploading files.");
+                ErrorMessage.classList.append("Er");
+                console.error("Error");
             }
         })
         .catch(error => {
@@ -104,6 +104,19 @@ window.addEventListener("load", () => {
         this.reset();
     });
 });
+
+function handleFileSelect() {
+    var fileInput = document.getElementById("fileInput");
+    var uploadButton = document.getElementById("uploadButton");
+
+    if (fileInput.files.length > 0) {
+        // Files selected, hide the upload button
+        uploadButton.style.display = "flex";
+    } else {
+        // No files selected, show the upload button
+        uploadButton.style.display = "none";
+    }
+}
 //// file uploaded code /////
 
 function showPopupMessage(message) {
