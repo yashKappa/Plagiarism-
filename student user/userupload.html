@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
     <link rel="stylesheet" href="userpanel.css">   
     <link rel="database" href="../database.js">
+    <link rel="script" href="script.js">
 
 </head>
 <body>
@@ -42,32 +43,38 @@
     </nav><br><br><br><br><br>
 
     <div class="up">
-    <div class="upload">
-        <h1>File Upload</h1>
-        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-            
-            <div class="info">
-            <input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
-            <input type="text" id="username" name="username" placeholder="username" required />
-        </div>
-        <div class="file">
-            <label for="fileInput" class="uploadlabel">
-                <div class="UPlogo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
-                <input type="file" id="fileInput" name="files" multiple required onchange="handleFileSelect()">
-            </label>
-        </div>
-    
-        <div class="wrapper" id="lost">
-            <span class="non"><ul id="filewrapper"></ul></span>
-        </div>
-        <input class="submit" type="submit" value="UPLOAD" id="uploadButton" style="display: none;" />
-    
-          
-        </form>
-        <div id="successMessage" class="hidden">Your Files Uploaded Successfully</div>
+        <div class="upload">
+            <h1>File Upload</h1>
+            <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+                <div class="discription">
+                    <textarea class="disc" id="text" name="summary" placeholder="Short description about the project...." rows="4" cols="50"></textarea>
+                </div>
+                <div class="info">
+                    <input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
+                    <input type="text" id="username" name="username" placeholder="Username" required />
+                </div>
+                <div class="file">
+                    <label for="fileInput" class="uploadlabel">
+                        <div class="UPlogo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
+                        <input type="file" id="fileInput" name="files" multiple required onchange="handleFileSelect()">
+                    </label>
+                </div>
         
+                <div class="wrapper" id="lost">
+                    <span class="non">
+                        <ul id="filewrapper"></ul>
+                        <div class="fo">
+                        <input class="submit" type="submit" value="UPLOAD" id="uploadButton" />
+                        <input class="cancel" type="button" value="Cancel file" onclick="cancelFileSelection()">
+                        </div>
+                    </span>
+                </div>
+                
+            </form>
+            <div id="successMessage" class="hidden">Your Files Uploaded Successfully</div>
+        </div>
     </div>
-</div>
+    
    
 
     <!-- Popup Message -->
@@ -80,6 +87,9 @@
 <style>
     
 /************ UPLOAD FORM OR FILES *************************/
+h1{
+    color: var(--h1-color);
+}
 .up{
     line-height: 75vh;
     padding-bottom: 10rem;
@@ -89,11 +99,11 @@
     align-items: center;
 }
 .upload {
-    width: 80%;
+    width: 55%;
     background:var(--study-color);
     line-height: 10vh;
     border-radius: 0.3rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
     padding-left: 1rem;
 }
 #successMessage.success {
@@ -123,6 +133,7 @@ input[type="file"] {
     display: inline-block;
     line-height: 0vh;
     margin-left: 2rem;
+    margin-top: 1rem;
 }
 
 /* Optionally, add some hover effect */
@@ -134,7 +145,7 @@ input[type="file"] {
     list-style: none;
     background:var(--file-back-color);
     margin-top: 1rem;
-    margin-left: 1rem;
+    margin-left: 0.7rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
     border-radius: 0.3rem;
@@ -142,7 +153,7 @@ input[type="file"] {
     font-weight: 900;
     text-align: left;
     color: white;
-    width: 65%;
+    width: 95%;
 }
 
 #filewrapper li{
@@ -180,6 +191,13 @@ input[type="file"] {
     display: flex;
     align-items: center;
 }
+.fo{
+    background:var(--dis-color);
+    height: 7vh;
+    width: 100%;
+    border: none;
+    border-radius: none;
+}
 
 .filetype {
     margin-left: 10px;
@@ -201,6 +219,8 @@ input[type="file"] {
     color:white;
     cursor: pointer;
     font-weight: 500;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
 }
 .upload .submit:hover{
     background: var(--navfont-hover-color);
@@ -213,16 +233,41 @@ input[type="file"] {
     cursor: pointer;
 }
 
+.upload .cancel{
+    background: var(--navfont-color);
+    border: none;
+    padding: 4px 20px 4px 20px;
+    font-size:medium;
+    font-family:"Segoe UI";
+    border-radius: 0.2rem;
+    color:white;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    margin-left: 28.3rem;
+    margin-bottom: 0.5rem;
+}
+.upload .cancel:hover{
+    background: var(--navfont-hover-color);
+    border: none;
+    padding: 4px 20px 4px 20px;
+    font-size:medium;
+    font-family:"Segoe UI";
+    border-radius: 0.2rem;
+    color:white;
+    cursor: pointer;
+}
+
 #projectName{
-    width: 25%;
+    width: 35%;
     line-height: 4vh;
-    border-radius: 0.3rem;
+    border-radius: 0.2rem;
     border: none;
 }
 #username{
-    width: 25%;
+    width: 35%;
     line-height: 4vh;
-    border-radius: 0.3rem;
+    border-radius: 0.2rem;
     border: none;
 }
 .hidden {
@@ -292,6 +337,20 @@ button:hover {
     height: 5px;
     background:var(--time-color); /* Adjust the color and transparency as needed */
     animation: timeline 3s linear infinite; /* Adjust the duration as needed */
+}
+
+
+.discription{
+    float: right;
+    margin-right: 1rem;
+}
+
+.disc{
+    border-radius: 0.3rem;
+    width: 30vw;
+    height: 30vh;
+    resize: none;
+    
 }
 
 @keyframes timeline {

@@ -104,7 +104,7 @@ window.addEventListener("load", () => {
         this.reset();
     });
 });
-
+/*
 function handleFileSelect() {
     var fileInput = document.getElementById("fileInput");
     var uploadButton = document.getElementById("uploadButton");
@@ -116,8 +116,48 @@ function handleFileSelect() {
         // No files selected, show the upload button
         uploadButton.style.display = "none";
     }
-}
+}*/
 //// file uploaded code /////
+
+function handleFileSelect(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    var fileInput = document.getElementById("fileInput");
+    var cancelButton = document.getElementById("cancelButton");
+    var uploadButton = document.getElementById("uploadButton");
+
+    if (fileInput.files.length > 0) {
+        // Files are selected, show the cancel and upload buttons
+        cancelButton.style.display = "block";
+        uploadButton.style.display = "flex";
+    } else {
+        // No files selected, hide the cancel and upload buttons
+        cancelButton.style.display = "none";
+        uploadButton.style.display = "none";
+    }
+
+    // Rest of your file handling logic here...
+}
+
+function cancelFileSelection() {
+    var fileInput = document.getElementById("fileInput");
+    fileInput.value = ""; // Clear the file input
+
+    var cancelButton = document.getElementById("cancelButton");
+    cancelButton.style.display = "none"; // Hide the cancel button
+
+    var uploadButton = document.getElementById("uploadButton");
+    uploadButton.style.display = "none"; // Hide the upload button
+
+    // Rest of your cancel logic here...
+}
+
+document.getElementById("uploadForm").addEventListener("submit", function() {
+    // Form submitted successfully, hide the buttons
+    document.getElementById("cancelButton").style.display = "none";
+    document.getElementById("uploadButton").style.display = "none";
+});
+
 
 function showPopupMessage(message) {
     const popupMessage = document.getElementById('popupMessage');
@@ -366,3 +406,11 @@ const ejs = require('ejs');
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
+
+
+function cancelFileSelection() {
+    var fileInput = document.getElementById("fileInput");
+    fileInput.value = ""; // Clear the file input
+    var fileWrapper = document.getElementById("filewrapper");
+    fileWrapper.innerHTML = ""; // Clear the file list
+}

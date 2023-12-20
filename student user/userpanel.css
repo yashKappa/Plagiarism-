@@ -36,6 +36,7 @@ body{
     --file-back-color:white;
     --success-color:linear-gradient(133deg,rgb(76, 247, 90), rgb(105, 231, 132),rgb(47, 189, 78));;
     --time-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
+    --dis-color:linear-gradient(135deg, rgb(55, 55, 253), rgb(12, 149, 190), rgb(0, 87, 250));
 }
 .dark-theme{
     --h1-color:white;
@@ -62,6 +63,7 @@ body{
     --file-back-color:rgb(128, 124, 124);
     --success-color: linear-gradient(133deg,rgb(22, 31, 59), rgb(30, 37, 48),rgb(10, 14, 37));;
     --time-color:linear-gradient(135deg, rgb(245, 18, 18),rgb(243, 83, 83),rgb(170, 2, 2));
+    --dis-color:linear-gradient(135deg, rgb(43, 43, 46), rgb(44, 45, 48));
 }
 nav{
     width: 100%;
