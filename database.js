@@ -284,6 +284,7 @@ app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
   const projectName = req.body.projectName;
   const username = req.body.username;
+  const summary= req.body.summary;
 
   if (!files || files.length === 0 || !projectName) {
       return res.status(400).send("Please provide a project name and select files to upload.");
@@ -296,8 +297,8 @@ app.post("/upload", upload.array("files"), (req, res) => {
       const mimeType = file.mimetype;
       const fileData = file.buffer;
 
-      const query = "INSERT INTO file (filename, mime_type, data, project_name, username) VALUES (?, ?, ?, ?, ?)";
-      connection.query(query, [filename, mimeType, fileData, projectName, username], (err, result) => {
+      const query = "INSERT INTO file (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)";
+      connection.query(query, [filename, mimeType, fileData, projectName, username, summary], (err, result) => {
           if (err) {
               console.error("Error uploading file: ", err);
           } else {
@@ -313,19 +314,18 @@ app.post("/upload", upload.array("files"), (req, res) => {
 });
 
 
-app.get('/status', (req, res) => {
-  // Fetch files from the database
-  const query = 'SELECT * FROM file';
+app.get("/status", (req, res) => {
+  const query = "SELECT filename, project_name, summary FROM file";
   connection.query(query, (err, results) => {
-      if (err) {
-          console.error('Error fetching files: ', err);
-          res.status(500).send('Internal Server Error');
-      } else {
-          // Send file data to the status page
-          res.render('status', { files: results });
-      }
+    if (err) {
+      console.error("Error fetching data from database: ", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.render("status", { files: results });
+    }
   });
 });
+
 
 
 
