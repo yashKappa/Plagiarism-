@@ -1,17 +1,12 @@
 const express = require("express");
+const path = require('path');
+const app = express();
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const session = require('express-session');
-const path = require('path');
-const jwt = require('jsonwebtoken');
 
-const app = express();
-const PORT = 9000;
-const nodemailer = require('nodemailer');
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+app.set("port", 9000);
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -20,135 +15,119 @@ const connection = mysql.createConnection({
   database: 'ads'
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database: ' + err.stack);
-    return;
-  }
-  console.log('Connected to the database as ID ' + connection.threadId);
-});
-
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Use express-session middleware
-app.use(session({
-  secret: 'your_secret_key',
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    httpOnly: true,
-    secure: true,
-    maxAge: 24 * 60 * 60 * 1000 // 1 day in milliseconds
-  }
-}));
-
-app.use(express.static(__dirname));
-
-// Middleware to verify JWT token
-function verifyToken(req, res, next) {
-  const token = req.session.token;
-
-  if (!token) {
-    return res.status(403).json({ error: 'Token is missing' });
-  }
-
-  try {
-    const decoded = jwt.verify(token, 'your_secret_key');
-    req.user = decoded.user;
-    next();
-  } catch (err) {
-    res.status(403).json({ error: 'Invalid token' });
-  }
-}
-
-app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/main.html");
-});
+app.use(cookieParser());
 
 app.get("/login", function (req, res) {
   res.sendFile(__dirname + "/login.html");
 });
 
-app.post("/student", function (req, res) {
+app.get("/", function (req, res) {
+  const username = req.cookies.username;
+  const logged = req.cookies.logged;
+  const teacher = req.cookies.teacher;
+
+  if (username && logged === 'true') {
+    // If the user is logged in, redirect to the user panel page
+    res.redirect(`/student user/userpanel.html?username=${username}`);
+  } else if (username && teacher === 'true') {
+    // If the user is a teacher, redirect to the teacher page
+    res.redirect(`/teacher and MU.html?username=${username}`);
+  } else {
+    // If the user is not logged in, serve the index.html page
+    res.sendFile(path.join(__dirname, "index.html"));
+  }
+});
+
+
+app.post("/student", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
   const query = "SELECT * FROM student WHERE username = ? AND password = ?";
-  connection.query(query, [username, password], function (error, results) {
+  connection.query(query, [username, password], (error, results) => {
     if (error) {
       console.error("Error occurred during login:", error);
       res.redirect("/");
     } else if (results.length > 0) {
-      // Generate a JWT token
-      const token = jwt.sign({ username: results[0].username }, 'your_secret_key');
-      
-      // Store the token in the session
-      req.session.token = token;
-
-      res.redirect("/student user/userpanel.html");
+      // Set cookies for username and login status
+      res.cookie('username', username);
+      res.cookie('logged', 'true');
+      // Redirect to the user panel page
+      res.redirect(`/student user/userpanel.html?username=${username}`);
     } else {
       res.redirect("/student/student login.html");
     }
   });
 });
 
-app.get("/student/userpanel.html", verifyToken, function (req, res) {
-  res.sendFile(__dirname + "/student/userpanel.html");
+app.get("/logout", (req, res) => {
+  // Clear cookies and redirect to index.html
+  res.clearCookie('username');
+  res.clearCookie('logged');
+  res.redirect("/index.html"); // Update the path if needed
 });
 
-app.get("/logout", function (req, res) {
-  // Clear the session
-  req.session.destroy();
-  res.redirect("/");
+
+app.listen(app.get("port"), () => {
+  console.log("App listening on port " + app.get("port"));
 });
 
-app.post('/forgot-password', function (req, res) {
-  const username = req.body.username;
-  const email = req.body.email;
-  const new_password = req.body.new_password;
+/*------------------------------------student register ---------------------------------*/
+app.post('/register', (req, res) => {
+  const { username, email, password } = req.body;
 
-  connection.query('SELECT * FROM student WHERE username = ?', [username], (error, results) => {
-    if (error) {
-      console.error('Error occurred during password reset:', error);
-      res.send('Error occurred. Please try again later.');
-    } else if (results.length > 0) {
-      // Implement your logic for sending the verification email here
-      res.send('Verification code sent to your email. <a href="/verify-code">Verify Code</a>');
-    } else {
-      res.send('Invalid username.');
-    }
+  const query = 'INSERT INTO student (username, email, password) VALUES (?, ?, ?)';
+  connection.query(query, [username, email, password], (error) => {
+      if (error) {
+          console.error('Error inserting data into the database:', error);
+          res.sendStatus(500);
+      } else {
+          res.redirect('/student user/userpanel.html');
+      }
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.get('/student user/userpanel.html', (req, res) => {
+  res.sendFile(__dirname + '/student user/userpanel.html');
 });
 
 
 /*------------------------------------student register ---------------------------------*/
 
+
 /*------------------------------------teacher login ---------------------------------*/
 
-app.post("/log", function(req, res) {
+
+app.post("/log", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
   const query = "SELECT * FROM teacher WHERE username = ? AND password = ?";
-  connection.query(query, [username, password], function(error, results) {
+  connection.query(query, [username, password], (error, results) => {
     if (error) {
-      console.error('Error inserting data into the database:', error);
-      res.status(500).send('Error login teacher. Please try again later.');
-      } else if (results.length > 0) {
-          res.redirect("/teacher and MU.html");
-      } else {
-          res.redirect("/teacher/teacher login.html");
-      }
+      console.error("Error occurred during login:", error);
+      res.redirect("/");
+    } else if (results.length > 0) {
+      // Set cookies for username and login status
+      res.cookie('username', username);
+      res.cookie('teacher', 'true');
+      // Redirect to the user panel page
+      res.redirect(`/teacher and MU.html?username=${username}`);
+    } else {
+      res.redirect("/teacher/teacher login.html");
+    }
   });
 });
 
-app.get("/teacher and MU.html", function(req, res) {
-  res.sendFile(__dirname + "/teacher and MU.html");
+app.get("/logout", (req, res) => {
+  // Clear cookies and redirect to index.html
+  res.clearCookie('username');
+  res.clearCookie('teacher');
+  res.redirect("/index.html"); // Update the path if needed
 });
+
+
 
 /*------------------------------------teacher login ---------------------------------*/
 
@@ -230,6 +209,13 @@ app.get('/mu.html', (req, res) => {
 
 // database.js
 
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
+
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
   const projectName = req.body.projectName;
@@ -275,3 +261,4 @@ app.get("/status", (req, res) => {
     }
   });
 });
+
