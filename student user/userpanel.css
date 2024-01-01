@@ -9,6 +9,8 @@ body{
     background-color:var(--secondary-color);
     height: 100vh;
     font-family: 'Calibri (Body)';
+    width: 100%;
+    justify-content: center;
 }
 :root{
     --h1-color:black;
@@ -37,6 +39,7 @@ body{
     --success-color:linear-gradient(133deg,rgb(76, 247, 90), rgb(105, 231, 132),rgb(47, 189, 78));;
     --time-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
     --dis-color:linear-gradient(135deg, rgb(55, 55, 253), rgb(12, 149, 190), rgb(0, 87, 250));
+    --error-color:white;
 }
 .dark-theme{
     --h1-color:white;
@@ -64,6 +67,7 @@ body{
     --success-color: linear-gradient(133deg,rgb(22, 31, 59), rgb(30, 37, 48),rgb(10, 14, 37));;
     --time-color:linear-gradient(135deg, rgb(245, 18, 18),rgb(243, 83, 83),rgb(170, 2, 2));
     --dis-color:linear-gradient(135deg, rgb(43, 43, 46), rgb(44, 45, 48));
+    --error-color:rgb(32, 29, 29);
 }
 nav{
     width: 100%;
@@ -276,12 +280,14 @@ a{
 }
 #check{
     background-color:var(--check-color);
-    transition: background-color 0.3s ease;
+    color: var(--third-color);
     border-radius: 10px;
     border: none;
-    color: var(--third-color);
-    height: 6vh;
+    transition: background-color 0.3s ease;
+    margin-left: auto;
+    margin-right: auto;
     text-align-last: center;
+    padding: 0.8rem 1rem 0.8rem 1rem;
 }
 #check:hover{
     background-color: var(--check-hover-color);
@@ -317,33 +323,39 @@ a{
 
 
 .popup {
-    width: 20%;
-    height: 20vh;
     display: none;
     position: fixed;
     top: 30%;
-    left: 42%;
-    background-color: #fff;
+    left: 40%;
+    background: var(--error-color);
     border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px var(--h1-color);
     z-index: 9999;
     transition: background-color 0.3s ease;
     text-align-last: center;
+    padding: 0rem 2rem 2rem 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 15%;
+    border-radius: 2rem;
+    color: var(--third-color);
 }
 
 .popup button{
-    width: 30%;
     margin-top: 2rem;
+    border: none;
 }
-
+.popup button:hover{
+    margin-top: 2rem;
+    border-radius: 0.6rem;
+    border: none;
+}
 .popup p{
     width: 100%;
     text-align-last: center;
 }
 #popupMessage{
     margin-left: -0rem;
-    text-align: center;
-    text-align-last: center;
 }
 
 .code-input {
@@ -518,6 +530,8 @@ a{
     text-align: center;
     padding: 1.5rem 2rem 1.5rem 2rem;
     transition: background-color 0.3s ease;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 h2{
@@ -720,26 +734,35 @@ h3{
     transition: background-color 0.3s ease;
     }
 
+    .content{
+        max-width: 2050px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
  /* footer */
     
       
  .container{
-    max-width: 2170px;
-    margin:auto;
-    margin-left: 8rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-left: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
 }
 .row{
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 ul{
     list-style: none;
 }
 .footer{
+    max-width: 2100px;
     background-color:var(--secondary-color);
-    padding: 70px 0;
     box-shadow: 0 0 1px var(--third-color);
-    margin-top: 4.5rem;
+    margin-top: 10rem;
 }
 .footer-col{
    width: 20%;
