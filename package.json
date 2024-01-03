@@ -13,6 +13,8 @@
     "express": "~4.16.1",
     "express-mysql-session": "^3.0.0",
     "express-session": "^1.17.3",
+    "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0",
     "http-errors": "~1.6.3",
     "install": "^0.13.0",
     "morgan": "~1.9.1",
