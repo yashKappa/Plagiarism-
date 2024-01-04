@@ -1,36 +1,49 @@
 const express = require("express");
 const path = require('path');
-const app = express();
-const mysql = require("mysql");
+const sql = require("mssql");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MSSQLStore = require('connect-mssql')(session);
+const app = express();
+const PORT = 9000;
 const multer = require('multer');
 
-app.set("port", 9000);
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'ads'
+const dbConfig = {
+  user: 'sa',
+  password: 'yash@2003',
+  server: 'DESKTOP-4IBD93F',
+  database: 'duplicate',
+  options: {
+      encrypt: true,
+      trustServerCertificate: true,
+  },
+};
+
+// Connect to SQL Server
+sql.connect(dbConfig, async (err) => {
+  if (err) {
+      console.error('Error connecting to SQL Server:', err);
+  } else {
+      console.log('Connected to SQL Server');
+  }
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get("/login", function (req, res) {
-  res.sendFile(__dirname + "/login.html");
-});
-
+// Routes
 app.get("/", function (req, res) {
   const username = req.cookies.username;
   const logged = req.cookies.logged;
   const teacher = req.cookies.teacher;
 
+
   if (username && logged === 'true') {
     // If the user is logged in, redirect to the user panel page
     res.redirect(`/student user/userpanel.html?username=${username}`);
-  } else if (username && teacher === 'true') {
+  } else if (teacher && logged === 'true') {
     // If the user is a teacher, redirect to the teacher page
     res.redirect(`/teacher and MU.html?username=${username}`);
   } else {
@@ -44,17 +57,24 @@ app.post("/student", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT * FROM student WHERE username = ? AND password = ?";
-  connection.query(query, [username, password], (error, results) => {
+  const query = "SELECT * FROM student WHERE username = @username AND password = @password";
+
+  const request = new sql.Request();
+  request.input('username', sql.NVarChar, username);
+  request.input('password', sql.NVarChar, password);
+
+  request.query(query, (error, results) => {
     if (error) {
       console.error("Error occurred during login:", error);
       res.redirect("/");
-    } else if (results.length > 0) {
+    } else if (results.recordset.length > 0) {
       // Set cookies for username and login status
       res.cookie('username', username);
       res.cookie('logged', 'true');
+      // Set session variable
+      req.cookies.user = username;
       // Redirect to the user panel page
-      res.redirect(`/student user/userpanel.html?username=${username}`);
+      res.redirect("/student user/userpanel.html");
     } else {
       res.redirect("/student/student login.html");
     }
@@ -62,34 +82,58 @@ app.post("/student", (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  // Clear cookies and redirect to index.html
+  // Clear cookies and session and redirect to index.html
   res.clearCookie('username');
   res.clearCookie('logged');
-  res.redirect("/index.html"); // Update the path if needed
+  res.clearCookie('teacher')
+    res.redirect("/index.html");
 });
 
-
-app.listen(app.get("port"), () => {
-  console.log("App listening on port " + app.get("port"));
+app.get("/student/userpanel", (req, res) => {
+  if (req.session.user) {
+    res.redirect("student user/userpanel.html");
+  } else {
+    res.redirect("/login");
+  }
 });
 
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
 /*------------------------------------student register ---------------------------------*/
-app.post('/register', (req, res) => {
-  const { username, email, password } = req.body;
+app.post('/register', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    const result = await sql.query`
+      INSERT INTO student (username, email, password)
+      VALUES (${username}, ${email}, ${password});`;
 
-  const query = 'INSERT INTO student (username, email, password) VALUES (?, ?, ?)';
-  connection.query(query, [username, email, password], (error) => {
-      if (error) {
-          console.error('Error inserting data into the database:', error);
-          res.sendStatus(500);
-      } else {
-          res.redirect('/student user/userpanel.html');
-      }
-  });
+      const request = new sql.Request();
+  request.input('username', sql.NVarChar, username);
+  request.input('password', sql.NVarChar, password);
+
+    // Check if the query was successful
+    if (result.rowsAffected[0] > 0) {
+      res.cookie('username', username);
+      res.cookie('logged', 'true');
+      // Set session variable
+      req.cookies.user = username;
+      // Redirect to the user panel page
+      res.redirect('/student user/userpanel.html');
+    } else {
+      res.redirect('/student/student register.html');
+    }
+  } catch (error) {
+    console.error(error);
+    res.redirect('/student/student register.html');
+  } finally {
+    sql.close();
+  }
 });
 
-app.get('/student user/userpanel.html', (req, res) => {
-  res.sendFile(__dirname + '/student user/userpanel.html');
+app.get('/student/user/userpanel.html', (req, res) => {
+  res.sendFile(__dirname + '/student/user/userpanel.html');
 });
 
 
@@ -103,28 +147,25 @@ app.post("/log", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT * FROM teacher WHERE username = ? AND password = ?";
-  connection.query(query, [username, password], (error, results) => {
+  const query = "SELECT * FROM teacher WHERE username = @username AND password = @password";
+  const request = new sql.Request();
+  request.input('username', sql.NVarChar, username);
+  request.input('password', sql.NVarChar, password);
+
+  request.query(query, (error, results) => {
     if (error) {
       console.error("Error occurred during login:", error);
       res.redirect("/");
-    } else if (results.length > 0) {
-      // Set cookies for username and login status
-      res.cookie('username', username);
-      res.cookie('teacher', 'true');
+    } else if (results.recordset.length > 0) {
+      // Set cookies for username, teacher, and logged status
+      res.cookie('teacher', username);
+      res.cookie('logged', 'true'); // Add this line to set the 'logged' cookie
       // Redirect to the user panel page
       res.redirect(`/teacher and MU.html?username=${username}`);
     } else {
       res.redirect("/teacher/teacher login.html");
     }
   });
-});
-
-app.get("/logout", (req, res) => {
-  // Clear cookies and redirect to index.html
-  res.clearCookie('username');
-  res.clearCookie('teacher');
-  res.redirect("/index.html"); // Update the path if needed
 });
 
 
@@ -135,25 +176,40 @@ app.get("/logout", (req, res) => {
 
 /*------------------------------------teacher register ---------------------------------*/
 
-app.post('/go', (req, res) => {
-  const { university, college, teacher, username, email, password } = req.body;
+app.post('/go', async (req, res) => {
+  try {
+    const { username, email, password, university, college, teacher_name } = req.body;
+    const result = await sql.query`
+      INSERT INTO teacher (username, email, password, university, college, teacher_name)
+      VALUES (${username}, ${email}, ${password}, ${university}, ${college}, ${teacher_name});`;
 
-  const query =
-    'INSERT INTO teacher (university, college, teacher, username, email, password) VALUES (?, ?, ?, ?, ?, ?)';
-  connection.query(query, [university, college, teacher, username, email, password], (error) => {
-    if (error) {
-      console.error('Error inserting data into the database:', error);
-      res.status(500).send('Error registering teacher. Please try again later.');
-      alert("ALready exist")
-    } else {
+      const request = new sql.Request();
+  request.input('username', sql.NVarChar, username);
+  request.input('password', sql.NVarChar, password);
+
+    // Check if the query was successful
+    if (result.rowsAffected[0] > 0) {
+      res.cookie('teacher', username);
+      res.cookie('logged', 'true');
+      // Set session variable
+      req.cookies.user = username;
+      // Redirect to the user panel page
       res.redirect('/teacher and MU.html');
+    } else {
+      res.redirect('/teacher/teacher register.html');
     }
-  });
+  } catch (error) {
+    console.error(error);
+    res.redirect('/teacher/teacher register.html');
+  } finally {
+    sql.close();
+  }
 });
 
 app.get('/teacher and MU.html', (req, res) => {
   res.sendFile(__dirname + '/teacher and MU.html');
 });
+
 
   /*------------------------------------teacher register ---------------------------------*/
 
