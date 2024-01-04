@@ -63,13 +63,19 @@
                 <div class="wrapper" id="lost">
                     <span class="non">
                         <ul id="filewrapper"></ul>
-                        <div class="fo">
-                        <input class="submit" type="submit" value="UPLOAD" id="uploadButton" />
-                        <input class="cancel" type="button" value="Cancel file" onclick="cancelFileSelection()">
-                        </div>
                     </span>
                 </div>
-                
+                <script>
+                    if(fileInput.files.length > 0){
+                        document.getElementById("uploadButton").style.display = "none";
+                    }else{
+                        document.getElementById("uploadButton").style.display = "block";
+                    }
+                </script>
+                <div>
+                    <input class="submit" type="submit" value="UPLOAD" id="uploadButton" />
+                    <input class="cancel" type="button" value="Cancel file" onclick="cancelFileSelection()">
+                    </div>
             </form>
             <div id="successMessage" class="hidden">Your Files Uploaded Successfully</div>
         </div>

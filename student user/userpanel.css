@@ -33,7 +33,7 @@ body{
     --h1-color:black;
     --primary-color:rgb(252, 245, 245);
     --secondary-color: #dad8d8;
-    --third-color:rgb(0, 0, 0);
+    --third-color:rgb(41, 41, 41);
     --study-color:linear-gradient(135deg,rgb(98, 161, 255), rgb(48, 65, 161));;
     --content-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
     --study-hover-color:linear-gradient(133deg,rgb(48, 65, 161), rgb(98, 161, 255),rgb(48, 65, 161));
@@ -49,7 +49,7 @@ body{
     --navfont-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
     --navfont-hover-color:linear-gradient(135deg,rgb(68, 67, 67), rgb(49, 46, 46), rgb(71, 65, 65));
     --scroll-border-color:black;
-    --type-color:linear-gradient(175deg,rgb(245, 161, 52), rgb(219, 180, 136), rgb(234, 236, 103));
+    --type-color: rgb(234, 236, 103);
     --about-color:linear-gradient(135deg,rgb(85, 84, 84), rgb(39, 34, 34), rgb(85, 84, 84));
     --file-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
     --file-back-color:white;
@@ -57,6 +57,7 @@ body{
     --time-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
     --dis-color:linear-gradient(135deg, rgb(55, 55, 253), rgb(12, 149, 190), rgb(0, 87, 250));
     --error-color:white;
+    --go-color: rgb(47, 175, 235);
 }
 .dark-theme{
     --h1-color:white;
@@ -77,7 +78,7 @@ body{
     --scroll-color:red;
     --scroll-hover-color:#b30000;
     --scroll-border-color:rgb(255, 250, 250);
-    --type-color:linear-gradient(175deg,rgb(0, 153, 255), rgb(160, 203, 228), rgb(238, 83, 83));
+    --type-color: rgb(255, 0, 0);
     --about-color:rgb(179, 7, 7);
     --file-color:linear-gradient(133deg,rgb(27, 35, 56), rgb(42, 52, 66),rgb(34, 41, 80));
     --file-back-color:rgb(128, 124, 124);
@@ -85,6 +86,7 @@ body{
     --time-color:linear-gradient(135deg, rgb(245, 18, 18),rgb(243, 83, 83),rgb(170, 2, 2));
     --dis-color:linear-gradient(135deg, rgb(43, 43, 46), rgb(44, 45, 48));
     --error-color:rgb(32, 29, 29);
+    --go-color:gray;
 }
 nav{
     width: 100%;
@@ -341,8 +343,8 @@ a{
 
 .popup {
     display: none;
-    position: fixed;
-    top: 30%;
+    position:fixed;
+    top: 70%;
     left: 40%;
     background: var(--error-color);
     border: 1px solid #ccc;
@@ -425,14 +427,14 @@ a{
     height: 60vh;
     overflow: auto; 
 }
-.repeatedCodeList{
+#repeatedCodeList{
     font-family: 'Segoe UI';
     width: 50%;
-    height: 60vh;
     overflow: auto; 
 }
 
 #not-similar-lines-list{
+    font-family: 'Segoe UI';
     width: 50%;
     height: 60vh;
     overflow: auto; 
@@ -720,14 +722,13 @@ h3{
 }
 
 .type{
-    margin-left: 1.5rem;
-    margin-bottom: 1rem;
-    background:var(--study-color);
-    width: 20%;
+    background:var(--go-color);
+    width: 15%;
     text-align-last: center;
-    height: 10vh;
-    padding-top: 2rem;
+    padding: 1rem 1rem 1rem 0rem;
     border-radius: 0.5rem;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
 }
 .ty{
     padding-left: 1rem;
@@ -740,9 +741,9 @@ h3{
     font-family: "Segoe UI";
     font-size:1.2rem;
     font-weight:bold;
-    color:black;
+    color:var(--primary-color);
     text-decoration:underline;
-    background:var(--type-color);
+    background:var(--third-color);
     padding-top: 8px;
     padding-bottom: 8px;
     padding-left: 12px;
