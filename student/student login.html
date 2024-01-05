@@ -59,6 +59,9 @@
                   
                     </div>
                 </div>
+                <div id="errorPopup" class="popup">
+                    <p id="errorMessage" style="color: red;"></p>
+                </div>
             </form>
         </div>
     </div>
@@ -67,7 +70,36 @@
             var element = document.body;
             element.classList.toggle("dark-mode");
         }
+        
+        function showError(message) {
+            const errorPopup = document.getElementById('errorPopup');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Set the error message text
+            errorMessage.textContent = message;
+      
+            // Show the popup
+            errorPopup.style.display = 'block';
+      
+            // Close the popup after 3 seconds (adjust as needed)
+            setTimeout(() => {
+              errorPopup.style.display = 'none';
+            }, 3000);
+          }
+      
+          // Check if there's an error parameter in the URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const error = urlParams.get('error');
+      
+          // If there's an error, show the popup
+          if (error) {
+            showError(error);
+          }
+          
     </script>
 </body>
 
 </html>
+<!-- Include this in your student login.html file -->
+
+  
