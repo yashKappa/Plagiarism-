@@ -39,18 +39,35 @@
             </div>
         </div>
     </nav><br><br><br><br><br>
-    <div class="content">
+  <!-- HTML code -->
+<!-- HTML code -->
+<!-- HTML code -->
+<!-- Update your EJS template -->
+<!-- Update your EJS template -->
+<div class="content">
+    <form action="/status" method="get">
         <h1>File Status</h1>
-        <ul>
+        <table border="2">
+            <tr>
+                <th>Filename</th>
+                <th>Project Name</th>
+                <th>Summary</th>
+            </tr>
             <% files.forEach(file => { %>
-                <li>
-                    <strong>Filename:</strong> <%= file.filename %><br>
-                    <strong>MIME Type:</strong> <%= file.mime_type %><br>
-                    <!-- Display other file information as needed -->
-                </li>
+                <tr>
+                    <td><%= file.filename %></td>
+                    <td><%= file.project_name %></td>
+                    <td><%= file.summary %></td>
+                </tr>
             <% }); %>
-        </ul>
+        </table>
+    </form>
+</div>
 
+
+
+
+</body>
     </div>
     
         <footer class="footer">

@@ -247,78 +247,60 @@ function checkPlagiarism() {
     // Check if either editor is empty
     if (!code1.trim() || !code2.trim()) {
         displayPopup('Please input code in both editors.');
+        // Clear any previously displayed copied lines and not similar lines
         clearCopiedLines();
         clearNotSimilarLines();
-        return;
+        return; // Exit the function
     }
 
-    // Function to normalize a line by removing comments and handling whitespace variations
-    function normalizeLine(line) {
-        // Remove comments and leading/trailing white spaces
-        const trimmedLine = line.replace(/\/\/.*$/, '').trim();
+    // Function to split code into lines and filter out empty lines
+    const getCleanLines = (code) => code.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 
-        // Handle multiple whitespaces
-        const normalizedLine = trimmedLine.replace(/\s+/g, ' ');
+    // Get cleaned lines
+    const cleanLines1 = getCleanLines(code1);
+    const cleanLines2 = getCleanLines(code2);
 
-        return normalizedLine;
+    // Check if both code snippets are empty after removing empty lines
+    if (cleanLines1.length === 0 || cleanLines2.length === 0) {
+        displayPopup('No code found.');
+        // Clear any previously displayed copied lines and not similar lines
+        clearCopiedLines();
+        clearNotSimilarLines();
+        return; // Exit the function
     }
 
-    // Function to split code into lines while maintaining references to the original lines
-    const getNormalizedLinesWithReferences = (code) => {
-        const lines = code.split('\n');
-        return lines.map((line, index) => ({
-            originalLine: line,
-            normalizedLine: normalizeLine(line),
-            lineNumber: index + 1,
-        }));
-    };
+    // Find common lines between the two code snippets
+    const commonLines = getCommonLines(cleanLines1, cleanLines2);
 
-    const linesWithReferences1 = getNormalizedLinesWithReferences(code1);
-    const linesWithReferences2 = getNormalizedLinesWithReferences(code2);
-
-    // Initialize variables to track copied and not similar lines
-    const copiedLines = [];
-    const notSimilarLines1 = [];
-    const notSimilarLines2 = [];
-
-    linesWithReferences1.forEach((line1, index1) => {
-        let lineIsSimilar = false;
-        linesWithReferences2.forEach((line2, index2) => {
-            if (line1.normalizedLine === line2.normalizedLine && line1.normalizedLine !== '') {
-                copiedLines.push({
-                    editor1Line: line1.lineNumber,
-                    editor2Line: line2.lineNumber,
-                    text: line1.originalLine,
-                });
-                lineIsSimilar = true;
-            }
-        });
-        if (!lineIsSimilar) {
-            notSimilarLines1.push(line1.originalLine);
-            notSimilarLines2.push(linesWithReferences2[index1]?.originalLine || ''); // Use empty string for non-existing lines
-        }
-    });
+    // Check if there are common lines
+    if (commonLines.length === 0) {
+        displayPopup('No similarities found.');
+        // Clear any previously displayed copied lines and not similar lines
+        clearCopiedLines();
+        clearNotSimilarLines();
+        return; // Exit the function
+    }
 
     // Calculate plagiarism percentage
-    const totalLines = Math.max(linesWithReferences1.length, linesWithReferences2.length);
-    const nonEmptyLines1 = linesWithReferences1.filter(line => line.normalizedLine !== '').length;
-    const nonEmptyLines2 = linesWithReferences2.filter(line => line.normalizedLine !== '').length;
-    const copiedPercentage = (copiedLines.length / totalLines) * 100;
+    const plagiarismPercentage = (commonLines.length / Math.max(cleanLines1.length, cleanLines2.length)) * 100;
 
-    // Display the result
+    // Display the result, ensuring the percentage is capped at 100%
     const resultElement = document.getElementById('result');
-    resultElement.textContent = `Plagiarism Percentage: ${Math.min(copiedPercentage, 100).toFixed(2)}%`;
+    resultElement.textContent = `Plagiarism Percentage: ${Math.min(plagiarismPercentage, 100).toFixed(2)}%`;
 
-    if (copiedPercentage > 0) {
-        // Display copied lines (optional)
-        displayCopiedLines(copiedLines);
-    } else {
-        displayPopup('No similarities found.');
-    }
+    // Find not similar lines
+    const notSimilarLines1 = cleanLines1.filter(line1 => !cleanLines2.includes(line1));
+    const notSimilarLines2 = cleanLines2.filter(line2 => !cleanLines1.includes(line2));
+
+    // Display copied lines (optional)
+    displayCopiedLines(commonLines);
 
     // Display not similar lines
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
 }
+
+// ... (rest of the functions remain unchanged)
+
 
 
 // Function to find common lines between two arrays
@@ -333,7 +315,6 @@ function getCommonLines(array1, array2) {
     });
     return common;
 }
-
 
 // Function to display copied lines
 function displayCopiedLines(commonLines) {
@@ -351,22 +332,30 @@ function displayCopiedLines(commonLines) {
     copiedLinesDiv.style.display = 'block';
 }
 
-
-
 // Function to clear copied lines
+function clearCopiedLines() {
+    const copiedLinesList = document.getElementById('copied-lines-list');
+    copiedLinesList.innerHTML = '';
+
+    // Hide the copied lines div
+    const copiedLinesDiv = document.getElementById('copied-lines');
+    copiedLinesDiv.style.display = 'none';
+}
+
+// Function to display not similar lines
 function displayNotSimilarLines(lines1, lines2) {
     const notSimilarLinesList = document.getElementById('not-similar-lines-list');
     notSimilarLinesList.innerHTML = '';
 
-    lines1.forEach((line, index) => {
+    lines1.forEach(line => {
         const listItem = document.createElement('li');
-        listItem.textContent = `Line ${index + 1} (Editor 1): ${line}`;
+        listItem.textContent = `Not Similar (Editor 1): ${line}`;
         notSimilarLinesList.appendChild(listItem);
     });
 
-    lines2.forEach((line, index) => {
+    lines2.forEach(line => {
         const listItem = document.createElement('li');
-        listItem.textContent = `Line ${index + 1} (Editor 2): ${line}`;
+        listItem.textContent = `Not Similar (Editor 2): ${line}`;
         notSimilarLinesList.appendChild(listItem);
     });
 
@@ -374,6 +363,17 @@ function displayNotSimilarLines(lines1, lines2) {
     const notSimilarLinesDiv = document.getElementById('not-similar-lines');
     notSimilarLinesDiv.style.display = 'block';
 }
+
+// Function to clear not similar lines
+function clearNotSimilarLines() {
+    const notSimilarLinesList = document.getElementById('not-similar-lines-list');
+    notSimilarLinesList.innerHTML = '';
+
+    // Hide the not similar lines div
+    const notSimilarLinesDiv = document.getElementById('not-similar-lines');
+    notSimilarLinesDiv.style.display = 'none';
+}
+
 
 // Function to display popup messages
 function displayPopup(message) {

@@ -343,38 +343,43 @@ a{
 
 .popup {
     display: none;
-    position:fixed;
+    position: fixed;
     top: 70%;
-    left: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: var(--error-color);
     border: 1px solid #ccc;
     box-shadow: 0 0 10px var(--h1-color);
     z-index: 9999;
     transition: background-color 0.3s ease;
-    text-align-last: center;
-    padding: 0rem 2rem 2rem 2rem;
-    margin-left: auto;
-    margin-right: auto;
-    width: 15%;
-    border-radius: 2rem;
     color: var(--third-color);
+    border-radius: 0.2rem;
 }
 
-.popup button{
-    margin-top: 2rem;
+
+.popup button {
+    display: block;
+    margin: 0 auto; /* This will center the button horizontally */
     border: none;
+    margin-bottom: 1rem;
 }
-.popup button:hover{
+
+.popup button:hover {
     margin-top: 2rem;
     border-radius: 0.6rem;
     border: none;
 }
-.popup p{
+
+
+.popup p {
     width: 100%;
-    text-align-last: center;
+    margin: auto; /* Center the message vertically */
 }
-#popupMessage{
-    margin-left: -0rem;
+
+#popupMessage {
+    text-align-last: center;
+    margin: 1rem 1rem 2rem 0.1rem;
+
 }
 
 .code-input {
@@ -424,7 +429,6 @@ a{
 #copied-lines-list{
     font-family: 'Segoe UI';
     width: 50%;
-    height: 60vh;
     overflow: auto; 
 }
 #repeatedCodeList{
@@ -436,7 +440,6 @@ a{
 #not-similar-lines-list{
     font-family: 'Segoe UI';
     width: 50%;
-    height: 60vh;
     overflow: auto; 
 }
 .line-numbers {

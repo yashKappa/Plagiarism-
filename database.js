@@ -272,49 +272,80 @@ const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-app.post("/upload", upload.array("files"), (req, res) => {
+
+
+app.post("/upload", upload.array("files"), async (req, res) => {
   const files = req.files;
   const projectName = req.body.projectName;
   const username = req.body.username;
-  const summary= req.body.summary;
+  const summary = req.body.summary;
 
   if (!files || files.length === 0 || !projectName) {
-      return res.status(400).send("Please provide a project name and select files to upload.");
+    return res.status(400).send("Please provide a project name and select files to upload.");
   }
 
   let filesUploaded = 0;
 
-  files.forEach((file, index, array) => {
+  try {
+    // Assuming you already have an open connection, you can use it directly
+    const request = new sql.Request();
+
+    for (const file of files) {
       const filename = file.originalname;
       const mimeType = file.mimetype;
       const fileData = file.buffer;
 
-      const query = "INSERT INTO file (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)";
-      connection.query(query, [filename, mimeType, fileData, projectName, username, summary], (err, result) => {
-          if (err) {
-              console.error("Error uploading file: ", err);
-          } else {
-              filesUploaded++;
-
-              if (filesUploaded === array.length) {
-                  // All files have been uploaded
-                  res.status(200).send("Files uploaded successfully");
-              }
-          }
-      });
-  });
-});
+      const query = `
+    INSERT INTO [file] (filename, mime_type, data, project_name, username, summary)
+    VALUES (@filename, @mimeType, @fileData, @projectName, @username, @summary)
+`;
 
 
-app.get("/status", (req, res) => {
-  const query = "SELECT filename, project_name, summary FROM file";
-  connection.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching data from database: ", err);
-      res.status(500).send("Internal Server Error");
-    } else {
-      res.render("status", { files: results });
+      request.input('filename', sql.NVarChar, filename);
+      request.input('mimeType', sql.NVarChar, mimeType);
+      request.input('fileData', sql.VarBinary, fileData);
+      request.input('projectName', sql.NVarChar, projectName);
+      request.input('username', sql.NVarChar, username);
+      request.input('summary', sql.NVarChar, summary);
+
+      await request.query(query);
+      filesUploaded++;
     }
-  });
+
+    if (filesUploaded === files.length) {
+      // All files have been uploaded
+      res.status(200).send("Files uploaded successfully");
+    }
+  } catch (err) {
+    console.error("Error uploading files: ", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+
+
+
+// Assuming you have Express set up and your EJS view engine configured
+
+// Update the route handler
+app.get("/status", async (req, res) => {
+  try {
+    await poolConnect;
+
+    const request = pool.request();
+    const query = "SELECT * FROM file summary=@summary, project_name=@project_name and filename=@filename";
+    const result = await request.query(query);
+
+    // Pass the files array to the EJS template with the correct variable name
+    res.render('status', { files: result.recordset });
+  } catch (err) {
+    console.error("Error fetching data from database: ", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.set('view engine', 'ejs');
+
+
+
 

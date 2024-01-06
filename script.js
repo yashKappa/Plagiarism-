@@ -172,24 +172,24 @@ function checkPlagiarism() {
     const cleanLines1 = getCleanLines(code1);
     const cleanLines2 = getCleanLines(code2);
 
-    // Find common lines between the two code snippets
-    const commonLines = getCommonLines(cleanLines1, cleanLines2);
-
-    // Check if there are common lines
-    if (commonLines.length === 0) {
-        displayPopup('No similarities found.');
+    // Check if both code snippets are empty after removing empty lines
+    if (cleanLines1.length === 0 || cleanLines2.length === 0) {
+        displayPopup('No code found.');
         // Clear any previously displayed copied lines and not similar lines
         clearCopiedLines();
         clearNotSimilarLines();
         return; // Exit the function
     }
 
+    // Find common lines between the two code snippets
+    const commonLines = getCommonLines(cleanLines1, cleanLines2);
+
     // Calculate plagiarism percentage
     const plagiarismPercentage = (commonLines.length / Math.max(cleanLines1.length, cleanLines2.length)) * 100;
 
-    // Display the result
+    // Display the result, ensuring the percentage is capped at 100%
     const resultElement = document.getElementById('result');
-    resultElement.textContent = `Plagiarism Percentage: ${plagiarismPercentage.toFixed(2)}%`;
+    resultElement.textContent = `Plagiarism Percentage: ${Math.min(plagiarismPercentage, 100).toFixed(2)}%`;
 
     // Find not similar lines
     const notSimilarLines1 = cleanLines1.filter(line1 => !cleanLines2.includes(line1));

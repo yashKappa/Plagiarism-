@@ -84,15 +84,61 @@
    
 
     <!-- Popup Message -->
-    <div id="popup" style="display: none;">
-        <div id="popupContent">
-            <p id="popupMessage"></p>
-            <button id="popupOKButton">OK</button>
-        </div>
+
+
+
+    <div id="popup" class="popup" style="display: none;">
+        <p id="popupMessage"></p>
+        <span class="poop"><button id="popupOKButton">OK</button></span>
     </div>
+
+
 <style>
     
 /************ UPLOAD FORM OR FILES *************************/
+.popup {
+    display: none;
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--error-color);
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px var(--h1-color);
+    z-index: 9999;
+    transition: background-color 0.3s ease;
+    color: var(--third-color);
+    border-radius: 0.2rem;
+}
+
+
+.popup Button{
+    cursor: pointer;
+    background-color: var(--check-color);
+    color: rgb(255, 255, 255);
+    border: none;   
+    margin-bottom: 1rem;
+    border-radius: 0.2rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.popup Button:hover {
+    border-radius: 0.6rem;
+    border: none;
+}
+
+
+.popup p {
+    width: 100%;
+    margin: auto; /* Center the message vertically */
+}
+
+#popupMessage {
+    text-align-last: center;
+    margin: 1rem 1rem 2rem 0.1rem;
+
+}
+
 .nam{
     width: 30%;
     text-align: center;
@@ -295,7 +341,7 @@ input[type="file"] {
 .Er{
     display: none;
 }
-button {
+.wrapper button {
     margin-left: 16rem;
     cursor: pointer;
     background-color: var(--check-color);
@@ -307,7 +353,7 @@ button {
     float: right;
 }
 
-button:hover {
+.wrapper button:hover {
     margin-left: 13px;
     cursor: pointer;
     background-color: var(--check-hover-color);
