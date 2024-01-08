@@ -7,5 +7,26 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <!-- Update your EJS template (status.ejs) -->
+<div class="content">
+  <form action="/status" method="get">
+      <h1>File Status</h1>
+      <table border="2">
+          <tr>
+              <th>Filename</th>
+              <th>Project Name</th>
+              <th>Summary</th>
+          </tr>
+          <% files.forEach(file => { %>
+              <tr>
+                  <td><%= file.filename %></td>
+                  <td><%= file.project_name %></td>
+                  <td><%= file.summary %></td>
+              </tr>
+          <% }); %>
+      </table>
+  </form>
+</div>
+
   </body>
 </html>

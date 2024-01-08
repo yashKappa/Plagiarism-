@@ -15,14 +15,14 @@
     <img class="logo" id="loo" src="dark1.png">
    <div class="box">
     <div class="container">
-
+        <form action="/admin_student" method="POST">
         <div class="top">
             <span>Have an account?</span>
             <header>Admin Login</header>
         </div>
 
         <div class="input-field">
-            <input type="text" class="input" name="username" placeholder="Username" id="name" required>
+            <input type="text" class="input" name="admin" placeholder="Username" id="name" required>
             <i class='bx bx-user' ></i>
         </div>
 
@@ -44,25 +44,9 @@
                 <label><a href="#">Forgot password?</a></label>
             </div>
         </div>
+        </form>
     </div>
 </div>  
-<script>
-   
-
-function auth() {
-    var name = document.getElementById("name").value;
-    var password = document.getElementById("password").value;
-
-    if (name === "yash" && password === "yash@2003") {
-       
-        window.location.assign("userpanel.html");
-        alert("Login successfully");
-    } else {
-        alert("Invalid credentials");
-    }
-}
-
-</script>
 <style>
     /*login page*/
 

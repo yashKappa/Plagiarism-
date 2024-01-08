@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Anti Duplicate Software</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="stylesheet" href="userpanel.css">   
+    <link rel="database" href="database.js">
+
+    <style>
+        body {
+            background-color: antiquewhite;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .content {
+            width: 80%;
+            background-color: rgb(248, 154, 91);
+            text-align: center;
+            margin: 30px auto;
+            padding: 70px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stu {
+            display: inline-block;
+            background-color: rgb(255, 198, 134);
+            padding: 40px 50px;
+            margin: 20px;
+            text-decoration: none;
+            color: #000000;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: large;
+        }
+
+        .stu:hover {
+            background-color: #3498db;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <a class="stu" href="../student">Student</a>
+        <a class="stu" href="../teacher">Teacher</a>
+        <a class="stu" href="../developer">Developer</a><br>
+        <a class="stu" href="../file">File</a>
+        <a class="stu" href="../admin">Admin</a>
+        <a class="stu" href="../user">User</a>
+    </div>
+</body>
+</html>

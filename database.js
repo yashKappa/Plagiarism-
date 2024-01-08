@@ -328,24 +328,95 @@ app.post("/upload", upload.array("files"), async (req, res) => {
 // Assuming you have Express set up and your EJS view engine configured
 
 // Update the route handler
-app.get("/status", async (req, res) => {
+app.set('views', path.join(__dirname, 'views'));
+
+// Set the 'public' directory for static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+
+// Define a route to fetch data from the 'student' table
+app.get('/status', async (req, res) => {
   try {
-    await poolConnect;
+    // Connect to MSSQL using dbConfig
+    await sql.connect(dbConfig);
 
-    const request = pool.request();
-    const query = "SELECT * FROM file summary=@summary, project_name=@project_name and filename=@filename";
-    const result = await request.query(query);
+    // Query the database
+    const result = await sql.query('SELECT * FROM student');
 
-    // Pass the files array to the EJS template with the correct variable name
-    res.render('status', { files: result.recordset });
+    // Render the 'status.ejs' page and pass the query results
+    res.render('status', { data: result.recordset, title: 'File Status' });
   } catch (err) {
-    console.error("Error fetching data from database: ", err);
-    res.status(500).send("Internal Server Error");
+    console.error('Error executing MSSQL query:', err);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    // Close the MSSQL connection
+    sql.close();
   }
 });
 
-app.set('view engine', 'ejs');
+
+// Serve the status.html file
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'status.html'));
+});
 
 
 
 
+/*------------------------------------admin_student login---------------------------------*/
+
+
+app.post("/admin_student", (req, res) => {
+  const admin = req.body.admin;
+  const password = req.body.password;
+
+  const query = "SELECT * FROM admin_student WHERE admin = @admin AND password = @password";
+
+  const request = new sql.Request();
+  request.input('admin', sql.NVarChar, admin);
+  request.input('password', sql.NVarChar, password);
+
+  request.query(query, (error, results) => {
+    if (error) {
+      console.error("Error occurred during login:", error);
+      res.redirect("/");
+    } else if (results.recordset.length > 0) {
+      // Set cookies for admin and login status
+      res.cookie('admin', admin);
+      res.cookie('logged', 'true');
+      // Set session variable
+      req.cookies.user = admin;
+      // Redirect to the user panel page
+      res.redirect("/admin/admin_home.html");
+    } else {
+      res.redirect();
+    }
+  });
+});
+
+app.get('/student', async (req, res) => {
+  try {
+    // Connect to MSSQL using dbConfig
+    await sql.connect(dbConfig);
+
+    // Query the database
+    const result = await sql.query('SELECT * FROM student');
+
+    // Render the 'status.ejs' page and pass the query results
+    res.render('student', { data: result.recordset, title: 'File Status' });
+  } catch (err) {
+    console.error('Error executing MSSQL query:', err);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    // Close the MSSQL connection
+    sql.close();
+  }
+});
+
+
+// Serve the status.html file
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'student.html'));
+});

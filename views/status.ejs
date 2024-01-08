@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Status Page</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #3498db;
+    }
+
+    table {
+      width: 50%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #3498db;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #ecf0f1;
+    }
+
+    tr:hover {
+      background-color: #d4e6f1;
+    }
+    #backButton {
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+  
+      #backButton:hover {
+        background-color: #2980b9;
+      }
+      
+  </style>
+</head>
+<body>
+  <!-- Your existing HTML content here -->
+  <button id="backButton">< Back</button>
+  <table border="1">
+    <tr>
+      <th>email</th>
+      <th>Username</th>
+      <th>Password</th>
+    </tr>
+    <% data.forEach(row => { %>
+      <tr>
+        <td><%= row.email %></td>
+        <td><%= row.username %></td>
+        <td><%= row.password %></td>
+      </tr>
+    <% }); %>
+  </table>
+
+  <!-- Your existing script tags here -->
+  <script>
+    document.getElementById("backButton").addEventListener("click", function() {
+      window.history.back();
+    });
+  </script>
+</body>
+</html>
