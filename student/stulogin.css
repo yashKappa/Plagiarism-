@@ -306,6 +306,16 @@ body {
             animation: float 3s infinite;
         }
 
+        .popup{
+            background-color: #ffffff79;
+            width: 80%;
+            margin-left: 1.3rem;
+            text-align: center;
+            margin-top: -1rem;
+            border-radius: 0.2rem;
+            font-weight: bold;
+            font-size: small;
+        }
         @keyframes float {
             0% {
                 transform: translateY(0);
@@ -383,3 +393,4 @@ body {
 }
 
 }
+

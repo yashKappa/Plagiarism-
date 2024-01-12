@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Details</title>
+  <!-- Add your CSS styles or include external stylesheets here -->
+</head>
+<body>
+  <h1>File Details</h1>
+  
+  <div>
+    <h2>File Information</h2>
+    <p><strong>Filename:</strong> <%= file.filename %></p>
+    <p><strong>MIME Type:</strong> <%= file.mime_type %></p>
+    <p><strong>Project Name:</strong> <%= file.project_name %></p>
+    <p><strong>Username:</strong> <%= file.username %></p>
+    <p><strong>Summary:</strong> <%= file.summary %></p>
+  </div>
+
+  <div>
+    <h2>File Content</h2>
+    <!-- Display the file content here -->
+    <!-- You may need to handle different file types (e.g., images, text, etc.) differently -->
+    <!-- For simplicity, this example assumes the file content is plain text -->
+    <pre><%= file.data %></pre>
+  </div>
+
+  <!-- Add your additional HTML elements or content here -->
+
+</body>
+</html>
