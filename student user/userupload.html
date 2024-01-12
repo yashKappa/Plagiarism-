@@ -45,21 +45,21 @@
     <div class="up">
         <div class="upload">
             <h1>File Upload</h1>
-            <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-                <div class="discription">
-                    <textarea type="text" class="disc" id="summary" name="summary" placeholder="Short description about the project...." rows="4" cols="50" required></textarea>
-                </div>
-                <div class="info">
-                <span class="nam">project</span> <input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
-                <span class="nam">username</span><input type="text" id="username" name="username" placeholder="Username" required />
-                </div>
-                <div class="file">
-                    <label for="fileInput" class="uploadlabel">
-                        <div class="UPlogo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
-                        <input type="file" id="fileInput" name="files" multiple required onchange="handleFileSelect()">
-                    </label>
-                </div>
-        
+           <!-- Your HTML form -->
+<form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="discription">
+        <textarea type="text" class="disc" id="summary" name="summary" placeholder="Short description about the project...." rows="4" cols="50" required></textarea>
+    </div>
+    <div class="info">
+        <span class="nam">project</span> <input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
+        <span class="nam">username</span><input type="text" id="username" name="username" placeholder="Username" required />
+    </div>
+    <div class="file">
+        <label for="fileInput" class="uploadlabel">
+            <div class="UPlogo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
+            <input type="file" id="fileInput" name="files" multiple required onchange="handleFileSelect()">
+        </label>
+    </div>
                 <div class="wrapper" id="lost">
                     <span class="non">
                         <ul id="filewrapper"></ul>

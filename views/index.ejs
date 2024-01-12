@@ -157,34 +157,76 @@
 					<table>
 						<tbody>
               <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
-			  <% if (data && data.length > 0) { %>
-				<table>
+			  <table border="1">
+				<tr>
+				  <th>filename</th>
+				  <th>Username</th>
+				  <th>id</th>
+				</tr>
+				<% data.forEach(row => { %>
 				  <tr>
-					<th>project name</th>
-					<th>data</th>
-					<th>Username</th>
-					<th>filename</th>
+					<td>
+					  <a class="data" href="/download/<%= row.id %>"><%= row.filename %></a>
+					</td>
+					<td><p class="data"><%= row.username %></p></td>
+					<td><p class="data"><%= row.id %></p></td>
 				  </tr>
-				  <% data.forEach(row => { %>
-					<tr>
-					  <td><p class="data"><%= row.project_name %></p></td>
-					  <td><p class="data"><%= row.data %></p></td>
-					  <td><p class="data"><%= row.username %></p></td>
-					  <td><p class="data"><%= row.filename %></p></td>
-					</tr>
-				  <% }); %>
-				</table>
+				<% }); %>
+			  </table>
+			  <% if (data && data.length > 0) { %>
+				<!-- Your other content here -->
 			  <% } else { %>
 				<p class="message">Data was not found or Empty</p>
 			  <% } %>
-			  
             
               <!-- Your existing script tags here -->
-              <script>
-                document.getElementById("backButton").addEventListener("click", function() {
-                  window.history.back();
-                });
-              </script>
+             <!-- Update your script tags -->
+<script>
+	document.getElementById("backButton").addEventListener("click", function () {
+	  window.history.back();
+	});
+  
+	// Assuming you have jQuery included
+	$(document).ready(function () {
+	  // Add a click event listener to all elements with the class 'download-link'
+	  $('.download-link').click(function (e) {
+		e.preventDefault(); // Prevent the default link behavior
+  
+		// Get the file ID from the data attribute
+		const fileId = $(this).data('file-id');
+  
+		// Fetch the file content from the server
+		fetch(`/getFileContent/${fileId}`)
+		  .then(response => response.text())
+		  .then(content => {
+			// Create a blob with the file content
+			const blob = new Blob([content], { type: 'text/plain' });
+  
+			// Create a link element
+			const downloadLink = document.createElement('a');
+  
+			// Set the download attribute with the filename
+			downloadLink.download = $(this).data('filename');
+  
+			// Set the href attribute with the blob URL
+			downloadLink.href = URL.createObjectURL(blob);
+  
+			// Append the link to the body
+			document.body.appendChild(downloadLink);
+  
+			// Trigger a click on the link to start the download
+			downloadLink.click();
+  
+			// Remove the link from the DOM
+			document.body.removeChild(downloadLink);
+		  })
+		  .catch(error => {
+			console.error('Error fetching file content:', error);
+		  });
+	  });
+	});
+  </script>
+  
 						</tbody>
 					</table>
 				</div>

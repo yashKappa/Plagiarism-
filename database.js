@@ -452,6 +452,31 @@ app.get('/', (req, res) => {
 
 /*------------------------------------User file fetch data---------------------------------*/
 
+// Add a new route for downloading files
+app.get('/download/:id', (req, res) => {
+  const fileId = req.params.id;
+
+  // Query the MySQL database to get file information based on the provided id
+  connection.query('SELECT * FROM file WHERE id = ?', [fileId], (error, results, fields) => {
+    if (error) {
+      console.error('Error executing MySQL query:', error);
+      res.status(500).send('Internal Server Error');
+    } else {
+      // Assuming 'data' is the column with BLOB data and 'filename' is the original filename
+      const fileData = results[0].data; // Access the BLOB data from the first result (adjust as needed)
+      const filename = results[0].filename; // Access the filename from the first result (adjust as needed)
+
+      // Set response headers for file download
+      res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+      res.setHeader('Content-type', 'application/octet-stream');
+
+      // Send the BLOB data as the response
+      res.send(fileData);
+    }
+  });
+});
+
+// Your existing /index route remains unchanged
 app.get('/index', (req, res) => {
   try {
     // Query the MySQL database
@@ -460,8 +485,8 @@ app.get('/index', (req, res) => {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
       } else {
-        // Render the 'student.ejs' page and pass the query results
-        res.render('index', { data: results, title: 'File Status' });
+        // Render the 'index' page and pass the query results
+        res.render('index', { data: results, title: 'File List' });
       }
     });
   } catch (err) {
@@ -470,10 +495,8 @@ app.get('/index', (req, res) => {
   }
 });
 
-// Handle other routes...
 
-// Serve the student.html file
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
 /*------------------------------------User file fetch data---------------------------------*/
+// Add this route to handle getFileContent requests
+
+
