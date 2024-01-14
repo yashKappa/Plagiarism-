@@ -500,3 +500,69 @@ app.get('/index', (req, res) => {
 // Add this route to handle getFileContent requests
 
 
+// Your existing /index route remains unchanged
+// Add a new route to handle the click on the project name
+// Update the /user route to fetch distinct username and project_name
+app.get('/user', (req, res) => {
+  try {
+    // Query the MySQL database
+    connection.query('SELECT DISTINCT username, project_name FROM file', (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'user' page and pass the query results
+        res.render('user', { data: results, title: 'User Projects' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Add a new route to handle the click on the project name and fetch related files
+app.get('/related/:username/:projectName', (req, res) => {
+  const { username, projectName } = req.params;
+
+  try {
+    // Query the MySQL database to fetch files related to the username and project name
+    const query = `
+      SELECT *
+      FROM file
+      WHERE username = ? AND project_name = ?
+    `;
+
+    connection.query(query, [username, projectName], (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'related' page and pass the query results
+        res.render('related', { data: results, title: 'Related Files', username, projectName });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.get('/related', (req, res) => {
+  try {
+    // Query the MySQL database
+    connection.query('SELECT * FROM file', (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'index' page and pass the query results
+        res.render('related', { data: results, title: 'File List' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});

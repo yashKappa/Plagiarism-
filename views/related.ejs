@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.3/css/boxicons.min.css">
+  <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="../views/file.css">   
+  <link rel="database" href="../database.js">
+  <link rel="script" href="script.js">
+    <title>Users Files Table</title>
+</head>
+
+<!-- user.ejs -->
+
+<body>
+    <div class="container">
+      <div class="header">
+          <h1>Users Files Files</h1>
+          <div class="actions">
+              <i class="bx bx-search"></i>
+              <i class="bx bx-filter"></i>
+          </div>
+      </div>
+      <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+      <table border="1">
+        <tr>
+          <th>Files</th>
+        </tr>
+        <% data.forEach(row => { %>
+          <tr>
+            <td>
+              <a class="data" href="/download/<%= row.id %>"><%= row.filename %></a>
+            </td>
+          </tr>
+        <% }); %>
+      </table>
+      <% if (data && data.length > 0) { %>
+        <!-- Your other content here -->
+      <% } else { %>
+        <p class="message">Data was not found or Empty</p>
+      <% } %>
+    </div>
+  </body>
+  
+<script>
+document.getElementById("backButton").addEventListener("click", function () {
+window.history.back();
+});
+
+// Assuming you have jQuery included
+$(document).ready(function () {
+// Add a click event listener to all elements with the class 'download-link'
+$('.download-link').click(function (e) {
+e.preventDefault(); // Prevent the default link behavior
+
+// Get the file ID from the data attribute
+const fileId = $(this).data('file-id');
+
+// Fetch the file content from the server
+fetch(`/getFileContent/${fileId}`)
+.then(response => response.text())
+.then(content => {
+// Create a blob with the file content
+const blob = new Blob([content], { type: 'text/plain' });
+
+// Create a link element
+const downloadLink = document.createElement('a');
+
+// Set the download attribute with the filename
+downloadLink.download = $(this).data('filename');
+
+// Set the href attribute with the blob URL
+downloadLink.href = URL.createObjectURL(blob);
+
+// Append the link to the body
+document.body.appendChild(downloadLink);
+
+// Trigger a click on the link to start the download
+downloadLink.click();
+
+// Remove the link from the DOM
+document.body.removeChild(downloadLink);
+})
+.catch(error => {
+console.error('Error fetching file content:', error);
+});
+});
+});
+
+const darkModePreference = localStorage.getItem('darkMode');
+
+// Function to toggle dark mode
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-theme");
+
+  if (document.body.classList.contains("dark-theme")) {
+    localStorage.setItem('darkMode', 'enabled');
+    dark.src = "moons.png";
+    loo.src = "dark1.png";
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+    dark.src = "suns.png";
+    loo.src = "light1.png";
+  }
+}
+
+// Apply dark mode based on user preference
+if (darkModePreference === 'enabled') {
+  document.body.classList.add('dark-theme');
+  dark.src = "moons.png";
+  loo.src = "dark1.png";
+} else {
+  dark.src = "suns.png";
+  loo.src = "light1.png";
+}
+
+dark.onclick = toggleDarkMode;
+
+</script>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        transition: background-color 0.3s ease; /* Added transition for smoother mode change */
+        background-color: var(--background-color);
+    }
+    
+    :root {
+        --background-color: #f5f5f5;
+        --color: #333;
+    }
+    
+    .dark-theme {
+        --background-color: #000127;
+        --color: #fff;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+        border-radius: 1rem;
+    }
+    
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    h1 {
+        margin: 0;
+        transition: color 0.3s ease;
+    }
+    
+    .actions {
+        display: flex;
+    }
+    
+    i {
+        font-size: 24px;
+        color: #ffffff;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+    
+    i:hover {
+        color: #333;
+    }
+    
+    button {
+        padding: 10px 15px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+        margin-bottom: 1rem;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+    .table-container {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+        padding: 15px;
+        text-align: left;
+    }
+    
+    th {
+        background-color: #007bff;
+        color: #fff;
+    }
+    
+    a.data {
+        text-decoration: none;
+        color: #007bff;
+        transition: color 0.3s ease;
+    }
+    
+    a.data:hover {
+        color: #0056b3;
+    }
+      
+    .message {
+        font-style: italic;
+        color: #777;
+    }
+    
+    /* Dark mode styles */
+    .dark-mode .container {
+        background-color: #222;
+        color: #fff;
+    }
+    
+    .dark-mode h1 {
+        color: #fff;
+    }
+    
+    .dark-mode th {
+        background-color: #333;
+        color: #fff;
+    }
+    
+    .dark-mode a.data {
+        color: #1e90ff;
+    }
+    
+    .dark-mode a.data:hover {
+        color: #00bfff;
+    }
+</style>
+</html>

@@ -954,6 +954,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		localStorage.setItem('switch-mode', this.checked ? 'dark' : 'light');
 	});
 });
+document.getElementById("backButton").addEventListener("click", function () {
+window.history.back();
+});
   </script>
 </body>
 </html>
