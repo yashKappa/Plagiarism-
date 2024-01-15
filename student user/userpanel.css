@@ -58,6 +58,10 @@ body{
     --dis-color:linear-gradient(135deg, rgb(55, 55, 253), rgb(12, 149, 190), rgb(0, 87, 250));
     --error-color:white;
     --go-color: rgb(47, 175, 235);
+    --submit-color:rgb(0, 162, 255);
+    --cancel-color:rgba(253, 21, 21, 0.884);
+    --submit-hover-color:rgba(49, 175, 248, 0.767);
+    --cancel-hover-color:rgba(248, 49, 49, 0.767);
 }
 .dark-theme{
     --h1-color:white;
@@ -87,6 +91,9 @@ body{
     --dis-color:linear-gradient(135deg, rgb(43, 43, 46), rgb(44, 45, 48));
     --error-color:rgb(32, 29, 29);
     --go-color:gray;
+    --submit-color:rgb(59, 59, 59);
+    --submit-hover-color:rgba(80, 80, 80, 0.767);
+
 }
 nav{
     width: 100%;

@@ -156,29 +156,30 @@
 					</div>
 					<table>
 						<tbody>
-              <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
-			  <table border="1">
-				<tr>
-				  <th>filename</th>
-				  <th>Username</th>
-				  <th>id</th>
-				</tr>
-				<% data.forEach(row => { %>
-				  <tr>
-					<td>
-					  <a class="data" href="/download/<%= row.id %>"><%= row.filename %></a>
-					</td>
-					<td><p class="data"><%= row.username %></p></td>
-					<td><p class="data"><%= row.id %></p></td>
-				  </tr>
-				<% }); %>
-			  </table>
-			  <% if (data && data.length > 0) { %>
-				<!-- Your other content here -->
-			  <% } else { %>
-				<p class="message">Data was not found or Empty</p>
-			  <% } %>
-            
+							<button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+							<table border="1">
+								<tr>
+								  <th>Username</th>
+								  <th>project name</th>
+								</tr>
+								<% data.forEach(row => { %>
+								  <tr>
+									<td><p class="data"><%= row.username %></p></td>
+									<td>
+									  <p class="data">
+										<!-- Update the link to point to the related route with username and project name parameters -->
+										<a class="data" href="/related/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
+									  </p>
+									</td>
+								  </tr>
+								<% }); %>
+							</table>
+							<% if (data && data.length > 0) { %>
+							  <!-- Your other content here -->
+							<% } else { %>
+							  <p class="message">Data was not found or Empty</p>
+							<% } %>
+						  </div>
               <!-- Your existing script tags here -->
              <!-- Update your script tags -->
 <script>

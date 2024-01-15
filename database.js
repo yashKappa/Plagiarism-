@@ -279,39 +279,52 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
 
-
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.json());
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
   const projectName = req.body.projectName;
-  const username = req.body.username;
-  const summary= req.body.summary;
+  const inputUsername = req.body.username;
+  const summary = req.body.summary;
 
   if (!files || files.length === 0 || !projectName) {
       return res.status(400).send("Please provide a project name and select files to upload.");
   }
 
+  // Check if the input username matches the one stored in cookies
+  const storedUsername = req.cookies.username;
+
+  if (inputUsername !== storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
   let filesUploaded = 0;
 
-  files.forEach((file, index, array) => {
-      const filename = file.originalname;
-      const mimeType = file.mimetype;
-      const fileData = file.buffer;
+// ...
 
-      const query = "INSERT INTO file (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)";
-      connection.query(query, [filename, mimeType, fileData, projectName, username, summary], (err, result) => {
-          if (err) {
-              console.error("Error uploading file: ", err);
-          } else {
-              filesUploaded++;
+files.forEach((file, index, array) => {
+  const filename = file.originalname;
+  const mimeType = file.mimetype;
+  const fileData = file.buffer;
 
-              if (filesUploaded === array.length) {
-                  // All files have been uploaded
-                  res.status(200).send("Files uploaded successfully");
-              }
+  const query = "INSERT INTO file (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)";
+  connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary], (err, result) => {
+      if (err) {
+          console.error("Error uploading file: ", err);
+      } else {
+          filesUploaded++;
+
+          if (filesUploaded === array.length) {
+              // All files have been uploaded
+              res.status(200).send("Files uploaded successfully");
           }
-      });
+      }
   });
 });
+});
+// ...
+
 
 
 app.get("/status", (req, res) => {
@@ -480,13 +493,13 @@ app.get('/download/:id', (req, res) => {
 app.get('/index', (req, res) => {
   try {
     // Query the MySQL database
-    connection.query('SELECT * FROM file', (error, results, fields) => {
+    connection.query('SELECT DISTINCT username, project_name FROM file', (error, results, fields) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
       } else {
-        // Render the 'index' page and pass the query results
-        res.render('index', { data: results, title: 'File List' });
+        // Render the 'user' page and pass the query results
+        res.render('index', { data: results, title: 'User Projects' });
       }
     });
   } catch (err) {
@@ -503,10 +516,25 @@ app.get('/index', (req, res) => {
 // Your existing /index route remains unchanged
 // Add a new route to handle the click on the project name
 // Update the /user route to fetch distinct username and project_name
+
+// Add this route in your main server file
+// Add this route in your main server file (app.js or index.js)
+
+// Add this route in your main server file (app.js or index.js)
+
+
+// Route to delete a project
 app.get('/user', (req, res) => {
   try {
-    // Query the MySQL database
-    connection.query('SELECT DISTINCT username, project_name FROM file', (error, results, fields) => {
+    // Check if the username is present in cookies
+    const storedUsername = req.cookies.username;
+
+    if (!storedUsername) {
+      return res.status(401).send('Unauthorized. Please log in.');
+    }
+
+    // Query the MySQL database using the stored username
+    connection.query('SELECT DISTINCT username, project_name FROM file WHERE username = ?', [storedUsername], (error, results, fields) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
@@ -521,25 +549,51 @@ app.get('/user', (req, res) => {
   }
 });
 
+// Route to delete a project
+app.post('/user/delete', (req, res) => {
+  const usernameToDelete = req.body.username;
+  const projectNameToDelete = req.body.projectName;
+
+  // Delete the project from the database using placeholders
+  const deleteQuery = 'DELETE FROM file WHERE username = ? AND project_name = ?';
+
+  connection.query(deleteQuery, [usernameToDelete, projectNameToDelete], (error, results) => {
+    if (error) {
+      console.error('Error deleting project:', error);
+      res.status(500).send('Internal Server Error');
+    } else {
+      // Redirect to the user page after successful deletion
+      res.redirect('/user');
+    }
+  });
+});
+
+
 // Add a new route to handle the click on the project name and fetch related files
 app.get('/related/:username/:projectName', (req, res) => {
-  const { username, projectName } = req.params;
+  const storedUsername = req.cookies.username;
+  const projectName = req.params.projectName;
 
   try {
-    // Query the MySQL database to fetch files related to the username and project name
+    // Check if the username is present in cookies
+    if (!storedUsername) {
+      return res.status(401).send('Unauthorized. Please log in.');
+    }
+
+    // Query the MySQL database to fetch files related to the stored username and project name
     const query = `
       SELECT *
       FROM file
       WHERE username = ? AND project_name = ?
     `;
 
-    connection.query(query, [username, projectName], (error, results, fields) => {
+    connection.query(query, [storedUsername, projectName], (error, results, fields) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
       } else {
         // Render the 'related' page and pass the query results
-        res.render('related', { data: results, title: 'Related Files', username, projectName });
+        res.render('related', { data: results, title: 'Related Files', username: storedUsername, projectName });
       }
     });
   } catch (err) {
@@ -547,7 +601,6 @@ app.get('/related/:username/:projectName', (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
 
 app.get('/related', (req, res) => {
   try {
@@ -559,6 +612,24 @@ app.get('/related', (req, res) => {
       } else {
         // Render the 'index' page and pass the query results
         res.render('related', { data: results, title: 'File List' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/userdata', (req, res) => {
+  try {
+    // Query the MySQL database
+    connection.query('SELECT * FROM file', (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'index' page and pass the query results
+        res.render('userdata', { data: results, title: 'File List' });
       }
     });
   } catch (err) {

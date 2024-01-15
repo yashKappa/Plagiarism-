@@ -32,21 +32,30 @@
       </div>
       <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
       <table border="1">
-          <tr>
-            <th>Username</th>
-            <th>project name</th>
-          </tr>
-          <% data.forEach(row => { %>
-            <tr>
-              <td><p class="data"><%= row.username %></p></td>
-              <td>
-                <p class="data">
-                  <!-- Update the link to point to the related route with username and project name parameters -->
-                  <a class="data" href="/related/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
-                </p>
-              </td>
-            </tr>
-          <% }); %>
+          <form action="/user/delete" method="post">
+            <table border="1">
+              <tr>
+                <th>Username</th>
+                <th>project name</th>
+              </tr>
+              <% data.forEach(row => { %>
+                <tr>
+                  <td><p class="data"><%= row.username %></p></td>
+                  <td>
+                    <p class="data">
+                      <!-- Update the link to point to the related route with username and project name parameters -->
+                      <a class="data" href="/related/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
+                    </p>
+                    <!-- Add hidden input fields to hold the data for deletion -->
+                    <input type="hidden" name="username" value="<%= row.username %>">
+                    <input type="hidden" name="projectName" value="<%= row.project_name %>">
+                    <button type="submit">Delete</button>
+                  </td>
+                </tr>
+              <% }); %>
+            </table>
+          </form>
+          
       </table>
       <% if (data && data.length > 0) { %>
         <!-- Your other content here -->

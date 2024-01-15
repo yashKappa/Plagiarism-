@@ -47,24 +47,29 @@
             <h1>File Upload</h1>
            <!-- Your HTML form -->
 <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="info">
+        <span class="nam">Project</span><input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
+        <span class="nam">Username</span><input type="text" id="username" name="username" placeholder="Username" required />
+    </div>
     <div class="discription">
+        <span class="nam">Project discription</span>
         <textarea type="text" class="disc" id="summary" name="summary" placeholder="Short description about the project...." rows="4" cols="50" required></textarea>
     </div>
-    <div class="info">
-        <span class="nam">project</span> <input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
-        <span class="nam">username</span><input type="text" id="username" name="username" placeholder="Username" required />
-    </div>
     <div class="file">
+        <div class="fileimg">
         <label for="fileInput" class="uploadlabel">
             <div class="UPlogo"><img src="https://cdn-icons-png.flaticon.com/128/4400/4400806.png" alt="Upload" required></div>
+            <span class="msg">Choose The File To Upload</span>
             <input type="file" id="fileInput" name="files" multiple required onchange="handleFileSelect()">
         </label>
     </div>
-                <div class="wrapper" id="lost">
-                    <span class="non">
-                        <ul id="filewrapper"></ul>
-                    </span>
-                </div>
+        <div class="wrapper" id="lost">
+            <span class="non">
+                <ul id="filewrapper"></ul>
+            </span>
+        </div>
+    </div>
+                
                 <script>
                     if(fileInput.files.length > 0){
                         document.getElementById("uploadButton").style.display = "none";
@@ -89,13 +94,48 @@
 
     <div id="popup" class="popup" style="display: none;">
         <p id="popupMessage"></p>
-        <span class="poop"><button id="popupOKButton">OK</button></span>
+        <span class="poop"><button id="popupOKButton" onclick="cancelFileSelection()">OK</button></span>
     </div>
 
 
 <style>
     
 /************ UPLOAD FORM OR FILES *************************/
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+textarea,
+input[type="text"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.UPlogo img{
+    width: 70%;
+    margin-bottom: 1rem;
+}
+.file{
+    width: 95%;
+    margin-top: 1rem;
+    margin-left: 0.4rem;
+    background:var(--study-color);
+    border-radius: 0.3rem;
+    border: 3px dashed black;
+    color:var(--h1-color);
+}
+.fileimg{
+    text-align-last: center;
+}
+.msg{
+    margin-top: 1rem;
+}
 .popup {
     display: none;
     position: fixed;
@@ -142,8 +182,9 @@
 .nam{
     width: 30%;
     text-align: center;
-    font-size: large;
-    color: var(--h1-color);
+    font-size:1.5rem;
+    color:var(--h1-color);
+
 }
 h1{
     color: var(--h1-color);
@@ -157,7 +198,7 @@ h1{
     align-items: center;
 }
 .upload {
-    width: 63%;
+    width: 55%;
     background:var(--study-color);
     line-height: 10vh;
     border-radius: 0.3rem;
@@ -185,7 +226,6 @@ input[type="file"] {
 
 /* Style the custom button as you like */
 .uploadlabel {
-    background-color: var(--navfont-color);
     border-radius: 10rem;
     cursor: pointer;
     display: inline-block;
@@ -226,7 +266,7 @@ input[type="file"] {
     padding-left: 0.2rem;
     padding-right: 0.2rem;
     border-radius: 0.3rem;
-    width: 59vw;
+    width: 48.8vw;
     float: left;
 }
 #filewrapper li:hover{
@@ -268,7 +308,7 @@ input[type="file"] {
     align-items: center;
 }
 .upload .submit{
-    background: var(--navfont-color);
+    background: var(--submit-color);
     border: none;
     padding: 4px 20px 4px 20px;
     font-size:medium;
@@ -279,9 +319,10 @@ input[type="file"] {
     font-weight: 500;
     margin-left: 1rem;
     margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
 }
 .upload .submit:hover{
-    background: var(--navfont-hover-color);
+    background: var(--submit-hover-color);
     border: none;
     padding: 4px 20px 4px 20px;
     font-size:medium;
@@ -292,7 +333,7 @@ input[type="file"] {
 }
 
 .upload .cancel{
-    background: var(--navfont-color);
+    background: var(--cancel-color);
     border: none;
     padding: 4px 20px 4px 20px;
     font-size:medium;
@@ -300,13 +341,9 @@ input[type="file"] {
     border-radius: 0.2rem;
     color:white;
     cursor: pointer;
-    font-weight: 500;
-    margin-top: 0.5rem;
-    margin-left: 35.8rem;
-    margin-bottom: 0.5rem;
 }
 .upload .cancel:hover{
-    background: var(--navfont-hover-color);
+    background: var(--cancel-hover-color);
     border: none;
     padding: 4px 20px 4px 20px;
     font-size:medium;
@@ -317,18 +354,18 @@ input[type="file"] {
 }
 
 #projectName{
-    width: 35%;
+    width: 95.5%;
     line-height: 4vh;
     border-radius: 0.2rem;
     border: none;
-    margin-left: 2rem;
+    margin-left: 0.3rem;
 }
 #username{
-    width: 35%;
+    width: 95.5%;
     line-height: 4vh;
     border-radius: 0.2rem;
     border: none;
-    margin-left: 1.1rem;
+    margin-left: 0.3rem;
 }
 .hidden {
     display: none;
@@ -401,15 +438,15 @@ input[type="file"] {
 
 
 .discription{
-    float: right;
     margin-right: 1rem;
 }
 
 .disc{
     border-radius: 0.3rem;
-    width: 30vw;
-    height: 30vh;
+    width: 52vw;
+    height: 20vh;
     resize: none;
+    margin-left: 0.3rem;
     
 }
 
