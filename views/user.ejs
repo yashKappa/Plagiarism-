@@ -31,41 +31,96 @@
           </div>
       </div>
       <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
-      <table border="1">
-          <form action="/user/delete" method="post">
-            <table border="1">
-              <tr>
-                <th>Username</th>
-                <th>project name</th>
-              </tr>
-              <% data.forEach(row => { %>
-                <tr>
-                  <td><p class="data"><%= row.username %></p></td>
-                  <td>
-                    <p class="data">
-                      <!-- Update the link to point to the related route with username and project name parameters -->
-                      <a class="data" href="/related/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
-                    </p>
-                    <!-- Add hidden input fields to hold the data for deletion -->
-                    <input type="hidden" name="username" value="<%= row.username %>">
-                    <input type="hidden" name="projectName" value="<%= row.project_name %>">
-                    <button type="submit">Delete</button>
-                  </td>
-                </tr>
-              <% }); %>
-            </table>
-          </form>
-          
-      </table>
-      <% if (data && data.length > 0) { %>
-        <!-- Your other content here -->
-      <% } else { %>
-        <p class="message">Data was not found or Empty</p>
-      <% } %>
-    </div>
-  </body>
+      <form id="deleteForm" action="/user/delete" method="post">
+        <table border="1">
+          <tr>
+            <th>Username</th>
+            <th>Project name</th>
+          </tr>
+          <% data.forEach(row => { %>
+            <tr>
+              <td><p class="data"><%= row.username %></p></td>
+              <td>
+                <p class="data">
+                  <!-- Update the link to point to the related route with username and project name parameters -->
+                  <a class="data" href="/related/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
+                </p>
+                <!-- Add hidden input fields to hold the data for deletion -->
+                <input type="hidden" name="username" value="<%= row.username %>">
+                <input type="hidden" name="projectName" value="<%= row.project_name %>">
+                <!-- Update the input names to use an array notation -->
+                <div>
+                  Please confirm deletion
+                  <input type="checkbox" id="checkbox-<%= row.username %>-<%= row.project_name %>" name="selectedProjects" value="<%= row.username %>-<%= row.project_name %>" onchange="toggleDeleteButton(this)" required />
+                </div>
+                <button type="button" onclick="deleteProject('<%= row.username %>', '<%= row.project_name %>')" disabled>Delete</button>                
+              </td>
+            </tr>
+          <% }); %>
+        </table>
+        <% if (data && data.length > 0) { %>
+          <!-- Your other content here -->
+        <% } else { %>
+          <p class="message">Data was not found or Empty</p>
+        <% } %>
+      </form>
+</div>
+</body>
   
 <script>
+  function toggleDeleteButton(checkbox) {
+    const deleteButton = checkbox.parentNode.nextElementSibling;
+    deleteButton.disabled = !checkbox.checked;
+  }
+
+  function deleteProject(username, projectName) {
+    const checkboxId = `checkbox-${username}-${projectName}`;
+    const checkbox = document.getElementById(checkboxId);
+    
+    // Check if the checkbox is checked
+    if (checkbox.checked) {
+      const selectedProjects = [{ username, projectName }];
+
+      fetch('/user/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ selectedProjects }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Server response:', data);
+
+        if (data.success) {
+          // Update the webpage dynamically
+          const rowId = `checkbox-${username}-${projectName}`;
+          const row = document.getElementById(rowId);
+
+          if (row) {
+            console.log('Removing row:', rowId);
+            row.closest('tr').remove(); // Remove the entire row from the table
+          } else {
+            console.log('Row not found:', rowId);
+          }
+        }
+
+        // Handle any additional logic or UI updates
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Log the server response error
+        if (error && error.message) {
+          console.error('Server Response Error:', error.message);
+        }
+        // Handle errors or show an error message to the user
+      });
+    } else {
+      alert('Please check the confirmation checkbox before deleting.');
+    }
+  }
+  
+  
 document.getElementById("backButton").addEventListener("click", function () {
 window.history.back();
 });

@@ -526,20 +526,17 @@ app.get('/index', (req, res) => {
 // Route to delete a project
 app.get('/user', (req, res) => {
   try {
-    // Check if the username is present in cookies
     const storedUsername = req.cookies.username;
 
     if (!storedUsername) {
       return res.status(401).send('Unauthorized. Please log in.');
     }
 
-    // Query the MySQL database using the stored username
-    connection.query('SELECT DISTINCT username, project_name FROM file WHERE username = ?', [storedUsername], (error, results, fields) => {
+    connection.query('SELECT DISTINCT username, project_name FROM file WHERE username = ?', [storedUsername], (error, results) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
       } else {
-        // Render the 'user' page and pass the query results
         res.render('user', { data: results, title: 'User Projects' });
       }
     });
@@ -551,22 +548,50 @@ app.get('/user', (req, res) => {
 
 // Route to delete a project
 app.post('/user/delete', (req, res) => {
-  const usernameToDelete = req.body.username;
-  const projectNameToDelete = req.body.projectName;
+  try {
+    const storedUsername = req.cookies.username;
 
-  // Delete the project from the database using placeholders
-  const deleteQuery = 'DELETE FROM file WHERE username = ? AND project_name = ?';
+    const projectNamesToDelete = req.body.selectedProjects.map(project => project.projectName);
 
-  connection.query(deleteQuery, [usernameToDelete, projectNameToDelete], (error, results) => {
-    if (error) {
-      console.error('Error deleting project:', error);
-      res.status(500).send('Internal Server Error');
-    } else {
-      // Redirect to the user page after successful deletion
-      res.redirect('/user');
+    if (!projectNamesToDelete || projectNamesToDelete.length === 0) {
+      return res.status(400).json({ success: false, error: 'No projects selected for deletion.' });
     }
-  });
+
+    const placeholders = projectNamesToDelete.map(() => '?').join(', ');
+    const deleteQuery = `DELETE FROM file WHERE project_name IN (${placeholders}) AND username = ?`;
+
+    console.log('Delete Query:', deleteQuery);
+    console.log('Delete Parameters:', [...projectNamesToDelete, storedUsername]);
+
+    connection.query(deleteQuery, [...projectNamesToDelete, storedUsername], (error, results) => {
+      if (error) {
+        console.error('Error deleting projects:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+      } else {
+        console.log('Deletion successful. Rows affected:', results.affectedRows);
+
+        // Fetch updated data from the server
+        connection.query('SELECT DISTINCT username, project_name FROM file WHERE username = ?', [storedUsername], (error, results) => {
+          if (error) {
+            console.error('Error executing MySQL query:', error);
+            res.status(500).json({ success: false, error: 'Internal Server Error' });
+          } else {
+            res.json({
+              success: true,
+              deletedProjects: projectNamesToDelete,
+              updatedData: results,
+            });
+          }
+        });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling deletion:', err);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
 });
+
+
 
 
 // Add a new route to handle the click on the project name and fetch related files
