@@ -66,8 +66,8 @@ app.post("/student", (req, res) => {
       res.status(500).send("Internal server error");
     } else if (results.length > 0) {
       // Set cookies for username and login status
-      res.cookie('username', username);
-      res.cookie('logged', 'true');
+      res.cookie('username', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+      res.cookie('logged', 'true', { maxAge: 3 * 24 * 60 * 60 * 1000 });
       // Set session variable
       req.cookies.user = username;
       // Redirect to the user panel page

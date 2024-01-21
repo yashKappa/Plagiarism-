@@ -70,38 +70,36 @@ window.addEventListener("load", () => {
     document.getElementById("uploadForm").addEventListener("submit", function (event) {
         event.preventDefault();
 
-        // Use FormData to construct the POST request
         const formData = new FormData(this);
 
-        // Send the POST request using Fetch API
         fetch("/upload", {
             method: "POST",
             body: formData,
         })
         .then(response => {
-            if (response.ok) {
-                // Handle success here
-                successMessage.classList.remove("hidden");
-                console.log("Files uploaded successfully.");
+            console.log("Response Status:", response.status); // Log the HTTP status code
 
-                // Set a timer to hide the successMessage after 3000 milliseconds (3 seconds)
+            if (response.ok) {
+                successMessage.classList.remove("hidden");
+                console.log("Files uploaded successfully");
                 setTimeout(() => {
                     successMessage.classList.add("hidden");
                 }, 3000);
-
-                filewrapper.style.display = "none"; // Hide the file list
+                filewrapper.style.display = "none";
             } else {
-                // Handle any errors here
-                ErrorMessage.classList.append("Er");
-                console.error("Error");
+                ErrorMessage.classList.add("Er");
+                return response.text().then(errorMsg => {
+                    console.error("Error:", errorMsg);
+                });
             }
         })
         .catch(error => {
-            // Handle network errors here
-            showPopupMessage("Network error");
+            showPopupMessage("Invalid username");
             console.error("Network error:", error);
+        })
+        .finally(() => {
+            this.reset();
         });
-        this.reset();
     });
 });
 /*
@@ -298,9 +296,6 @@ function checkPlagiarism() {
     // Display not similar lines
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
 }
-
-// ... (rest of the functions remain unchanged)
-
 
 // ... (rest of the functions remain unchanged)
 
