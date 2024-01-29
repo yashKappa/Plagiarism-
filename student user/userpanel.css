@@ -32,7 +32,7 @@ body{
 :root{
     --h1-color:black;
     --primary-color:rgb(252, 245, 245);
-    --secondary-color: #dad8d8;
+    --secondary-color: #eaeaec;
     --third-color:rgb(41, 41, 41);
     --study-color:linear-gradient(135deg,rgb(98, 161, 255), rgb(48, 65, 161));;
     --content-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
@@ -42,8 +42,8 @@ body{
     --result-color:rgb(255, 255, 255);
     --copied-color:rgb(176, 193, 230);
     --list-color:rgb(255, 252, 252);
-    --check-color:rgb(201, 115, 3);
-    --check-hover-color:rgb(163, 94, 3);
+    --check-color:#ff9100;
+    --check-hover-color:rgb(204, 122, 14);
     --scroll-color:rgb(184, 184, 184);
     --scroll-hover-color:#868484;
     --navfont-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
@@ -62,9 +62,10 @@ body{
     --cancel-color:rgba(253, 21, 21, 0.884);
     --submit-hover-color:rgba(49, 175, 248, 0.767);
     --cancel-hover-color:rgba(248, 49, 49, 0.767);
+    --info-color:rgb(100, 162, 197);
 }
 .dark-theme{
-    --h1-color:white;
+    --h1-color:rgb(255, 255, 255);
     --primary-color:rgb(0, 0, 0);
     --secondary-color: #171718;
     --third-color:rgb(255, 255, 255);
@@ -93,6 +94,7 @@ body{
     --go-color:gray;
     --submit-color:rgb(59, 59, 59);
     --submit-hover-color:rgba(80, 80, 80, 0.767);
+    --info-color:rgb(69, 100, 141);
 
 }
 nav{
@@ -104,6 +106,7 @@ nav{
     background-color:var(--primary-color);      
     text-align-last: center;
     transition: background-color 0.3s ease;
+    box-shadow: 0 0 3px var(--h1-color);
 }
 
 .menu{
@@ -306,7 +309,7 @@ a{
 }
 #check{
     background-color:var(--check-color);
-    color: var(--third-color);
+    color: var(--h1-color);
     border-radius: 10px;
     border: none;
     transition: background-color 0.3s ease;
@@ -314,6 +317,7 @@ a{
     margin-right: auto;
     text-align-last: center;
     padding: 0.8rem 1rem 0.8rem 1rem;
+    border: 2px solid ;
 }
 #check:hover{
     background-color: var(--check-hover-color);
@@ -592,7 +596,7 @@ h3{
     width: 45%;
     height: 400px;
     margin-left: 2rem;
-    margin-top: 2rem;
+    margin-top: 0.3rem;
     position: relative;
     border: 3px solid var(--third-color);
     border-radius: 0.5rem;
@@ -635,6 +639,8 @@ h3{
     font-size: 20px;
     resize: none;
     border-radius: 0.3rem;
+    margin-left: 42rem;
+    border: 3px solid rgb(255, 255, 255);
 }
 
 .html-container {
@@ -999,19 +1005,25 @@ margin-left: -60%;
     display: flex;
     flex-wrap: wrap;
     max-width: 400px;
-    max-width: 100%;
-    padding-left: 6rem;
+    max-width: 90%;
+    padding-left: rem;
+    font-family: sans-serif;
+    background:var(--info-color);
+    margin-left: 3rem;
+    border-radius: 3rem;
 }
+
+
 
 .textbox {
     position: relative;
     width: 25%;
     height: 60vh;
-    margin: 1%;
+    margin: 2.5%;
     padding: 20px;
-    background-color: wheat;
+    background:var(--content-color);
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 9px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     overflow: hidden;
 }
@@ -1026,12 +1038,69 @@ margin-left: -60%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #333; /* Adjust text color */
-    font-size: 16px; /* Adjust text size */
+    color: #000;
+    font-size: 16px; 
     font-weight: bold;
     text-align: center;
-    width: 65%; /* Adjust text width */
-    max-width: 300px; /* Adjust max-width if needed */
+    width: 65%; 
+    max-width: 300px; 
+    border: 1px solid rgb(0, 0, 0);
+    padding: 3.9rem 2rem 3.9rem 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    background-color:#ebeaea;
+    /*border-bottom-left-radius: 5rem;
+    border-top-right-radius: 5rem;*/
+
+}
+
+.overlay-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20px;
+    width: 40px;    
+    height: 100%;
+    background: var(--study-color);
+    border-radius: 15% 100% 100% 15%;
+    box-shadow: 0 40px 40px rgba(0, 0, 0, 0.2);
+    margin-left: 1.2rem;
+
+}
+
+.overlay-text1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-size: 16px; 
+    font-weight: bold;
+    text-align: center;
+    width: 65%; 
+    max-width: 300px; 
+    border: 1px solid rgb(0, 0, 0);
+    padding: 2.8rem 2rem 3.9rem 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    background-color:#ebeaea;
+    /*border-bottom-left-radius: 5rem;
+    border-top-right-radius: 5rem;*/
+
+}
+
+.overlay-text1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20px;
+    width: 40px;    
+    height: 100%;
+    background: var(--study-color);
+    border-radius: 15% 100% 100% 15%;
+    box-shadow: 0 40px 40px rgba(0, 0, 0, 0.2);
+    margin-left: 1.2rem;
+
 }
 
 .clickme{
@@ -1041,14 +1110,244 @@ margin-left: -60%;
         color: #3498db;
 }
 .head{
-    width: 30%; 
-    background-color: #f1f1f1;
+    width: 80%; 
+    background-color: #8db2ca;
+    margin-left: 6.5rem;
+    text-align: center;
+    padding-right: 1.5rem;
+    border-radius: 0.3rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    text-decoration: 3px underline;
+    
+}
+
+.head1{
+    width: 80%; 
+    background-color: #8db2ca;
     margin-left: 6.5rem;
     text-align: center;
     padding-right: 1.5rem;
     border-radius: 0.3rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 2rem;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    text-decoration: 3px underline;
+}
+
+.head h1{
+    color: black;
+}
+.head1 h1{
+    color: black;
+}
+/*  
+.gero {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 400px;
+    max-width: 100%;
+    padding-left: 6rem;
+    margin-top: 2rem;
+}
+
+.di {
+    position: relative;
+    width: 40vw;
+    height: 40vh;
+    margin: 1%;
+    padding: 20px;
+    background-color: rgb(158, 203, 226);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.di::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20px;
+    width: 60px;    
+    height: 100%;
+    background-color: rgb(35, 204, 255);
+    border-radius: 0 100% 100% 0;
+    box-shadow: 0 40px 40px rgba(0, 0, 0, 0.2);
 }
 
 
+
+.sq-text {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100vw;
+    max-width: 300px;
+    top: 10vw;
+    left: 20vw;
+    font-size: large;
+}
+
+.ne{
+    width: 18vw;
+    height: 10vh;
+    border-radius: 100rem;
+    background-color: rgb(158, 203, 226);
+    margin-top: 6.5rem;
+    margin-left: -3.5rem;
+    z-index: 1;
+    text-align: center;
+    padding-top: 2.5rem;
+}
+
+
+
+
+.R1 {
+    position: relative;
+    width: 40vw;
+    height: 40vh;
+    margin: 1%;
+    padding: 20px;
+    background-color: rgb(158, 203, 226);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin-left: 35rem;
+    margin-top: 3rem;
+}
+
+.R1::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -20px; 
+    width: 60px; 
+    height: 100%;
+    background-color: rgb(35, 204, 255);
+    border-radius: 100% 0 0 100%;
+    box-shadow: 0 -40px 40px rgba(0, 0, 0, 0.2);
+}
+
+
+.R1-text {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100vw;
+    max-width: 300px;
+    top: 10vw;
+    left: 20vw;
+    font-size: large;
+}
+
+.R1e{
+    width: 18vw;
+    height: 10vh;
+    border-radius: 100rem;
+    background-color: rgb(158, 203, 226);
+    margin-top: 8.5rem;
+    margin-left: -50rem;
+    z-index: 1;
+    text-align: center;
+    padding-top: 2.5rem;
+}
+*/
+
+/* Style for the file input buttons */
+
+
+/* Style for the container of the file input buttons */
+
+
+/* Style for the custom file input button */
+/* Style for the file input buttons */
+
+
+/* Style for the container of the file input buttons */
+.editor-container {
+    position: relative;
+}
+
+/* Style for the custom file input button */
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.btn {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 2rem;
+    margin-top: 1rem;
+}
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.upload-btn-wrapper .upload-btn-wrapper1 {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.upload-btn-wrapper1 {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.btn1 {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-left: 34.2rem;
+}
+
+.upload-btn-wrapper1 input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+/* Style for the file names */
+.file-name {
+    margin-left: 10px;
+}
+
+
+.goof{
+    margin-left: 42rem;
+}
+
+.upload-btn-wrapper span{
+    background-color: #ff9741;
+}
+
+.upload-btn-wrapper1 button{
+    background-color: #ff9741;
+}
 

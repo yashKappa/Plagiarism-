@@ -102,6 +102,19 @@ window.addEventListener("load", () => {
         });
     });
 });
+
+function loadFileContent(editorId, input) {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        const content = e.target.result;
+        document.getElementById(editorId).textContent = content;
+    };
+
+    reader.readAsText(file);
+}
+
 /*
 function handleFileSelect() {
     var fileInput = document.getElementById("fileInput");
@@ -234,7 +247,13 @@ document.getElementById('file1').addEventListener('change', function () {
 document.getElementById('file2').addEventListener('change', function () {
     updateEditorFromFile(this, ace.edit("editor1"));
 });
-
+// Function to get the Ace editor line number
+function getAceEditorLineNumber(editor, lineNumber) {
+    return lineNumber - 1; // Adjust for Ace editor's 0-based index
+}
+document.getElementById('checkPlagiarism').addEventListener('click', function() {
+    checkPlagiarism();
+});
 function checkPlagiarism() {
     // Get the content of both editors
     const editor1 = ace.edit("editor");
@@ -261,6 +280,24 @@ function checkPlagiarism() {
     // Check if both code snippets are empty after removing empty lines
     if (cleanLines1.length === 0 || cleanLines2.length === 0) {
         displayPopup('No code found.');
+        // Clear any previously displayed copied lines and not similar lines
+        clearCopiedLines();
+        clearNotSimilarLines();
+        return; // Exit the function
+    }
+
+    // Check for HTML/JavaScript in the CSS editor
+    if (containsCSSorJS(cleanLines1)) {
+        displayPopup('Error: The HTML editor should only contain CSS code.');
+        // Clear any previously displayed copied lines and not similar lines
+        clearCopiedLines();
+        clearNotSimilarLines();
+        return; // Exit the function
+    }
+
+    // Check for HTML/JavaScript in the CSS editor
+    if (containsCSSorJS(cleanLines2)) {
+        displayPopup('Error: The HTML editor should only contain CSS code.');
         // Clear any previously displayed copied lines and not similar lines
         clearCopiedLines();
         clearNotSimilarLines();
@@ -295,6 +332,11 @@ function checkPlagiarism() {
 
     // Display not similar lines
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
+
+    function containsHTMLorJS(lines) {
+        const htmlJSRegex = /<[^>]+>|<\/[^>]+>|<script[^>]*>[\s\S]*?<\/script>/i;
+        return lines.some(line => htmlJSRegex.test(line));
+    }
 }
 
 // ... (rest of the functions remain unchanged)

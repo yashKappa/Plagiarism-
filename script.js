@@ -297,31 +297,41 @@ function checkPlagiarism() {
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
 }
 
-// ... (rest of the functions remain unchanged)
-
-
-
+// Function to find common lines between two arrays
 // Function to find common lines between two arrays
 function getCommonLines(array1, array2) {
     const common = [];
-    array1.forEach((line1, index1) => {
-        array2.forEach((line2, index2) => {
-            if (line1 === line2) {
-                common.push({ editor1Line: index1 + 1, editor2Line: index2 + 1, text: line1 });
-            }
-        });
-    });
+    const minLength = Math.min(array1.length, array2.length);
+
+    for (let i = 0; i < minLength; i++) {
+        const line1 = array1[i];
+        const line2 = array2[i];
+
+        if (line1 === line2) {
+            common.push({ editor1Line: i + 1, editor2Line: i + 1, text: line1 });
+        }
+    }
+
     return common;
 }
 
+
 // Function to display copied lines
 function displayCopiedLines(commonLines) {
+    const editor1 = ace.edit("editor");
+    const editor2 = ace.edit("editor1");
+    
     const copiedLinesList = document.getElementById('copied-lines-list');
     copiedLinesList.innerHTML = '';
 
     commonLines.forEach(line => {
+        const { editor1Line, editor2Line, text } = line;
+
+        const aceEditor1Line = getAceEditorLineNumber(editor1, editor1Line);
+        const aceEditor2Line = getAceEditorLineNumber(editor2, editor2Line);
+
         const listItem = document.createElement('li');
-        listItem.textContent = `Editor line ${line.editor1Line} = Editor1 line ${line.editor2Line}: ${line.text}`;
+        listItem.textContent = `Editor line ${aceEditor1Line} = Editor1 line ${aceEditor2Line}: ${text}`;
         copiedLinesList.appendChild(listItem);
     });
 
@@ -329,6 +339,26 @@ function displayCopiedLines(commonLines) {
     const copiedLinesDiv = document.getElementById('copied-lines');
     copiedLinesDiv.style.display = 'block';
 }
+
+// Function to get the Ace editor line number, accounting for empty lines
+function getAceEditorLineNumber(editor, lineNumber) {
+    const totalLines = editor.session.getLength();
+    let nonEmptyLineCount = 0;
+
+    for (let i = 0; i < totalLines; i++) {
+        const line = editor.session.getLine(i);
+        if (line.trim() !== '') {
+            nonEmptyLineCount++;
+        }
+
+        if (nonEmptyLineCount === lineNumber) {
+            return i + 1; // Return the line number (adjusted for Ace editor's 0-based indexing)
+        }
+    }
+
+    return lineNumber; // Fallback to the original line number if not found
+}
+
 
 // Function to clear copied lines
 function clearCopiedLines() {
