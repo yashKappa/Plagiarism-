@@ -44,7 +44,7 @@
 <div class="mode"><img id="dark" src="suns.png"></div>
     <div class="maincont">
         <img src="main.png">
-    <h1>Welcome to My<br>Anti-Duplication application</h1>
+    <div class="ma"><h1>Welcome to My Anti-Duplication application</h1></div>
     <p>this application is made for developer who wants to develop their software. <br>they need to aware about copyed code from internet or github 
     <br> Wrote a unique code and make your application or software project unique </p>
 
@@ -54,6 +54,7 @@
     <a class="getup" href="all logins.html">Sign in ?</a>
     </div>
     </div>
+    <!--
     <div class="info">
         <h1>How Code Was plagiarize ?</h1>
         <div class="html">
@@ -122,7 +123,7 @@
         </div>
        
    </footer>
-  
+  -->
 </body>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@300&family=Ubuntu:wght@300;400&display=swap');
@@ -400,19 +401,92 @@ body{
 
 
         /*responsive*/
-        @media(max-width: 767px){
-          .footer-col{
-            width: 50%;
-            margin-bottom: 30px;
-        }
-        }
-        @media(max-width: 574px){
+       
+        
+        @media(max-width: 350px){
+            *{
+                margin:0;
+                padding:0;
+                box-sizing: border-box;
+            }
+            body{
+                width: 82.5%;
+                margin: 0%;
+                position: fixed;
+                overflow-x: auto;
+            }
           .footer-col{
             width: 100%;
         }
+        
+        
+        
+        .mode{
+            margin-left: 6rem;
         }
-       
+        
+        }
+        
+        @media (max-width: 600px) {
+            body{
+                height: 10%;
+            }
+            .maincont img {
+                width: 100%;
+            }
+            .ma h1 {
+                width: 90%;
+                font-size: 1.5rem;
+                margin: 0;
+                margin-left: 1rem;
+            }
+            .maincont p {
+                width: 80%;
+                margin-left: 2.5rem;
 
+            }
+            .maincont {
+                width: 100%;
+                height: 100vh;
+            }
+            .getst {
+                width: 100%;
+                text-align: center; /* Center the links */
+                margin-top: 1rem;
+            }
+            .getst a {
+                margin: 10px;
+                font-size: 1rem;
+                display: inline-block; /* Display links in a block to prevent unexpected layout issues */
+                color: white; /* Add text color to improve visibility */
+            }
+
+            .getst a:hover {
+                margin: 10px;
+                font-size: 1rem;
+                display: inline-block; /* Display links in a block to prevent unexpected layout issues */
+                color: white; /* Add text color to improve visibility */
+            }
+            .get {
+                width: 38vw;
+                margin-top: 0; /* Remove negative margin */
+            }
+            .get:hover{
+                width: 38vw;
+                margin-top: 0; 
+            }
+            .getup {
+                border: 2px solid var(--word-color);
+                margin-top: 1rem; /* Adjust margin-top */
+            
+            }
+            .getup:hover {
+                border: 2px solid var(--word-color);
+                margin-top: 1rem;
+                background-color: #24262b00;
+            }
+        }
+        
         ::-webkit-scrollbar {
             width: 18px;
           }

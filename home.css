@@ -72,9 +72,7 @@ nav{
 .Pname .logo{
     width:7rem;
 }
-.menu{
-    width: 100%;
-}
+
 nav p{
     font-family:'Blackadder ITC';
     font-size: 45px;
@@ -545,14 +543,69 @@ h3{
     height: 40px;
 }
 
-@media screen and (max-width: 820px) {
+@media screen and (max-width: 600px) {
     .logo {
         width: 30px;
         height: 30px;
     }
+    .menu {
+        float: left;
+        overflow: hidden;
+    }
+
+    .menu .menubtn {
+        font-size: 16px;  
+        border: none;
+        outline: none;
+        color: white;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+    }
+
+    .navbar a:hover, .menu:hover .menubtn {
+        background-color: red;
+    }
+
+    .menu-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .menu-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+
+    .menu-content a:hover {
+        background-color: #ddd;
+    }
+
+    .menu:hover .menu-content {
+        display: block;
+    }
+    .menu i{
+        display: block;
+        position: fixed;
+        color: var(--font-color);
+
+    }
 }
 
+.menu i{
+    color: var(--primary-color);
+    position: fixed;
 
+}
 
 ::-webkit-scrollbar {
     width: 18px;

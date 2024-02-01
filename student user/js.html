@@ -46,13 +46,20 @@
     </div>
         <h1>One-To-One <br> Plagiarize two codes with each other</h1>
         
-        <div class="editor-container1">
-            <div id="editor1">// testing 1</div>
+        <div class="upload-btn-wrapper">
+            <button class="btn">Upload a file</button>
+            <input type="file" class="put" id="file1" onchange="updateEditorFromFile(this, ace.edit('editor'))">
         </div>
         
-        <div class="editor-container">
-            <div id="editor">// testing 1</div>
+        <div class="upload-btn-wrapper1">
+            <button class="btn1">Upload a file</button>
+            <input type="file" class="put1" id="file2" onchange="updateEditorFromFile(this, ace.edit('editor1'))">
         </div>
+                <div class="editor-container">
+            <div id="editor">// testing 1</div>
+            <div id="editor1">// testing 1</div>
+        </div>
+    
     
         <div class="check">
             <button id="check" onclick="checkPlagiarism()">Check Plagiarism</button>

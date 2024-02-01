@@ -16,25 +16,28 @@
 </head>
 <body>
     <nav>
-       
         <div class="Pname">
             <img class="logo" id="loo" src="light1.png">
-        <div class="menu">
-            <span class="feat"><a class="Active" href="home.html">Home</a></span>
-            <div class="dropdown">
-                <a class="no" href="#">Detector</a>
-                <div class="dropdown-content">
-                    <a class="drop" href="one-to-one.html">One-to-One</a>
-                    <a class="drop" href="self detect.html">Self Detect</a>
-                    <a class="drop" href="All plagi.html">All Plagi</a>
+            <div class="menu" id="me">
+                <i class="fas fa-bars" onclick="myFunction"></i>
+                <div class="menu-content">            
+                    <span class="feat"><a class="Active" href="home.html">Home</a></span>
+                    <div class="dropdown">
+                        <a class="no" href="#">Detector</a>
+                        <div class="dropdown-content">
+                            <a class="drop" href="one-to-one.html">One-to-One</a>
+                            <a class="drop" href="self detect.html">Self Detect</a>
+                            <a class="drop" href="All plagi.html">All Plagi</a>
+                        </div>
+                    </div>
+                    <span class="feat"><a class="no" href="status.html">status</a></span>
+                    <span class="feat"><a class="no" href="all logins.html">Login</a></span>
+                    <span class="feat"><a class="no" href="Admin.html">Admin</a></span>
+                    <div class="logout">
+                        <span class="fea"><img id="dark" src="yash moon.png"></span>
+                    </div>
                 </div>
             </div>
-            <span class="feat"><a class="no" href="status.html">status</a></span>
-            <span class="feat"><a class="no" href="all logins.html">Login</a></span>
-            <span class="feat"><a class="no" href="Admin.html">Admin</a></span>
-            <div class="logout">
-                <span class="fea"><img id="dark" src="yash moon.png"></span>
-        </div>
     </nav><br><br><br><br><br>
 
 
@@ -73,6 +76,17 @@
 
 
     <script src="script.js">
+
+        function myFunction() {
+            var x = document.getElementById("me");
+            if (x.className === "menu") {
+                x.className += " responsive";
+            } else {
+                x.className = "menus";
+            }
+        }
+
+
         var referrer = document.referrer;
 
         // Check if the referrer is from the "student user" directory
@@ -149,4 +163,5 @@
        
    </footer>
 </body>
+
 </html>

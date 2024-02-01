@@ -1008,9 +1008,10 @@ margin-left: -60%;
     max-width: 90%;
     padding-left: rem;
     font-family: sans-serif;
-    background:var(--info-color);
+    background:var(--file-back-color);
     margin-left: 3rem;
     border-radius: 3rem;
+    box-shadow: 0 0 10px var(--h1-color);
 }
 
 
@@ -1020,12 +1021,13 @@ margin-left: -60%;
     width: 25%;
     height: 60vh;
     margin: 2.5%;
-    padding: 20px;
-    background:var(--content-color);
+    padding: 19px;
+    background:var(--primary-color);
     border-radius: 15px;
     box-shadow: 0 9px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     overflow: hidden;
+    border: 1px solid var(--h1-color);
 }
 
 .textbox img {
@@ -1111,37 +1113,39 @@ margin-left: -60%;
 }
 .head{
     width: 80%; 
-    background-color: #8db2ca;
+    background:var(--file-back-color);
     margin-left: 6.5rem;
     text-align: center;
     padding-right: 1.5rem;
     border-radius: 0.3rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
+    box-shadow: 0 0 10px var(--h1-color);
     padding-top: 0.5rem;
     padding-bottom: 1rem;
     text-decoration: 3px underline;
+    color: var(--h1-color);
     
 }
 
 .head1{
     width: 80%; 
-    background-color: #8db2ca;
+    background:var(--file-back-color);
     margin-left: 6.5rem;
     text-align: center;
     padding-right: 1.5rem;
     border-radius: 0.3rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin-top: 2rem;
     padding-top: 0.5rem;
     padding-bottom: 1rem;
     text-decoration: 3px underline;
+    color: var(--h1-color);
+    box-shadow: 0 0 10px var(--h1-color);
 }
 
 .head h1{
-    color: black;
+    color: var(--h1-color);
 }
 .head1 h1{
-    color: black;
+    color: var(--h1-color);
 }
 /*  
 .gero {

@@ -9,6 +9,8 @@ const MSSQLStore = require('connect-mssql')(session);
 const app = express();
 const PORT = 9000;
 const multer = require('multer');
+const fileUpload = require('express-fileupload');
+
 
 
 const connection = mysql.createConnection({
@@ -103,15 +105,34 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
 /*------------------------------------student register ---------------------------------*/
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public')); // Assuming your static files are in the 'public' folder
+app.use(fileUpload());
+
 app.post('/register', (req, res) => {
   try {
     const { username, email, password } = req.body;
-    const query = 'INSERT INTO student (username, email, password) VALUES (?, ?, ?)';
-    
-    connection.query(query, [username, email, password], (error, results) => {
+
+    // Check if an image file was uploaded
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No image file uploaded.');
+    }
+
+    // Get the image file
+    const image = req.files.image;
+
+    // Use the 'data' property to get the Buffer data of the image
+    const imageData = image.data;
+
+    // Convert image file data to buffer
+    const imageBuffer = Buffer.from(imageData);
+
+    const query = 'INSERT INTO student (username, email, password, image) VALUES (?, ?, ?, ?)';
+
+    connection.query(query, [username, email, password, imageBuffer], (error, results) => {
       if (error) {
         console.error("Error occurred during registration:", error);
-        res.redirect('/teacher/teacher register.html');
+        res.redirect('/student/student register.html');
       } else {
         // Check if the query was successful
         if (results.affectedRows > 0) {
@@ -122,24 +143,23 @@ app.post('/register', (req, res) => {
           // Redirect to the user panel page
           res.redirect('/student user/userpanel.html');
         } else {
-          res.redirect('/student/student register.html');
+          res.redirect("/student/student login.html?error= Username already exists");
         }
       }
     });
   } catch (error) {
-    console.error(error);
-    res.redirect('/teacher/teacher register.html');
+    console.error("Error occurred during registration:", error);
+    res.redirect('/student/student register.html');
   }
 });
 
-app.get("/student/userpanel.html", (req, res) => {
+app.get('/student/userpanel.html', (req, res) => {
   if (req.loggedInUser) {
-    res.sendFile(path.join(__dirname, "student user/userpanel.html"));
+    res.sendFile(path.join(__dirname, 'student user/userpanel.html'));
   } else {
-    res.redirect("/login");
+    res.redirect('/login');
   }
 });
-
 /*------------------------------------student register ---------------------------------*/
 
 
@@ -338,6 +358,8 @@ app.get("/status", (req, res) => {
     }
   });
 });
+
+
 
 
 // Assuming you have Express set up and your EJS view engine configured
@@ -662,3 +684,69 @@ app.get('/userdata', (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
+
+app.get('/profile', (req, res) => {
+  try {
+    const storedUsername = req.cookies.username;
+
+    if (!storedUsername) {
+      return res.status(401).send('Unauthorized. Please log in.');
+    }
+
+    connection.query('SELECT DISTINCT username, email, password, image FROM student WHERE username = ?', [storedUsername], (error, results) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Convert image data to Base64 string
+        if (results[0].image && results[0].image instanceof Buffer) {
+          results[0].image = 'data:image/jpeg;base64,' + results[0].image.toString('base64');
+        }
+
+        res.render('profile', { data: results, title: 'User Projects' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+app.post("/profile", (req, res) => {
+  try {
+      // Check if the input username matches the one stored in cookies
+      const storedUsername = req.cookies.username;
+
+      if (!storedUsername) {
+          return res.status(401).send("Invalid username. Please log in with the correct username.");
+      }
+
+      
+
+      // Get the image file
+      const image = req.files.image;
+      const imageData = image.data;
+
+      // Assuming you have a database connection named 'connection'
+      const updateQuery = "UPDATE student SET image=? WHERE username=?";
+
+      connection.query(updateQuery, [imageData, storedUsername], (err, result) => {
+          if (err) {
+            res.redirect("../profile");
+              console.error("Error updating student image: ", err);
+          } else {
+            res.redirect("../profile");
+            res.status(200).end();
+          }
+      });
+  } catch (error) {
+      console.error("Error occurred during profile update:", error);
+      res.redirect("../profile").send("Internal Server Error");
+
+  }
+});
+
