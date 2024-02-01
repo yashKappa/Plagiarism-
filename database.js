@@ -737,14 +737,12 @@ app.post("/profile", (req, res) => {
       connection.query(updateQuery, [imageData, storedUsername], (err, result) => {
           if (err) {
             res.redirect("../profile");
-              console.error("Error updating student image: ", err);
           } else {
             res.redirect("../profile");
             res.status(200).end();
           }
       });
   } catch (error) {
-      console.error("Error occurred during profile update:", error);
       res.redirect("../profile").send("Internal Server Error");
 
   }

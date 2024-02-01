@@ -40,7 +40,7 @@
                             
                             <div class="input-field">
                                 <label for="imageInput" class="upload-label">
-                                  <img src="upload.png">Upload Image
+                                  <img class="up" src="views\upload.png">choose Image
                                   <input type="file" id="imageInput" name="image" accept="image/*">
                                 </label>
                               </div>
@@ -83,7 +83,37 @@
 <script>
 	document.getElementById("backButton").addEventListener("click", function () {
 		window.history.back();
-	  });</script>
+	  });
+
+      const darkModePreference = localStorage.getItem('darkMode');
+const dark = document.getElementById("dark");
+const loo = document.getElementById("loo");
+
+if (darkModePreference === 'enabled') {
+    document.body.classList.add('dark-theme');
+    dark.src = "moons.png"; // Set the image to sun.png in dark mode
+    loo.src = "dark1.png";
+} else {
+    dark.src = "suns.png"; // Set the image to moon.png in light mode
+    loo.src = "light1.png";
+}
+
+dark.onclick = function () {
+    document.body.classList.toggle("dark-theme");
+
+    if (document.body.classList.contains("dark-theme")) {
+        localStorage.setItem('darkMode', 'enabled');
+        dark.src = "moons.png";
+        loo.src = "dark1.png";
+    } else {
+        localStorage.setItem('darkMode', 'disabled');
+        dark.src = "suns.png";
+        loo.src = "light1.png";
+    }
+}
+
+
+    </script>
 
 <style>
     
@@ -104,7 +134,7 @@
     }
 
     .dark-theme {
-        --background-color: #000127;
+        --background-color: #171718;
         --color: #fff;
         --box-color: #ffffff70;
         --shadow-color:white;
@@ -265,7 +295,7 @@
     }
 
     .table1{
-        background-color: rgb(241, 240, 240);
+        background-color: rgb(253, 251, 251);
         border-radius: 0.5rem;
         box-shadow: 0 4px 8px var(--box-color);
         margin-bottom: 2rem;
@@ -306,11 +336,11 @@
 
     .input-field{
         background-color: #007bff;
-        width: 8.5vw;
+        width: 10vw;
         color: var(--background-color);
         margin: 0.5rem;
         padding: 9px 8px;
-        font-size: 14px;
+        font-size: 15px;
         text-align: center;
         border-radius: 0.3rem;
     }
@@ -318,13 +348,44 @@
     .input-field input{
         display: none;
         width: 10vw;
-
     }
 
     .input-field i{
         color: #161616;
     }
     
+    .up{
+        width: 15px;
+        margin-right: 0.5rem;
+    }
+    
+    @media (max-width: 600px) {
+        .input-field{
+            background-color: #007bff;
+            width: 30vw;
+            color: var(--background-color);
+            margin: 0.5rem;
+            padding: 9px 8px;
+            font-size: 15px;
+            text-align: center;
+            border-radius: 0.3rem;
+        }
+
+        #edit-profile{
+            width: 33vw;
+        }
+        .container{
+            margin-left: 1rem;
+        }
+
+        .profile-image{
+            width: 50vw;
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin-bottom: 2rem;
+            margin: 0.5rem;
+        }
+    }
 </style>
 
 </html>
