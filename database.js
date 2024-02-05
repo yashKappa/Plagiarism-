@@ -686,7 +686,6 @@ app.get('/userdata', (req, res) => {
 });
 
 
-
 app.get('/profile', (req, res) => {
   try {
     const storedUsername = req.cookies.username;
@@ -695,7 +694,7 @@ app.get('/profile', (req, res) => {
       return res.status(401).send('Unauthorized. Please log in.');
     }
 
-    connection.query('SELECT DISTINCT username, email, password, image FROM student WHERE username = ?', [storedUsername], (error, results) => {
+    connection.query('SELECT DISTINCT username, email, password, image, lang, exp, professional, education, skill FROM student WHERE username = ?', [storedUsername], (error, results) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
@@ -713,38 +712,78 @@ app.get('/profile', (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
-
-
-app.post("/profile", (req, res) => {
+app.post("/profile/image", (req, res) => {
   try {
-      // Check if the input username matches the one stored in cookies
-      const storedUsername = req.cookies.username;
+    const storedUsername = req.cookies.username;
 
-      if (!storedUsername) {
-          return res.status(401).send("Invalid username. Please log in with the correct username.");
+    if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+    }
+
+    if (!req.files || !req.files.image) {
+      console.error("No image file uploaded.");
+      return res.status(400).send("No image file uploaded.");
+    }
+
+    const image = req.files.image;
+    const imageData = image.data;
+
+    const updateQuery = "UPDATE student SET image=? WHERE username=?";
+
+    connection.query(updateQuery, [imageData, storedUsername], (err, result) => {
+      if (err) {
+        console.error("Error updating image:", err);
+        res.redirect("../profile");
+      } else {
+        res.redirect("../profile");
+        res.status(200).end();
       }
-
-      
-
-      // Get the image file
-      const image = req.files.image;
-      const imageData = image.data;
-
-      // Assuming you have a database connection named 'connection'
-      const updateQuery = "UPDATE student SET image=? WHERE username=?";
-
-      connection.query(updateQuery, [imageData, storedUsername], (err, result) => {
-          if (err) {
-            res.redirect("../profile");
-          } else {
-            res.redirect("../profile");
-            res.status(200).end();
-          }
-      });
+    });
   } catch (error) {
-      res.redirect("../profile").send("Internal Server Error");
-
+    console.error("Error in image update route:", error);
+    res.redirect("../profile");
+    res.status(500).send("Internal Server Error");
   }
 });
 
+app.post("/profile/data", (req, res) => {
+  try {
+    const storedUsername = req.cookies.username;
+
+    if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+    }
+
+    const { lang, skill, exp, professional, education } = req.body;
+
+
+    const updateQuery = `
+  UPDATE student
+  SET lang=TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM lang), ''), ''), ?)),
+      skill=TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM skill), ''), ''), ?)),
+      exp=TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM exp), ''), ''), ?)),
+      professional=TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM professional), ''), ''), ?)),
+      education=TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM education), ''), ''), ?))
+  WHERE username=?
+`;
+
+    
+    
+
+    connection.query(
+      updateQuery,
+      [lang, skill, exp, professional, education, storedUsername],
+      (err, result) => {
+        if (err) {
+          console.error("Error updating profile data:", err);
+          res.redirect("../profile");
+        } else {
+          res.status(200).send("Profile updated successfully");
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Error in profile data update route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});

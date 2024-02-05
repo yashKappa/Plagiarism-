@@ -20,8 +20,8 @@
 
 <body>
     <div class="bb">
-    <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
-</div>
+        <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+    </div>
     <div class="container">
         <div class="header">
             <h1>User Profile</h1>
@@ -30,90 +30,244 @@
                 <i class="bx bx-filter"></i>
             </div>
         </div>
-        <form id="user-profile" action="/profile" method="post" enctype="multipart/form-data" onsubmit="return showErrorMessage()">
+        <form id="user-profile" action="/profile/image" method="post" enctype="multipart/form-data" onsubmit="return showErrorMessage()">
             <div class="table1">
-            <% data.forEach(user => { %>
-                <tr>
-                    <td>
-                        
-                            <img class="profile-image" src="<%= user.image %>" alt="Profile Image">
-                            
-                            <div class="input-field">
-                                <label for="imageInput" class="upload-label">
-                                  <img class="up" src="views\upload.png">choose Image
-                                  <input type="file" id="imageInput" name="image" accept="image/*">
-                                </label>
-                              </div>
-                              
-                            <div class="student">
-                                <input type="submit" class="stusubmit" value="Upload Image">
-                            </div>
-                        </td>
-                    </tr>
-                <% }); %>
-                </div>
-                <div class="table">
-               
+                <table>
+                    <tbody>
+                        <% data.forEach(user => { %>
+                            <tr>
+                                <td>
+                                    <img class="profile-image" src="<%= user.image %>" alt="Profile Image">
+                                    <div class="input-field">
+                                        <label for="imageInput" class="upload-label">
+                                            <img class="up" src="views\upload.png">choose Image
+                                            <input type="file" id="imageInput" name="image" accept="image/*">
+                                        </label>
+                                    </div>
+                                    <div class="student">
+                                        <input type="submit" class="stusubmit" value="Upload Image">
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        <form id="updateProfileForm" action="/profile/data" method="post" enctype="multipart/form-data" onsubmit="submitForm(event)">
+            <div class="table">
                 <% data.forEach(user => { %>
                     <div class="section">
                         <div class="head"><i class="fas fa-user"></i> Username </div>
                         <p><%= user.username %></p>
                     </div>
-                <div class="section">
-                    <div class="head"><i class="fas fa-envelope"></i> Email </div>
-                    <p><%= user.email %></p>
-                </div>
-                <div class="section1">
-                    <div class="head"><i class="fas fa-lock"></i> Password </div>
-                    <p><%= user.password %></p>
-                </div>
+                    <div class="section">
+                        <div class="head"><i class="fas fa-envelope"></i> Email </div>
+                        <p><%= user.email %></p>
+                    </div>
+                    <div class="section1">
+                        <div class="head"><i class="fas fa-lock"></i> Password </div>
+                        <p><%= '*'.repeat(user.password.length) %></p>
+                    </div>
+                    <!-- Skill Section -->
+                    <div class="section" id="skill-section">
+                        <div class="head"><i class="fas fa-user"></i> Skill </div>
+                        <ul class="data-list" id="skill-list">
+                            <% 
+                            const skills = user.skill.split(',').map(skill => skill.trim()).filter(Boolean);
+                    
+                            if (skills.length === 0) { %>
+                                <p class="message">Data was empty or not found</p>
+                            <% } else { %>
+                                <% skills.forEach(skill => { %>
+                                    <li><%= skill %></li>
+                                <% }); %>
+                            <% } %>
+                        </ul>
+                        <div class="put">
+                        <input type="text" name="skill" placeholder="Add new skill" />
+                        <button class="update-btn" data-section="skill">ADD</button>
+                    </div>
+                    </div>
+                    
+                    <!-- exp Section -->
+                    <div class="section" id="exp-section">
+                        <div class="head"><i class="fas fa-user"></i> Experience </div>
+                        <ul class="data-list" id="skill-list">
+                            <% 
+                            const exp = user.exp.split(',').map(exp => exp.trim()).filter(Boolean);
+                    
+                            if (exp.length === 0) { %>
+                                <p class="message">Data was empty or not found</p>
+                            <% } else { %>
+                                <% exp.forEach(exp => { %>
+                                    <li><%= exp %></li>
+                                <% }); %>
+                            <% } %>
+                        </ul>
+                        <div class="put">
+                        <input type="text" name="exp" placeholder="Add new experience" />
+                        <button class="update-btn" data-section="exp">ADD</button>
+                    </div>
+                    </div>
+                    <!-- education Section -->
+                    <div class="section" id="education-section">
+                        <div class="head"><i class="fas fa-user"></i> education </div>
+                        <ul class="data-list" id="skill-list">
+                            <% 
+                            const education = user.education.split(',').map(education => education.trim()).filter(Boolean);
+                    
+                            if (education.length === 0) { %>
+                                <p class="message">Data was empty or not found</p>
+                            <% } else { %>
+                                <% education.forEach(education => { %>
+                                    <li><%= education %></li>
+                                <% }); %>
+                            <% } %>
+                        </ul>
+                        <div class="put">
+                        <input type="text" name="education" placeholder="Add education" />
+                        <button class="update-btn" data-section="skill">ADD</button>
+                    </div>
+                    </div>
+                    <!-- professional Section -->
+                    <div class="section" id="professional-section">
+                        <div class="head"><i class="fas fa-user"></i> professional </div>
+                        <ul class="data-list" id="professional-list">
+                            <% 
+                            const professional = user.professional.split(',').map(professional => professional.trim()).filter(Boolean);
+                    
+                            if (professional.length === 0) { %>
+                                <p class="message">Data was empty or not found</p>
+                            <% } else { %>
+                                <% professional.forEach(professional => { %>
+                                    <li><%= professional %></li>
+                                <% }); %>
+                            <% } %>
+                        </ul>
+                        <div class="put">
+                        <input type="text" name="professional" placeholder="Add profession" />
+                        <button class="update-btn" data-section="skill">ADD</button>
+                    </div>
+                    </div>
+                    <!-- language
+                        
+                        
+                        .Section -->
+                    <div class="section" id="lang-section">
+                        <div class="head"><i class="fas fa-user"></i> language </div>
+                        <ul class="data-list" id="lang-list">
+                            <% 
+                            const lang = user.lang.split(',').map(lang => lang.trim()).filter(Boolean);
+                    
+                            if (lang.length === 0) { %>
+                                <p class="message">Data was empty or not found</p>
+                            <% } else { %>
+                                <% lang.forEach(lang => { %>
+                                    <li><%= lang %></li>
+                                <% }); %>
+                            <% } %>
+                        </ul>
+                        <div class="put">
+                        <input type="text" name="lang" placeholder="Add new language" />
+                        <button class="update-btn" data-section="lang">ADD</button>
+                    </div>
+                    </div>
                 <% }); %>
             </div>
             <% if (data && data.length > 0) { %>
-            <!-- Your other content here -->
+                <!-- Your other content here -->
             <% } else { %>
-            <p class="message">Data was not found or Empty</p>
+                <p class="message">Data was not found or Empty</p>
             <% } %>
         </form>
-		<button id="edit-profile"><i class="fas fa-user"></i>Edit Profile</button>
-
     </div>
 </body>
 
 <script>
-	document.getElementById("backButton").addEventListener("click", function () {
-		window.history.back();
-	  });
+    document.getElementById("backButton").addEventListener("click", function () {
+        window.history.back();
+    });
 
-      const darkModePreference = localStorage.getItem('darkMode');
-const dark = document.getElementById("dark");
-const loo = document.getElementById("loo");
+    const darkModePreference = localStorage.getItem('darkMode');
+    const dark = document.getElementById("dark");
+    const loo = document.getElementById("loo");
 
-if (darkModePreference === 'enabled') {
-    document.body.classList.add('dark-theme');
-    dark.src = "moons.png"; // Set the image to sun.png in dark mode
-    loo.src = "dark1.png";
-} else {
-    dark.src = "suns.png"; // Set the image to moon.png in light mode
-    loo.src = "light1.png";
-}
-
-dark.onclick = function () {
-    document.body.classList.toggle("dark-theme");
-
-    if (document.body.classList.contains("dark-theme")) {
-        localStorage.setItem('darkMode', 'enabled');
-        dark.src = "moons.png";
+    if (darkModePreference === 'enabled') {
+        document.body.classList.add('dark-theme');
+        dark.src = "moons.png"; // Set the image to sun.png in dark mode
         loo.src = "dark1.png";
     } else {
-        localStorage.setItem('darkMode', 'disabled');
-        dark.src = "suns.png";
+        dark.src = "suns.png"; // Set the image to moon.png in light mode
         loo.src = "light1.png";
     }
-}
 
+    dark.onclick = function () {
+        document.body.classList.toggle("dark-theme");
 
-    </script>
+        if (document.body.classList.contains("dark-theme")) {
+            localStorage.setItem('darkMode', 'enabled');
+            dark.src = "moons.png";
+            loo.src = "dark1.png";
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+            dark.src = "suns.png";
+            loo.src = "light1.png";
+        }
+    }
+
+    function submitForm(event) {
+        event.preventDefault(); // Prevent the default form submission
+        const form = event.target;
+
+        // Use FormData to serialize the form data
+        const formData = new FormData(form);
+
+        // Use AJAX to submit the form data
+        $.ajax({
+            type: form.method,
+            url: form.action,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log(response); // Handle the success response if needed
+                window.location.reload(true); // Reload the page after a successful update
+            },
+            error: function (error) {
+                console.error("Error submitting form:", error);
+                // Handle errors if needed
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        // Intercept form submission
+        $("#updateProfileForm").submit(function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Serialize the form data
+            const formData = $(this).serialize();
+
+            // Make an AJAX request to the server to update the profile
+            $.ajax({
+                type: "POST",
+                url: "/profile/data", // Adjust the URL if needed
+                data: formData,
+                success: function (data) {
+                    // Redirect to the profile page after a successful update
+                    window.location.href = "../profile";
+                },
+                error: function (error) {
+                    console.error("Error updating profile data:", error);
+                    // Handle errors if needed
+                },
+            });
+        });
+    });
+</script>
+
 
 <style>
     
@@ -177,9 +331,9 @@ dark.onclick = function () {
         color: #333;
     }
 
-    .bb button {
+    button {
         font-size: 15px;
-        padding: 10px 15px;
+        padding: 7px 15px;
         cursor: pointer;
         background-color: #007bff;
         color: #fff;
@@ -192,7 +346,7 @@ dark.onclick = function () {
 
     }
 
-    .bb button:hover {
+    button:hover {
         background-color: #0056b3;
     }
 
@@ -277,7 +431,8 @@ dark.onclick = function () {
 
     .profile-image{
         width: 15vw;
-        border-radius: 1rem;
+        height: 32vh;
+        border-radius: 10rem;
         box-shadow: 0 4px 8px var(--shadow-color);
         margin-bottom: 2rem;
         margin: 0.5rem;
@@ -324,6 +479,7 @@ dark.onclick = function () {
     .section1{
         border: 0.5px solid black;
         border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
     }
 
     .section p{
@@ -343,6 +499,7 @@ dark.onclick = function () {
         font-size: 15px;
         text-align: center;
         border-radius: 0.3rem;
+        
     }
 
     .input-field input{
@@ -358,7 +515,31 @@ dark.onclick = function () {
         width: 15px;
         margin-right: 0.5rem;
     }
-    
+
+    /* Add this to your existing CSS file or create a new one */
+    .table input {
+        border: none;
+        border-bottom: 1px solid rgb(48, 47, 47); /* Set initial color to transparent */
+        padding: 8px 50px;
+        margin: 0.5rem;
+        text-align: center;
+        outline: none;
+        background-color: rgb(241, 240, 240);
+        transition: border-bottom 0.3s ease; /* Add transition properties */
+      }
+      
+      .table input:focus {
+        border-bottom: 2px solid rgb(255, 4, 4); 
+      }
+      
+      
+      
+  
+  .put{
+    margin-top: 2rem;
+  }
+ 
+  
     @media (max-width: 600px) {
         .input-field{
             background-color: #007bff;
@@ -376,11 +557,12 @@ dark.onclick = function () {
         }
         .container{
             margin-left: 1rem;
+            margin-right: 1rem;
         }
 
         .profile-image{
-            width: 50vw;
-            border-radius: 1rem;
+            width: 65vw;
+            border-radius: 10rem;
             box-shadow: 0 4px 8px var(--shadow-color);
             margin-bottom: 2rem;
             margin: 0.5rem;
