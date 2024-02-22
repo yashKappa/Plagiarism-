@@ -1,4 +1,36 @@
-const darkModePreference = localStorage.getItem('darkMode');
+
+
+
+function saveImage() {
+    const input = document.getElementById('image-input');
+    const file = input.files[0];
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const imageData = event.target.result;
+        localStorage.setItem('savedImage', imageData);
+        displayImage(imageData);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function displayImage(imageData) {
+    const container = document.getElementById('image-container');
+    container.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+  }
+
+  // Load the image from localStorage when the page loads
+  window.onload = function() {
+    const savedImageData = localStorage.getItem('savedImage');
+    if (savedImageData) {
+      displayImage(savedImageData);
+    }
+  };
+  
+  
+  const darkModePreference = localStorage.getItem('darkMode');
 const dark = document.getElementById("dark");
 const loo = document.getElementById("loo");
 
@@ -454,3 +486,5 @@ function cancelFileSelection() {
     var fileWrapper = document.getElementById("filewrapper");
     fileWrapper.innerHTML = ""; // Clear the file list
 }
+
+

@@ -33,12 +33,23 @@
             <span class="feat"><a class="Active" href="userupload.html">File upload</a></span>
             <span class="feat"><a class="no" href="../user">status</a></span>
             <span class="feat"><a class="no" href="download.html">downloads</a></span>
-            <span class="feat"><a class="no" href="profile.html">Profile</a></span>
+            <span class="feat"><a class="no" href="../profile">Profile</a></span>
             <div class="logout">
-                <span class="fea"><img id="dark" src="suns.png"></span> 
-                <span class="fe"><a href="/logout" class="noo">log out</a></span>
+                <div class="table1">
+                    <div class="profile-dropdown">
+                        <a href="profile.html">
+                            <div class="img"><div id="image-container"></div></div>
+                        </a>
+                        <div class="dropdown-menu">
+                            <ul>
+                                <li><a href="#"><img id="dark" src="suns.png"></a></li>
+                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span class="fe" ><a href="/logout" class="noo">log out</a></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
     </nav><br><br><br><br><br>
 
     <div class="up">
@@ -96,9 +107,73 @@
         <span class="poop"><button id="popupOKButton" onclick="cancelFileSelection()">OK</button></span>
     </div>
 
-
-<style>
+<script>
+    function saveImage() {
+        const input = document.getElementById('image-input');
+        const file = input.files[0];
+        
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const imageData = event.target.result;
+            localStorage.setItem('savedImage', imageData);
+            displayImage(imageData);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
     
+      function displayImage(imageData) {
+        const container = document.getElementById('image-container');
+        container.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+      }
+    
+      // Load the image from localStorage when the page loads
+      window.onload = function() {
+        const savedImageData = localStorage.getItem('savedImage');
+        if (savedImageData) {
+          displayImage(savedImageData);
+        }
+      };
+</script>
+<style>
+    .profile-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background: var(--info-color);
+        min-width: 90px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 0; 
+        height: 24vh;
+        border-radius: 0.5rem;
+    }
+    
+    .set i{
+        margin-right: 0.3rem;
+        margin-top: 0;
+    }
+     
+    .set:hover{
+        background-color: #3d9fe0;
+        padding: 6px 6px 6px 6px;
+        border-radius: 0.5rem;
+    
+    }
+
+    .dropdown-menu li{
+        height: 7vh;
+    }
+
+    
+    .profile-dropdown:hover .dropdown-menu {
+        display: block;
+    }
 /************ UPLOAD FORM OR FILES *************************/
 .input-group {
     display: flex;
@@ -447,6 +522,22 @@ input[type="file"] {
     resize: none;
     margin-left: 0.3rem;
     
+}
+
+#image-container {
+    border: 2px solid #ccc;
+    border-radius: 10rem;
+    margin-top: 0.5rem;
+    width: 50px;
+    height: 8vh;
+}
+
+#image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10rem;
+
 }
 
 @keyframes timeline {

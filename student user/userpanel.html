@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
     <link rel="stylesheet" href="userpanel.css">   
     <link rel="database" href="database.js">
+    <link rel="script" href="script.js">
 
 </head>
 <body>
@@ -21,23 +22,27 @@
             <img class="logo" id="loo" src="light1.png">
         <div class="menu">
             <span class="feat"><a class="Active" href="userpanel.html">Home</a></span>
-            <div class="dropdown">
-                <a class="no" href="#">Detector</a>
-                <div class="dropdown-content">
-                    <a class="drop" href="one-to-one.html">One-to-One</a>
-                    <a class="drop" href="self detect.html">Self Detect</a>
-                    <a class="drop" href="All plagi.html">All Plagi</a>
+            <span class="feat"><a class="no" href="one-to-one.html">one-to-one</a></span>
+            <span class="feat"><a class="no" href="self detect.html">self detect</a></span>
+            <span class="feat"><a class="no" href="All plagi.html">All plagi</a></span>
+                
+            <span class="feat"><a class="no" href="userupload.html">File upload</a></span>
+            <div class="logout">
+                <div class="table1">
+                    <div class="profile-dropdown">
+                        <a href="profile.html">
+                            <div class="img"><div id="image-container"></div></div>
+                        </a>
+                        <div class="dropdown-menu">
+                            <ul>
+                                <li><a href="#"><img id="dark" src="suns.png"></a></li>
+                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span class="fe" ><a href="/logout" class="noo">log out</a></span></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <span class="feat"><a class="no" href="userupload.html">File upload</a></span>
-            <span class="feat"><a class="no" href="../user">status</a></span>
-            <span class="feat"><a class="no" href="download.html">downloads</a></span>
-            <span class="feat"><a class="no" href="../profile">Profile</a></span>
-            <div class="logout">
-            <span class="fea"><img id="dark" src="yash moon.png"></span> 
-            <span class="fe"><a href="/logout" class="noo">log out</a></span>
-            </div>
-        </div>
     </nav><br><br><br><br><br>
     <div class="content">
         <div class="slides-box">
@@ -208,3 +213,33 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+<script>
+    function saveImage() {
+        const input = document.getElementById('image-input');
+        const file = input.files[0];
+        
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const imageData = event.target.result;
+            localStorage.setItem('savedImage', imageData);
+            displayImage(imageData);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    
+      function displayImage(imageData) {
+        const container = document.getElementById('image-container');
+        container.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+      }
+    
+      // Load the image from localStorage when the page loads
+      window.onload = function() {
+        const savedImageData = localStorage.getItem('savedImage');
+        if (savedImageData) {
+          displayImage(savedImageData);
+        }
+      };
+</script>

@@ -34,9 +34,20 @@
             <span class="feat"><a class="no" href="download.html">downloads</a></span>
             <span class="feat"><a class="no" href="profile.html">Profile</a></span>
             <div class="logout">
-                <span class="fea"><img id="dark" src="yash moon.png"></span>
-                <span class="fe"><a href="/logout" class="noo">log out</a></span>
-        </div>
+                <div class="table1">
+                    <div class="profile-dropdown">
+                        <a href="profile.html">
+                            <div class="img"><div id="image-container"></div></div>
+                        </a>
+                        <div class="dropdown-menu">
+                            <ul>
+                                <li><a href="#"><img id="dark" src="suns.png"></a></li>
+                                <li><span class="fe"><a href="/logout" class="noo">log out</a></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </nav><br><br><br><br><br>
     <div class="content">
         <div class="type">
@@ -435,6 +446,37 @@ function cancelFileSelection() {
     var fileWrapper = document.getElementById("filewrapper");
     fileWrapper.innerHTML = ""; // Clear the file list
 }
+
+
+
+
+function saveImage() {
+    const input = document.getElementById('image-input');
+    const file = input.files[0];
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const imageData = event.target.result;
+        localStorage.setItem('savedImage', imageData);
+        displayImage(imageData);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function displayImage(imageData) {
+    const container = document.getElementById('image-container');
+    container.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+  }
+
+  // Load the image from localStorage when the page loads
+  window.onload = function() {
+    const savedImageData = localStorage.getItem('savedImage');
+    if (savedImageData) {
+      displayImage(savedImageData);
+    }
+  };
     </script>
 </body>
 </html>
