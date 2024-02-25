@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
     <link rel="stylesheet" href="userpanel.css">   
-    <link rel="database" href="../database.js">
+    <link rel="node" href="../node.js">
     <link rel="script" href="script.js">
 
 </head>
@@ -33,7 +33,7 @@
             <span class="feat"><a class="Active" href="userupload.html">File upload</a></span>
             <span class="feat"><a class="no" href="../user">status</a></span>
             <span class="feat"><a class="no" href="download.html">downloads</a></span>
-            <span class="feat"><a class="no" href="../profile">Profile</a></span>
+            <span class="feat"><a class="no" href="../user">Profile</a></span>
             <div class="logout">
                 <div class="table1">
                     <div class="profile-dropdown">
@@ -56,8 +56,8 @@
         <div class="upload">
             <h1>File Upload</h1>
            <!-- Your HTML form -->
-<form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-    <div class="info">
+           <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <div class="info">
         <span class="nam">Project</span><input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
         <span class="nam">Username</span><input type="text" id="username" name="username" placeholder="Username" required />
     </div>

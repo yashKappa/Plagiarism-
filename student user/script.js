@@ -101,9 +101,11 @@ window.addEventListener("load", () => {
     // Prevent the form from automatically redirecting
     document.getElementById("uploadForm").addEventListener("submit", function (event) {
         event.preventDefault();
-
+    
         const formData = new FormData(this);
-
+    
+        // Log the FormData object before sending it to the server
+        console.log("Form Data:", formData);
         fetch("/upload", {
             method: "POST",
             body: formData,
@@ -114,12 +116,15 @@ window.addEventListener("load", () => {
             if (response.ok) {
                 successMessage.classList.remove("hidden");
                 console.log("Files uploaded successfully");
+                console.log("Form Data:", formData);
                 setTimeout(() => {
                     successMessage.classList.add("hidden");
                 }, 3000);
                 filewrapper.style.display = "none";
             } else {
                 ErrorMessage.classList.add("Er");
+                console.log("Form Data:", formData);
+
                 return response.text().then(errorMsg => {
                     console.error("Error:", errorMsg);
                 });
@@ -147,7 +152,7 @@ function loadFileContent(editorId, input) {
     reader.readAsText(file);
 }
 
-/*
+
 function handleFileSelect() {
     var fileInput = document.getElementById("fileInput");
     var uploadButton = document.getElementById("uploadButton");
@@ -159,8 +164,8 @@ function handleFileSelect() {
         // No files selected, show the upload button
         uploadButton.style.display = "none";
     }
-}*/
-//// file uploaded code /////
+}
+//// fileuploaded code /////
 
 function handleFileSelect(event) {
     event.preventDefault(); // Prevent the default form submission behavior

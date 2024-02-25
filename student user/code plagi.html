@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Plagiarism Checker</title>
+</head>
+<body>
+  <h1>Plagiarism Checker</h1>
+  <form id="plagiarismForm">
+    <label for="text">Enter text:</label><br>
+    <textarea id="text" name="text" rows="10" cols="50" required></textarea><br>
+    <button type="submit">Check for Plagiarism</button>
+  </form>
+  <div id="result"></div>
+  <script src="plagiarism.js"></script>
+</body>
+</html>
+
+<script>
+    const plagiarismForm = document.getElementById('plagiarismForm');
+plagiarismForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const text = document.getElementById('text').value;
+
+  // Call the plagiarism checking API with the user's text
+  const response = await fetch('https://api.plagiarismchecker.com/check', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'YOUR_API_KEY'
+    },
+    body: JSON.stringify({ text })
+  });
+
+  const data = await response.json();
+
+  // Display the similarity score
+  const result = document.getElementById('result');
+  result.textContent = `Similarity score: ${data.similarity}%`;
+});
+</script>
