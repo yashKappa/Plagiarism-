@@ -20,29 +20,26 @@
         <div class="Pname">
             <img class="logo" id="loo" src="light1.png">
         <div class="menu">
-            <span class="Act"><a class="no" href="userpanel.html">Home</a></span>
-            <div class="dropdown">
-                <span class=""><a class="Activ" href="#">Detector</a></span>
-                <div class="dropdown-content">
-                    <a class="drop" href="one-to-one.html">One-to-One</a>
-                    <a class="drop" href="self detect.html">Self Detect</a>
-                    <a class="drop" href="All plagi.html">All Plagi</a>
-                </div>
-            </div>
+            <span class="feat"><a class="no" href="../student user/userpanel.html">Home</a></span>
+            <span class="feat"><a class="Active" href="one-to-one.html">one-to-one</a></span>
+            <span class="feat"><a class="no" href="self detect.html">self detect</a></span>
+            <span class="feat"><a class="no" href="code plagi.html">code</a></span>
+            <span class="feat"><a class="no" href="All plagi.html">All plagi</a></span>
             <span class="feat"><a class="no" href="userupload.html">File upload</a></span>
-            <span class="feat"><a class="no" href="../user">status</a></span>
-            <span class="feat"><a class="no" href="download.html">downloads</a></span>
-            <span class="feat"><a class="no" href="profile.html">Profile</a></span>
+                
+            <!--<span class="feat"><a class="no" href="http://localhost:3000/">File upload</a></span>-->
             <div class="logout">
                 <div class="table1">
                     <div class="profile-dropdown">
                         <a href="profile.html">
-                            <div class="img"><div id="image-container"></div></div>
+                            <div class="img"><div id="image-container1">profile</div></div>
                         </a>
                         <div class="dropdown-menu">
                             <ul>
                                 <li><a href="#"><img id="dark" src="suns.png"></a></li>
-                                <li><span class="fe"><a href="/logout" class="noo">log out</a></span></li>
+                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span class="fe" ><a id="logout-btn" class="noo">log out</a>
+                                </span></li>
                             </ul>
                         </div>
                     </div>
@@ -142,6 +139,96 @@
        
    </footer>
 </div>
+<script>
+    function saveImage() {
+        const input = document.getElementById('image-input');
+        const file = input.files[0];
+        
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            alert("Please enter your username first.");
+            return;
+        }
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageData = event.target.result;
+                // Store image data along with username in local storage
+                localStorage.setItem(username + '_savedImage', imageData);
+                displayImageInMultipleContainers(imageData);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function displayImageInMultipleContainers(imageData) {
+        // Get both image containers by their IDs
+        const container1 = document.getElementById('image-container1');
+        const container2 = document.getElementById('image-container2');
+        
+        // Set the inner HTML of both containers to display the image
+        container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+        container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+    }
+    
+    // Load the image from localStorage when the page loads
+    window.onload = function() {
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            const usernamePrompt = prompt("Please enter your username:");
+            if (usernamePrompt) {
+                document.cookie = `username=${usernamePrompt}`;
+            }
+        }
+        
+        const savedImageData = localStorage.getItem(username + '_savedImage');
+        if (savedImageData) {
+            displayImageInMultipleContainers(savedImageData);
+        }
+    };
+    
+    // Function to get the value of a cookie by its name
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+    
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('logout-popup').style.display = 'block';
+    });
+    
+    document.getElementById('logout-no').addEventListener('click', function() {
+        document.getElementById('logout-popup').style.display = 'none';
+    });
+    
+    document.getElementById('logout-yes').addEventListener('click', function() {
+        // Handle logout here
+        document.getElementById('logout-popup').style.display = 'none';
+        window.location.href = '/logout';
+    });
+    
+    
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+</script>
     <script>
         const darkModePreference = localStorage.getItem('darkMode');
 const dark = document.getElementById("dark");
@@ -213,7 +300,6 @@ document.addEventListener("DOMContentLoaded", function() {
 // ... (your existing functions) ...
 
 
-// Event listeners for file input fields
 document.getElementById('file1').addEventListener('change', function () {
     updateEditorFromFile(this, ace.edit("editor"));
 });
@@ -221,11 +307,13 @@ document.getElementById('file1').addEventListener('change', function () {
 document.getElementById('file2').addEventListener('change', function () {
     updateEditorFromFile(this, ace.edit("editor1"));
 });
+
 // Function to get the Ace editor line number
 function getAceEditorLineNumber(editor, lineNumber) {
     return lineNumber - 1; // Adjust for Ace editor's 0-based index
 }
-document.getElementById('checkPlagiarism').addEventListener('click', function() {
+
+document.getElementById('checkPlagiarism').addEventListener('click', function () {
     checkPlagiarism();
 });
 
@@ -261,18 +349,17 @@ function checkPlagiarism() {
         return; // Exit the function
     }
 
-    // Check for HTML/JavaScript in the CSS editor
-    if (containsHTMLorCSS(cleanLines1, 'JavaScript')) {
-        displayPopup('Error: The JavaScript editor should only contain JavaScript code.');
+    // Check for JavaScript and Node.js code in both editors
+    if (!containsJS(cleanLines1)) {
+        displayPopup('Error: The editor should only contain JavaScript and Node.js code.');
         // Clear any previously displayed copied lines and not similar lines
         clearCopiedLines();
         clearNotSimilarLines();
         return; // Exit the function
     }
 
-    // Check for HTML/JavaScript in the CSS editor
-    if (containsHTMLorCSS(cleanLines2, 'JavaScript')) {
-        displayPopup('Error: The JavaScript editor should only contain JavaScript code.');
+    if (!containsJS(cleanLines2)) {
+        displayPopup('Error: The editor should only contain JavaScript and Node.js code.');
         // Clear any previously displayed copied lines and not similar lines
         clearCopiedLines();
         clearNotSimilarLines();
@@ -308,25 +395,10 @@ function checkPlagiarism() {
     // Display not similar lines
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
 
-    function containsHTMLorCSS(lines, editorType) {
-        // Regular expressions to detect HTML and CSS code
-        const HTMLRegex = /<[^>]+>|<\/[^>]+>/i;
-        const CSSRegex = /\bstyle\s*=\s*["'][\s\S]*?["']|\bstyle\s*=\s*{[\s\S]*?}|\b<style[\s\S]*?>[\s\S]*?<\/style>/i;
-
-        // Check if any line contains HTML or CSS code
-        const hasHTML = lines.some(line => HTMLRegex.test(line));
-        const hasCSS = lines.some(line => CSSRegex.test(line));
-
-        // Log the detection results
-        console.log('HTML Detected:', hasHTML);
-        console.log('CSS Detected:', hasCSS);
-
-        if (hasHTML || hasCSS) {
-            console.log(`Error: The ${editorType} editor should only contain ${editorType} code.`);
-            return true;
-        }
-
-        return false;
+    function containsJS(lines) {
+        // Regular expression to match JavaScript and Node.js code
+        const jsRegex = /^(?!<p>|<plaintext>)(?:const|let|var|function|if|else|for|while|do|switch|case|break|continue|return|try|catch|finally|throw|import|export|module.exports)[\s\S]*$/;
+        return lines.some(line => jsRegex.test(line));
     }
 }
 

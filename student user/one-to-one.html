@@ -20,29 +20,26 @@
         <div class="Pname">
             <img class="logo" id="loo" src="light1.png">
         <div class="menu">
-            <span class="Act"><a class="no" href="userpanel.html">Home</a></span>
-            <div class="dropdown">
-                <span class=""><a class="Activ" href="#">Detector</a></span>
-                <div class="dropdown-content">
-                    <a class="drop" href="one-to-one.html">One-to-One</a>
-                    <a class="drop" href="self detect.html">Self Detect</a>
-                    <a class="drop" href="All plagi.html">All Plagi</a>
-                </div>
-            </div>
+            <span class="feat"><a class="no" href="../student user/userpanel.html">Home</a></span>
+            <span class="feat"><a class="Active" href="one-to-one.html">one-to-one</a></span>
+            <span class="feat"><a class="no" href="self detect.html">self detect</a></span>
+            <span class="feat"><a class="no" href="code plagi.html">code</a></span>
+            <span class="feat"><a class="no" href="All plagi.html">All plagi</a></span>
             <span class="feat"><a class="no" href="userupload.html">File upload</a></span>
-            <span class="feat"><a class="no" href="../user">status</a></span>
-            <span class="feat"><a class="no" href="download.html">downloads</a></span>
-            <span class="feat"><a class="no" href="profile.html">Profile</a></span>
+                
+            <!--<span class="feat"><a class="no" href="http://localhost:3000/">File upload</a></span>-->
             <div class="logout">
                 <div class="table1">
                     <div class="profile-dropdown">
                         <a href="profile.html">
-                            <div class="img"><div id="image-container"></div></div>
+                            <div class="img"><div id="image-container1">profile</div></div>
                         </a>
                         <div class="dropdown-menu">
                             <ul>
                                 <li><a href="#"><img id="dark" src="suns.png"></a></li>
-                                <li><span class="fe"><a href="/logout" class="noo">log out</a></span></li>
+                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span class="fe" ><a id="logout-btn" class="noo">log out</a>
+                                </span></li>
                             </ul>
                         </div>
                     </div>
@@ -144,36 +141,97 @@
        
    </footer>
 </div>
-    <script>
-
-        function saveImage() {
-            const input = document.getElementById('image-input');
-            const file = input.files[0];
-            
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = function(event) {
+<script>
+    function saveImage() {
+        const input = document.getElementById('image-input');
+        const file = input.files[0];
+        
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            alert("Please enter your username first.");
+            return;
+        }
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
                 const imageData = event.target.result;
-                localStorage.setItem('savedImage', imageData);
-                displayImage(imageData);
-              };
-              reader.readAsDataURL(file);
-            }
-          }
+                // Store image data along with username in local storage
+                localStorage.setItem(username + '_savedImage', imageData);
+                displayImageInMultipleContainers(imageData);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function displayImageInMultipleContainers(imageData) {
+        // Get both image containers by their IDs
+        const container1 = document.getElementById('image-container1');
+        const container2 = document.getElementById('image-container2');
         
-          function displayImage(imageData) {
-            const container = document.getElementById('image-container');
-            container.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
-          }
-        
-          // Load the image from localStorage when the page loads
-          window.onload = function() {
-            const savedImageData = localStorage.getItem('savedImage');
-            if (savedImageData) {
-              displayImage(savedImageData);
+        // Set the inner HTML of both containers to display the image
+        container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+        container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+    }
+    
+    // Load the image from localStorage when the page loads
+    window.onload = function() {
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            const usernamePrompt = prompt("Please enter your username:");
+            if (usernamePrompt) {
+                document.cookie = `username=${usernamePrompt}`;
             }
-          };
-
+        }
+        
+        const savedImageData = localStorage.getItem(username + '_savedImage');
+        if (savedImageData) {
+            displayImageInMultipleContainers(savedImageData);
+        }
+    };
+    
+    // Function to get the value of a cookie by its name
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+    
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('logout-popup').style.display = 'block';
+    });
+    
+    document.getElementById('logout-no').addEventListener('click', function() {
+        document.getElementById('logout-popup').style.display = 'none';
+    });
+    
+    document.getElementById('logout-yes').addEventListener('click', function() {
+        // Handle logout here
+        document.getElementById('logout-popup').style.display = 'none';
+        window.location.href = '/logout';
+    });
+    
+    
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+</script>
+    <script>
           
         function updateEditorFromFile(inputElement, editor) {
             const file = inputElement.files[0];
@@ -501,6 +559,8 @@ function cancelFileSelection() {
     var fileWrapper = document.getElementById("filewrapper");
     fileWrapper.innerHTML = ""; // Clear the file list
 }
+
+
     </script>
 </body>
 </html>

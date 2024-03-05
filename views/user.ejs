@@ -23,7 +23,7 @@
 <body>
   <div class="sidebar">
     <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
-    <div class="img"><div id="image-container"></div></div>
+    <div class="img"><div id="image-container1"></div></div>
     <a class="no" href="../student user/profile.html"><i class="fas fa-cog"> </i>Setting</a>
     <a href="../profile"><i class="fas fa-user"> </i>Profile</a>
     <a class="active" href="../user"><i class="fas fa-poll"> </i>Status</a>
@@ -108,35 +108,67 @@ document.getElementById('logout-yes').addEventListener('click', function() {
     window.location.href = '/logout';
 });
 
-  function saveImage() {
-    const input = document.getElementById('image-input');
-    const file = input.files[0];
-    
-    if (file) {
+function saveImage() {
+  const input = document.getElementById('image-input');
+  const file = input.files[0];
+  
+  // Check if username exists in cookies
+  const username = getCookie('username');
+  if (!username) {
+      alert("Please enter your username first.");
+      return;
+  }
+  
+  if (file) {
       const reader = new FileReader();
       reader.onload = function(event) {
-        const imageData = event.target.result;
-        localStorage.setItem('savedImage', imageData);
-        displayImage(imageData);
+          const imageData = event.target.result;
+          // Store image data along with username in local storage
+          localStorage.setItem(username + '_savedImage', imageData);
+          displayImageInMultipleContainers(imageData);
       };
       reader.readAsDataURL(file);
-    }
   }
+}
 
-  function displayImage(imageData) {
-    const container = document.getElementById('image-container');
-    container.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+function displayImageInMultipleContainers(imageData) {
+  // Get both image containers by their IDs
+  const container1 = document.getElementById('image-container1');
+  const container2 = document.getElementById('image-container2');
+  
+  // Set the inner HTML of both containers to display the image
+  container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+  container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+}
+
+// Load the image from localStorage when the page loads
+window.onload = function() {
+  // Check if username exists in cookies
+  const username = getCookie('username');
+  if (!username) {
+      const usernamePrompt = prompt("Please enter your username:");
+      if (usernamePrompt) {
+          document.cookie = `username=${usernamePrompt}`;
+      }
   }
+  
+  const savedImageData = localStorage.getItem(username + '_savedImage');
+  if (savedImageData) {
+      displayImageInMultipleContainers(savedImageData);
+  }
+};
 
-  // Load the image from localStorage when the page loads
-  window.onload = function() {
-    const savedImageData = localStorage.getItem('savedImage');
-    if (savedImageData) {
-      displayImage(savedImageData);
-    }
-  };
-
-
+// Function to get the value of a cookie by its name
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+          return cookie.substring(name.length + 1);
+      }
+  }
+  return null;
+}
 
   function toggleDeleteButton(checkbox) {
     const deleteButton = checkbox.parentNode.nextElementSibling;
@@ -377,15 +409,14 @@ button:hover {
 }
 
 
-#image-container {
+#image-container1 {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 1.4rem;
-  margin-bottom: 2rem;
 }
 
-#image-container img {
+#image-container1 img {
   width: 8vw;
   height: 15vh;
   object-fit: cover;

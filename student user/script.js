@@ -1,34 +1,132 @@
 
-
-
-function saveImage() {
-    const input = document.getElementById('image-input');
-    const file = input.files[0];
+    function saveImage() {
+        const input = document.getElementById('image-input');
+        const file = input.files[0];
+        
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            alert("Please enter your username first.");
+            return;
+        }
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageData = event.target.result;
+                // Store image data along with username in local storage
+                localStorage.setItem(username + '_savedImage', imageData);
+                displayImageInMultipleContainers(imageData);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
     
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const imageData = event.target.result;
-        localStorage.setItem('savedImage', imageData);
-        displayImage(imageData);
-      };
-      reader.readAsDataURL(file);
+    function displayImageInMultipleContainers(imageData) {
+        // Get both image containers by their IDs
+        const container1 = document.getElementById('image-container1');
+        const container2 = document.getElementById('image-container2');
+        
+        // Set the inner HTML of both containers to display the image
+        container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+        container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
     }
-  }
-
-  function displayImage(imageData) {
-    const container = document.getElementById('image-container');
-    container.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
-  }
-
-  // Load the image from localStorage when the page loads
-  window.onload = function() {
-    const savedImageData = localStorage.getItem('savedImage');
-    if (savedImageData) {
-      displayImage(savedImageData);
+    
+    // Load the image from localStorage when the page loads
+    window.onload = function() {
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            const usernamePrompt = prompt("Please enter your username:");
+            if (usernamePrompt) {
+                document.cookie = `username=${usernamePrompt}`;
+            }
+        }
+        
+        const savedImageData = localStorage.getItem(username + '_savedImage');
+        if (savedImageData) {
+            displayImageInMultipleContainers(savedImageData);
+        }
+    };
+    
+    // Function to get the value of a cookie by its name
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
     }
-  };
-  
+    
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('logout-popup').style.display = 'block';
+    });
+    
+    document.getElementById('logout-no').addEventListener('click', function() {
+        document.getElementById('logout-popup').style.display = 'none';
+    });
+    
+    document.getElementById('logout-yes').addEventListener('click', function() {
+        // Handle logout here
+        document.getElementById('logout-popup').style.display = 'none';
+        window.location.href = '/logout';
+    });
+    
+    
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+
+// Function to get the value of a cookie by its name
+function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return null;
+}
+
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('logout-popup').style.display = 'block';
+});
+
+document.getElementById('logout-no').addEventListener('click', function() {
+    document.getElementById('logout-popup').style.display = 'none';
+});
+
+document.getElementById('logout-yes').addEventListener('click', function() {
+    // Handle logout here
+    document.getElementById('logout-popup').style.display = 'none';
+    window.location.href = '/logout';
+});
+
+
+function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return null;
+}
+
   
   const darkModePreference = localStorage.getItem('darkMode');
 const dark = document.getElementById("dark");
@@ -493,3 +591,29 @@ function cancelFileSelection() {
 }
 
 
+document.getElementById('logout-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('logout-popup').style.display = 'block';
+});
+
+document.getElementById('logout-no').addEventListener('click', function() {
+    document.getElementById('logout-popup').style.display = 'none';
+});
+
+document.getElementById('logout-yes').addEventListener('click', function() {
+    // Handle logout here
+    document.getElementById('logout-popup').style.display = 'none';
+    window.location.href = '/logout';
+});
+
+
+function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return null;
+}

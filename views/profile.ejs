@@ -208,22 +208,41 @@
     });
 
     
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+
     function saveImage() {
         const input = document.getElementById('image-input');
         const file = input.files[0];
-    
+        
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            alert("Please enter your username first.");
+            return;
+        }
+        
         if (file) {
             const reader = new FileReader();
             reader.onload = function(event) {
                 const imageData = event.target.result;
-                localStorage.setItem('savedImage', imageData);
+                // Store image data along with username in local storage
+                localStorage.setItem(username + '_savedImage', imageData);
                 displayImageInMultipleContainers(imageData);
             };
             reader.readAsDataURL(file);
         }
     }
     
-      function displayImageInMultipleContainers(imageData) {
+    function displayImageInMultipleContainers(imageData) {
         // Get both image containers by their IDs
         const container1 = document.getElementById('image-container1');
         const container2 = document.getElementById('image-container2');
@@ -235,12 +254,20 @@
 
     // Load the image from localStorage when the page loads
     window.onload = function() {
-        const savedImageData = localStorage.getItem('savedImage');
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            const usernamePrompt = prompt("Please enter your username:");
+            if (usernamePrompt) {
+                document.cookie = `username=${usernamePrompt}`;
+            }
+        }
+        
+        const savedImageData = localStorage.getItem(username + '_savedImage');
         if (savedImageData) {
             displayImageInMultipleContainers(savedImageData);
         }
     };
-
     
 
     function removeSkill(langName) {

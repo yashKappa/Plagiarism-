@@ -10,8 +10,6 @@ const app = express();
 const PORT = 9000;
 const multer = require('multer');
 const fileUpload = require('express-fileupload');
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -27,6 +25,10 @@ connection.connect((err) => {
     console.log('Connected to MySQL database');
   }
 });
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Routes
 app.get("/", function (req, res) {
@@ -47,6 +49,7 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "index.html"));
   }
 });
+
 
 app.post("/student", (req, res) => {
   const username = req.body.username;
@@ -101,10 +104,16 @@ app.listen(PORT, () => {
 });
 /*------------------------------------student register ---------------------------------*/
 
-
 app.post('/register', (req, res) => {
   try {
     const { username, email, password } = req.body;
+
+    // Check if an image file was uploaded
+    /*if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No image file uploaded.');
+    }*/
+
+
 
     const query = 'INSERT INTO student (username, email, password) VALUES (?, ?, ?)';
 
@@ -277,6 +286,9 @@ const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
+
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.json());
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
@@ -320,7 +332,6 @@ files.forEach((file, index, array) => {
 });
 });
 // ...
-
 
 
 
@@ -724,6 +735,9 @@ app.post("/profile/image", (req, res) => {
   }
 });
 */
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public')); // Assuming your static files are in the 'public' folder
+app.use(fileUpload());
 app.post("/profile/data", (req, res) => {
   try {
       const storedUsername = req.cookies.username;
