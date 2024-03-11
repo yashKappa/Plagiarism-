@@ -10,6 +10,8 @@ const app = express();
 const PORT = 9000;
 const multer = require('multer');
 const fileUpload = require('express-fileupload');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -25,10 +27,6 @@ connection.connect((err) => {
     console.log('Connected to MySQL database');
   }
 });
-
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 // Routes
 app.get("/", function (req, res) {
@@ -104,16 +102,10 @@ app.listen(PORT, () => {
 });
 /*------------------------------------student register ---------------------------------*/
 
+
 app.post('/register', (req, res) => {
   try {
     const { username, email, password } = req.body;
-
-    // Check if an image file was uploaded
-    /*if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send('No image file uploaded.');
-    }*/
-
-
 
     const query = 'INSERT INTO student (username, email, password) VALUES (?, ?, ?)';
 
@@ -286,9 +278,6 @@ const upload = multer({ storage: storage });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 app.use(express.json());
 app.post("/upload", upload.array("files"), (req, res) => {
   const files = req.files;
@@ -499,16 +488,15 @@ app.get('/download/:id', (req, res) => {
   });
 });
 
-// Your existing /index route remains unchanged
 app.get('/index', (req, res) => {
   try {
-    // Query the MySQL database
-    connection.query('SELECT DISTINCT username, project_name FROM file', (error, results, fields) => {
+    // Query the MySQL database to select distinct username, project_name, and summary
+    connection.query('SELECT username, project_name, summary FROM file GROUP BY username, project_name, summary', (error, results, fields) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
       } else {
-        // Render the 'user' page and pass the query results
+        // Render the 'index' page and pass the query results
         res.render('index', { data: results, title: 'User Projects' });
       }
     });
@@ -542,7 +530,7 @@ app.get('/user', (req, res) => {
       return res.status(401).send('Unauthorized. Please log in.');
     }
 
-    connection.query('SELECT DISTINCT username, project_name FROM file WHERE username = ?', [storedUsername], (error, results) => {
+    connection.query('SELECT DISTINCT username, project_name, summary FROM file WHERE username = ?', [storedUsername], (error, results) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
@@ -555,6 +543,7 @@ app.get('/user', (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 // Route to delete a project
 app.post('/user/delete', (req, res) => {
@@ -735,9 +724,11 @@ app.post("/profile/image", (req, res) => {
   }
 });
 */
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public')); // Assuming your static files are in the 'public' folder
 app.use(fileUpload());
+
 app.post("/profile/data", (req, res) => {
   try {
       const storedUsername = req.cookies.username;
@@ -928,3 +919,119 @@ app.post('/removeProfessional', (req, res) => {
   });
 });
 
+
+app.get('/fileDetails/:username/:projectName', (req, res) => {
+  const projectName = req.params.projectName;
+
+  try {
+    // Query the MySQL database to fetch files related to the provided username and project name
+    const query = `
+      SELECT *
+      FROM file
+      WHERE username = ? AND project_name = ?
+    `;
+
+    connection.query(query, [req.params.username, projectName], (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'related' page and pass the query results
+        res.render('related', { data: results, title: 'Related Files', username: req.params.username, projectName });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.get('/plagi', (req, res) => {
+  try {
+    // Query the MySQL database to select distinct username, project_name, and summary
+    connection.query('SELECT username, project_name, summary FROM file GROUP BY username, project_name, summary', (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'index' page and pass the query results
+        res.render('plagi', { data: results, title: 'User Projects' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.get('/plagiarism', (req, res) => {
+  try {
+    // Query the MySQL database to select distinct username, project_name, and summary
+    connection.query('SELECT username, project_name, summary FROM file GROUP BY username, project_name, summary', (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'index' page and pass the query results
+        res.render('plagiarism', { data: results, title: 'User Projects' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.get('/plagiarism/:username/:projectName', (req, res) => {
+  const projectName = req.params.projectName;
+
+  // Query the MySQL database to fetch files related to the project name
+  const query = `
+    SELECT *
+    FROM file
+    WHERE project_name = ?
+  `;
+
+  connection.query(query, [projectName], (error, results, fields) => {
+    if (error) {
+      console.error('Error executing MySQL query:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      // Send the query results as JSON
+      res.json(results);
+    }
+  });
+});
+
+
+app.get('/plagiarism', (req, res) => {
+  try {
+    // Query the MySQL database
+    connection.query('SELECT * FROM file', (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'index' page and pass the query results
+        res.render('related', { data: results, title: 'File List' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/profile', (req, res) => {
+  // Execute the SQL query
+  connection.query('SELECT COUNT(*) AS totalProjects FROM student WHERE project_name', (error, results) => {
+    if (error) {
+      throw error;
+    }
+    // Render the EJS template with the query result
+    res.render('profile', { totalProjects: results[0].totalProjects });
+  });
+});

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Anti duplicate software</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="stylesheet" href="../student user/userpanel.css">   
+    <link rel="node" href="../node.js">
+    <link rel="script" href="script.js">
+
+</head>
+<body>
+    <nav>
+       
+        <div class="Pname">
+            <img class="logo" id="loo" src="light1.png">
+        <div class="menu">
+          <span class="feat"><a class="no" href="../student user/userpanel.html">Home</a></span>
+          <span class="feat"><a class="no" href="../plagi">Search</a></span>
+          <span class="feat"><a class="no" href="../student user/one-to-one.html">one-to-one</a></span>
+          <span class="feat"><a class="no" href="../student user/self detect.html">self detect</a></span>
+          <span class="feat"><a class="no" href="../student user/code plagi.html">code</a></span>
+          <span class="feat"><a class="Active" href="../plagiarism">All plagi</a></span>
+          <span class="feat"><a class="no" href="../student user/userupload.html">File upload</a></span>
+                
+            <!--<span class="feat"><a class="no" href="http://localhost:3000/">File upload</a></span>-->
+            <div class="logout">
+                <div class="table1">
+                    <div class="profile-dropdown">
+                        <a href="profile.html">
+                            <div class="img"><div id="image-container1">profile</div></div>
+                        </a>
+                        <div class="dropdown-menu">
+                            <ul>
+                                <li><a href="#"><img id="dark" src="suns.png"></a></li>
+                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span class="fe" ><a id="logout-btn" class="noo">log out</a>
+                                </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </nav><br><br><br>
+   
+    
+    
+    <div class="container">
+      <div class="find">
+        <div class="form">
+      <div class="search">
+        <p>Project name : - </p>
+        <input type="text" id="searchInput" placeholder="Search project name...">
+    </div>
+    
+    <div class="file-input">
+      <p>Choose your project files :- </p>
+      <label for="fileUpload">Choose files:</label>
+      <input type="file" id="fileUpload" name="fileUpload[]" multiple>
+  </div>
+  </div>
+  <div class="file-display">
+    <!-- Placeholder for file names -->
+  </div>
+  <div class="enter">
+  <button id="searchButton">Search <i class="fas fa-search"></i></button>
+  </div>
+  <div class="related" id="relatedProjectsContainer"></div>
+  <div class="enter">
+    <button id="CheckPlagiarism">Check Plagiarism <i class="fas fa-check"></i></button>
+    </div>
+  </div>
+    
+      <!--<div class="file-data">
+        <h3>File Data:</h3>
+        <div id="editor"></div>
+      </div>-->
+      <div class="order">
+        <div class="head">
+          <h3>Projects</h3>
+          <i class='bx bx-search' ></i>
+          <i class='bx bx-filter' ></i>
+        </div>
+        <table id="projectTable">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Project name</th>
+              <th>Summary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (data && data.length > 0) { %>
+              <% data.forEach(row => { %>
+              <tr>
+                <td><p class="datas"><%= row.username %></p></td>
+                <td>
+                  <p class="datas">
+                    <!-- Update the link to point to the related route with username and project name parameters -->
+                    <a class="data" href="#" onclick="loadRelatedProjects('<%= row.username %>', '<%= row.project_name %>')"><%= row.project_name %></a>
+                  </p>
+                </td>
+                <td><p class="data"><%= row.summary %></p></td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+
+              <tr>
+                <td><p class="message">Data was not found or Empty</p></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+
+      <script>
+        document.getElementById('CheckPlagiarism').addEventListener('click', function() {
+          // Get content from the "file-display" section
+          const fileDisplayContent = getFileDisplayContent();
+          
+          // Get content from the "relatedProjectsContainer" section
+          const relatedContent = getRelatedContent();
+          
+          // Perform plagiarism check
+          const plagiarismPercentage = calculatePlagiarismPercentage(fileDisplayContent, relatedContent);
+          
+          // Display the results to the user
+          displayPlagiarismPercentage(plagiarismPercentage);
+      });
+      
+      function getFileDisplayContent() {
+          const fileDisplaySection = document.querySelector('.file-display');
+          const fileContent = fileDisplaySection.textContent.trim();
+          return fileContent;
+      }
+      
+      function getRelatedContent() {
+          const relatedSection = document.getElementById('relatedProjectsContainer');
+          const fileElements = relatedSection.querySelectorAll('.file');
+          const fileContent = Array.from(fileElements).map(fileElement => fileElement.textContent).join('\n');
+          return fileContent;
+      }
+      
+      function calculatePlagiarismPercentage(content1, content2) {
+          // Convert content to lowercase for case-insensitive comparison
+          const lowerCaseContent1 = content1.toLowerCase();
+          const lowerCaseContent2 = content2.toLowerCase();
+        
+          // Split content into words
+          const words1 = lowerCaseContent1.split(/\s+/);
+          const words2 = lowerCaseContent2.split(/\s+/);
+        
+          // Calculate the number of common words
+          const commonWords = words1.filter(word => words2.includes(word)).length;
+        
+          // Calculate the plagiarism percentage
+          const totalWords = Math.max(words1.length, words2.length); // Total words in the longer content
+          const plagiarismPercentage = (commonWords / totalWords) * 100;
+        
+          return plagiarismPercentage;
+      }
+      
+      function displayPlagiarismPercentage(percentage) {
+          // Display the plagiarism percentage to the user
+          const resultsContainer = document.createElement('div');
+          resultsContainer.classList.add('plagiarism-results');
+        
+          const resultElement = document.createElement('div');
+          resultElement.textContent = `Plagiarism Percentage: ${percentage.toFixed(2)}%`;
+          resultsContainer.appendChild(resultElement);
+        
+          // Add the results container to the page
+          document.body.appendChild(resultsContainer);
+      }
+      
+      
+      
+        // After displaying files, scroll the container into view
+        function loadRelatedProjects(username, projectName) {
+          // Make an AJAX request to fetch related projects
+          fetch(`/plagiarism/${username}/${projectName}`)
+              .then(response => response.json())
+              .then(data => {
+                  // Clear the container
+                  const container = document.getElementById('relatedProjectsContainer');
+                  container.innerHTML = '';
+      
+                  // Iterate through the data and append to the container
+                  data.forEach(row => {
+                      const filename = row.filename;
+                      const fileId = row.id;
+                      const fileElement = document.createElement('div');
+                      fileElement.classList.add('file');
+                      fileElement.textContent = filename;
+                      container.appendChild(fileElement);
+                  });
+      
+                  // After displaying files, scroll the container into view
+                  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              })
+              .catch(error => {
+                  console.error('Error fetching related projects:', error);
+              });
+      }
+      
+
+      
+  /* // Get the file input element
+const fileInput = document.getElementById('fileUpload');
+// Get the file display element
+const fileDisplay = document.querySelector('.file-display');
+// Get the ACE Editor element
+const editor = ace.edit("editor");
+editor.setTheme("ace/theme/monokai"); // Set the theme (optional)
+editor.session.setMode("ace/mode/text"); // Set the mode (optional)
+
+// Add event listener for file input change
+fileInput.addEventListener('change', function() {
+  // Clear previous file display
+  fileDisplay.innerHTML = '';
+  // Loop through each selected file
+  for (const file of this.files) {
+    // Create a div element for each file
+    const fileDiv = document.createElement('div');
+    // Set the class for styling
+    fileDiv.classList.add('file-item');
+    // Display the file name
+    fileDiv.textContent = file.name;
+    // Append the file div to the file display container
+    fileDisplay.appendChild(fileDiv);
+    
+    // Add click event listener to each file div
+    fileDiv.addEventListener('click', function() {
+      displayFileData(file);
+    });
+  }
+});
+
+// Function to display file data in ACE Editor
+function displayFileData(file) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    // Set the file content to the ACE Editor
+    editor.setValue(event.target.result);
+    editor.clearSelection();
+  };
+  // Read the file as text
+  reader.readAsText(file);
+}
+*/
+      // Get the file input element
+const fileInput = document.getElementById('fileUpload');
+// Get the file display element
+const fileDisplay = document.querySelector('.file-display');
+// Get the file data display element
+const fileContent = document.getElementById('fileContent');
+
+// Add event listener for file input change
+fileInput.addEventListener('change', function() {
+  // Clear previous file display
+  fileDisplay.innerHTML = '';
+  // Loop through each selected file
+  for (const file of this.files) {
+    // Create a div element for each file
+    const fileDiv = document.createElement('div');
+    // Set the class for styling
+    fileDiv.classList.add('file-item');
+    // Display the file name
+    fileDiv.textContent = file.name;
+    // Append the file div to the file display container
+    fileDisplay.appendChild(fileDiv);
+    
+    // Add click event listener to each file div
+    fileDiv.addEventListener('click', function() {
+      displayFileData(file);
+    });
+  }
+});
+
+// Function to display file data
+function displayFileData(file) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    // Display the file content
+    fileContent.textContent = event.target.result;
+  };
+  // Read the file as text
+  reader.readAsText(file);
+}
+
+
+
+const searchInput = document.getElementById('searchInput');
+const projectTable = document.getElementById('projectTable');
+const projectBody = document.getElementById('projectBody');
+const rows = projectTable.getElementsByTagName('tr');
+const searchButton = document.getElementById('searchButton'); // Get the search button element
+
+// Function to hide all rows initially
+function hideAllRows() {
+  for (let i = 1; i < rows.length; i++) {
+    rows[i].style.display = 'none';
+  }
+}
+
+// Call hideAllRows function initially to hide all rows
+hideAllRows();
+
+// Function to filter rows based on search input
+// Function to filter rows based on search input
+function filterRows() {
+  const searchText = searchInput.value.trim().toLowerCase(); // Trim whitespace from input
+  if (searchText === '') {
+    hideAllRows(); // If search input is empty, hide all rows
+    return; // Exit the function
+  }
+  for (let i = 1; i < rows.length; i++) {
+    const projectName = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+    if (projectName.includes(searchText)) {
+      rows[i].style.display = ''; // Display rows that match the search query
+    } else {
+      rows[i].style.display = 'none'; // Hide rows that don't match the search query
+    }
+  }
+}
+
+
+// Add event listener to the search button
+searchButton.addEventListener('click', function(event) {
+  event.preventDefault(); // Prevent default button behavior
+  filterRows(); // Call the filterRows function when the button is clicked
+});
+
+searchInput.addEventListener('keyup', function(event) {
+  if (event.keyCode === 13) { // Check if Enter key is pressed
+    event.preventDefault(); // Prevent default Enter key behavior
+    filterRows(); // Call the filterRows function when Enter key is pressed
+  }
+});
+
+// Pagination variables and functions...
+
+// Pagination variables
+let currentPage = 1;
+const projectsPerPage = 5; // Number of projects per page
+
+// Function to display projects based on pagination
+function displayProjects() {
+  let displayedCount = 0;
+  const start = (currentPage - 1) * projectsPerPage;
+  const end = currentPage * projectsPerPage;
+  for (let i = 0; i < rows.length; i++) {
+    if (displayedCount < projectsPerPage) {
+      if (i >= start && i < end) {
+        rows[i].style.display = '';
+        displayedCount++;
+        console.log(`Displaying row ${i}`);
+      } else {
+        rows[i].style.display = 'none';
+        console.log(`Hiding row ${i}`);
+      }
+    } else {
+      rows[i].style.display = 'none';
+      console.log(`Hiding row ${i}`);
+    }
+  }
+}
+
+// Previous page button event listener
+document.getElementById('prevButton').addEventListener('click', () => {
+  console.log("Previous button clicked");
+  if (currentPage > 1) {
+    currentPage--;
+    displayProjects();
+  }
+});
+
+// Next page button event listener
+document.getElementById('nextButton').addEventListener('click', () => {
+  console.log("Next button clicked");
+  if (currentPage < Math.ceil(rows.length / projectsPerPage)) {
+    currentPage++;
+    displayProjects();
+  }
+});
+
+// Reset display to pagination-based display when search input is cleared
+searchInput.addEventListener('input', () => {
+  console.log("Input value:", searchInput.value);
+  if (searchInput.value === '') {
+    currentPage = 1; // Reset current page to 1
+    hideAllRows(); // Hide all rows again
+  } else {
+    filterRows(); // Call filterRows function to update display based on search input
+  }
+});
+
+      </script>
+      
+  <style>
+    .related {
+      margin-top: 10px;
+      color: white;
+      display: flex; /* Use flexbox */
+      flex-wrap: wrap; /* Allow items to wrap to the next line */
+      cursor: pointer;
+      justify-content: center;
+    }
+    
+    .related .file {
+      background-color: black; 
+      padding: 5px;
+      margin-right: 10px; /* Add margin between file names */
+      color: white; 
+      border-radius: 0.3rem;
+      display: inline-block; /* Display files inline */
+      /* Set width to accommodate 5 files in a row with margin */
+      width: calc(20% - 10px);
+      margin-bottom: 10px; /* Add margin at the bottom */
+      padding: 10px;
+    }
+    
+    .related .file:hover {
+      background-color: rgb(29, 28, 28);
+    }
+
+
+/* Adjustments for responsiveness */
+@media (max-width: 768px) {
+  .related .file {
+    width: 50%; /* Each file takes up 50% of the container width on smaller screens */
+  }
+}
+
+.file-item {
+  background-color: black; 
+  padding: 5px;
+  margin-right: 10px; /* Add margin between file names */
+  color: white; 
+  border-radius: 0.3rem;
+  display: inline-block; /* Display files inline */
+  /* Set width to accommodate 5 files in a row with margin */
+  width: calc(20% - 10px);
+  margin-bottom: 10px; /* Add margin at the bottom */
+  padding: 10px;
+}
+
+.file-display {
+  margin-top: 10px;
+  color: white;
+  display: flex; /* Use flexbox */
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  cursor: pointer;
+  justify-content: center;
+}
+
+
+.file-item:hover {
+  background-color: rgb(29, 28, 28);
+}
+
+
+
+    label[for="fileUpload"] {
+      display: inline-block;
+      padding: 10px;
+      background-color: #ff1313;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    #fileUpload {
+      display: none;
+    }
+    
+
+    
+    /* Styles for file data */
+    .file-data {
+      margin-top: 20px;
+    }
+    
+    .file-data h3 {
+      margin-bottom: 10px;
+    }
+    
+    /* Styles for ACE Editor */
+    #editor {
+      width: 50%;
+      height: 300px; 
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      position:relative;
+    }
+    .search {
+      display: flex;
+      margin-top: 1rem;
+      justify-content: center; /* Center horizontally */
+      align-items: center;
+      margin-left: 2rem;
+      margin-right: 2rem;
+    }
+
+    .file-input {
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; 
+    }
+
+  .file-input p {
+    color: white;
+    margin-right: 1rem;
+    background-color: #4062be;
+    padding: 10px;
+    border-radius: 0.3rem;
+    font-weight: bold;
+}
+
+  .file-input label {
+      margin-right: 1rem; 
+  }
+    
+    .find{
+      justify-content: center; 
+      align-items: center;
+      background-color: #0056b3;
+      margin-top: 2rem;
+      margin-left: 2rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    #searchInput {
+      width: 300px;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      margin-top: 1rem;
+    }
+    
+    #searchInput::placeholder {
+      color: #999;
+    }
+    
+    #searchInput:focus {
+      outline: none;
+      border-color: #4CAF50;
+      box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+    
+    #searchButton {
+      background-color: #ff0000;
+      font-size: small;
+      padding: 7px;
+      border: none;
+      color: #ffffff;
+      border-radius: 0.3rem;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
+    #searchButton:hover{
+      background-color: #f52121;
+      border: 1px solid white ;
+
+    }
+
+    #CheckPlagiarism {
+      background-color: #ff0000;
+      font-size: small;
+      padding: 7px;
+      border: none;
+      color: #ffffff;
+      border-radius: 0.3rem;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
+    #CheckPlagiarism:hover{
+      background-color: #f52121;
+      border: 1px solid white ;
+
+    }
+
+    .enter{
+      text-align-last: center;
+    }
+    
+    .search p{
+      color: white;
+      margin-right: 1rem;
+      background-color: #4062be;
+      padding: 10px;
+      border-radius: 0.3rem;
+      font-weight: bold;
+
+    }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 1.8rem;
+}
+
+
+.order {
+  margin-bottom: 20px;
+}
+
+table{
+  margin-top: 1rem;
+}
+
+thead th{
+  background-color: #0a75e7;
+  width: 30vw;
+  color: aliceblue;
+  font-size: large;
+  padding: 10px;
+  border-radius: 0.5rem;
+}
+
+td{
+  background-color: #ffffff;
+  padding-left: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+ }
+
+ td:hover{
+  background-color: #dddbdbcb;
+  padding-left: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+ }
+
+ .data{
+  text-align: justify;
+  margin-right: 0.5rem;
+  padding: 10px;
+ }
+
+ 
+  </style>
+  </html>
+  

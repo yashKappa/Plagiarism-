@@ -64,9 +64,12 @@
         <form id="updateProfileForm" action="/profile/data" method="post" enctype="multipart/form-data" onsubmit="submitForm(event)">
             <div class="table">
                 <% data.forEach(user => { %>
+                    
                     <div class="section">
                         <div class="head"><i class="fas fa-user"></i> Username </div>
                         <p><%= user.username %></p>
+                        <h1>Total Projects: <%= user.totalProjects %></h1> <!-- Access totalProjects directly -->
+
                     </div>
                     <div class="section">
                         <div class="head"><i class="fas fa-envelope"></i> Email </div>

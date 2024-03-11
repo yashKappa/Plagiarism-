@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Anti duplicate software</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="stylesheet" href="../student user/userpanel.css">   
+    <link rel="node" href="../node.js">
+    <link rel="script" href="script.js">
+
+</head>
+<body>
+    <nav>
+       
+        <div class="Pname">
+            <img class="logo" id="loo" src="light1.png">
+        <div class="menu">
+          <span class="feat"><a class="no" href="../student user/userpanel.html">Home</a></span>
+          <span class="feat"><a class="Active" href="../plagi">Search</a></span>
+          <span class="feat"><a class="no" href="one-to-one.html">one-to-one</a></span>
+          <span class="feat"><a class="no" href="self detect.html">self detect</a></span>
+          <span class="feat"><a class="no" href="code plagi.html">code</a></span>
+          <span class="feat"><a class="no" href="../plagiarism">All plagi</a></span>
+          <span class="feat"><a class="no" href="userupload.html">File upload</a></span>
+                
+            <!--<span class="feat"><a class="no" href="http://localhost:3000/">File upload</a></span>-->
+            <div class="logout">
+                <div class="table1">
+                    <div class="profile-dropdown">
+                        <a href="profile.html">
+                            <div class="img"><div id="image-container1">profile</div></div>
+                        </a>
+                        <div class="dropdown-menu">
+                            <ul>
+                                <li><a href="#"><img id="dark" src="suns.png"></a></li>
+                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span class="fe" ><a id="logout-btn" class="noo">log out</a>
+                                </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </nav><br><br><br>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Search project name...">
+      <button id="searchButton">Search <i class="fas fa-search"></i></button>
+    </div>
+    
+    
+    
+    <div class="container">
+      <div class="order">
+        <div class="head">
+          <h3>Projects</h3>
+          <i class='bx bx-search' ></i>
+          <i class='bx bx-filter' ></i>
+        </div>
+        <table id="projectTable">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Project name</th>
+              <th>Summary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (data && data.length > 0) { %>
+              <% data.forEach(row => { %>
+              <tr>
+                <td><p class="datas"><%= row.username %></p></td>
+                <td>
+                  <p class="datas">
+                    <!-- Update the link to point to the related route with username and project name parameters -->
+                    <a class="data" href="/fileDetails/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
+                  </p>
+                </td>
+                <td><p class="data"><%= row.summary %></p></td>
+              </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td><p class="message">Data was not found or Empty</p></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+      
+      <script>
+        const searchInput = document.getElementById('searchInput');
+        const projectTable = document.getElementById('projectTable');
+        const projectBody = document.getElementById('projectBody');
+        const rows = projectTable.getElementsByTagName('tr');
+        const searchButton = document.getElementById('searchButton'); // Get the search button element
+        
+        // Function to filter rows based on search input
+        function filterRows() {
+          const searchText = searchInput.value.toLowerCase();
+          for (let i = 1; i < rows.length; i++) {
+            const projectName = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+            if (projectName.includes(searchText)) {
+              rows[i].style.display = '';
+            } else {
+              rows[i].style.display = 'none';
+            }
+          }
+        }
+        
+        // Function to reset display to pagination-based display after clearing search input
+        function resetDisplay() {
+          const start = (currentPage - 1) * projectsPerPage;
+          const end = currentPage * projectsPerPage;
+          for (let i = 1; i < rows.length; i++) {
+            if (i >= start && i < end) {
+              rows[i].style.display = '';
+            } else {
+              rows[i].style.display = 'none';
+            }
+          }
+        }
+        
+        // Add event listener to the search button
+        searchButton.addEventListener('click', function(event) {
+          event.preventDefault(); // Prevent default button behavior
+          filterRows(); // Call the filterRows function when the button is clicked
+        });
+        
+        searchInput.addEventListener('keyup', function(event) {
+          if (event.keyCode === 13) { // Check if Enter key is pressed
+            event.preventDefault(); // Prevent default Enter key behavior
+            filterRows(); // Call the filterRows function when Enter key is pressed
+          }
+        });
+        
+        // Pagination variables and functions...
+        
+        // Pagination variables
+        let currentPage = 1;
+        const projectsPerPage = 5; // Number of projects per page
+        
+        // Function to display projects based on pagination
+        function displayProjects() {
+          let displayedCount = 0;
+          const start = (currentPage - 1) * projectsPerPage;
+          const end = currentPage * projectsPerPage;
+          for (let i = 0; i < rows.length; i++) {
+            if (displayedCount < projectsPerPage) {
+              if (i >= start && i < end) {
+                rows[i].style.display = '';
+                displayedCount++;
+                console.log(`Displaying row ${i}`);
+              } else {
+                rows[i].style.display = 'none';
+                console.log(`Hiding row ${i}`);
+              }
+            } else {
+              rows[i].style.display = 'none';
+              console.log(`Hiding row ${i}`);
+            }
+          }
+        }
+        
+        // Initial display of projects
+        displayProjects();
+
+// Previous page button event listener
+// Previous page button event listener
+document.getElementById('prevButton').addEventListener('click', () => {
+  console.log("Previous button clicked");
+  if (currentPage > 1) {
+    currentPage--;
+    displayProjects();
+  }
+});
+
+// Next page button event listener
+document.getElementById('nextButton').addEventListener('click', () => {
+  console.log("Next button clicked");
+  if (currentPage < Math.ceil(rows.length / projectsPerPage)) {
+    currentPage++;
+    displayProjects();
+  }
+});
+
+// Reset display to pagination-based display when search input is cleared
+searchInput.addEventListener('input', () => {
+  console.log("Input value:", searchInput.value);
+  if (searchInput.value === '') {
+    currentPage = 1; // Reset current page to 1
+    displayProjects(); // Display projects based on pagination
+  }
+});
+
+
+
+      </script>
+      
+  <style>
+
+    #searchButton{
+      background-color: #d83030;
+      font-size:small;
+      padding: 7px;
+      border: none;
+      color: #ffffff;
+      border-radius: 0.3rem;
+    }
+    /* Styles for the search bar */
+#searchInput {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+  margin-top: 1rem;
+}
+
+/* Styles for the search bar placeholder */
+#searchInput::placeholder {
+  color: #999;
+}
+
+/* Styles for the search bar on focus */
+#searchInput:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.search{
+  background-color: #0056b3;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  text-align-last: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 1.8rem;
+}
+
+
+.order {
+  margin-bottom: 20px;
+}
+
+table{
+  margin-top: 1rem;
+}
+
+thead th{
+  background-color: #0a75e7;
+  width: 30vw;
+  color: aliceblue;
+  font-size: large;
+  padding: 10px;
+  border-radius: 0.5rem;
+}
+
+td{
+  background-color: #ffffff;
+  padding-left: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+ }
+
+ td:hover{
+  background-color: #dddbdbcb;
+  padding-left: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+ }
+
+ .data{
+  text-align: justify;
+  margin-right: 0.5rem;
+  padding: 10px;
+ }
+
+ 
+  </style>
+  </html>
+  

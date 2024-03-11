@@ -1,92 +1,52 @@
+function saveImage() {
+    const input = document.getElementById('image-input');
+    const file = input.files[0];
+    
+    // Check if username exists in cookies
+    const username = getCookie('username');
+    if (!username) {
+        alert("Please enter your username first.");
+        return;
+    }
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const imageData = event.target.result;
+            // Store image data along with username in local storage
+            localStorage.setItem(username + '_savedImage', imageData);
+            displayImageInMultipleContainers(imageData);
+        };
+        reader.readAsDataURL(file);
+    }
+}
 
-    function saveImage() {
-        const input = document.getElementById('image-input');
-        const file = input.files[0];
-        
-        // Check if username exists in cookies
-        const username = getCookie('username');
-        if (!username) {
-            alert("Please enter your username first.");
-            return;
-        }
-        
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const imageData = event.target.result;
-                // Store image data along with username in local storage
-                localStorage.setItem(username + '_savedImage', imageData);
-                displayImageInMultipleContainers(imageData);
-            };
-            reader.readAsDataURL(file);
+function displayImageInMultipleContainers(imageData) {
+    // Get both image containers by their IDs
+    const container1 = document.getElementById('image-container1');
+    const container2 = document.getElementById('image-container2');
+    
+    // Set the inner HTML of both containers to display the image
+    container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+    container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+}
+
+// Load the image from localStorage when the page loads
+window.onload = function() {
+    // Check if username exists in cookies
+    const username = getCookie('username');
+    if (!username) {
+        const usernamePrompt = prompt("Please enter your username:");
+        if (usernamePrompt) {
+            document.cookie = `username=${usernamePrompt}`;
         }
     }
     
-    function displayImageInMultipleContainers(imageData) {
-        // Get both image containers by their IDs
-        const container1 = document.getElementById('image-container1');
-        const container2 = document.getElementById('image-container2');
-        
-        // Set the inner HTML of both containers to display the image
-        container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
-        container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+    const savedImageData = localStorage.getItem(username + '_savedImage');
+    if (savedImageData) {
+        displayImageInMultipleContainers(savedImageData);
     }
-    
-    // Load the image from localStorage when the page loads
-    window.onload = function() {
-        // Check if username exists in cookies
-        const username = getCookie('username');
-        if (!username) {
-            const usernamePrompt = prompt("Please enter your username:");
-            if (usernamePrompt) {
-                document.cookie = `username=${usernamePrompt}`;
-            }
-        }
-        
-        const savedImageData = localStorage.getItem(username + '_savedImage');
-        if (savedImageData) {
-            displayImageInMultipleContainers(savedImageData);
-        }
-    };
-    
-    // Function to get the value of a cookie by its name
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                return cookie.substring(name.length + 1);
-            }
-        }
-        return null;
-    }
-    
-        document.getElementById('logout-btn').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('logout-popup').style.display = 'block';
-    });
-    
-    document.getElementById('logout-no').addEventListener('click', function() {
-        document.getElementById('logout-popup').style.display = 'none';
-    });
-    
-    document.getElementById('logout-yes').addEventListener('click', function() {
-        // Handle logout here
-        document.getElementById('logout-popup').style.display = 'none';
-        window.location.href = '/logout';
-    });
-    
-    
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                return cookie.substring(name.length + 1);
-            }
-        }
-        return null;
-    }
+};
 
 // Function to get the value of a cookie by its name
 function getCookie(name) {
@@ -99,34 +59,6 @@ function getCookie(name) {
     }
     return null;
 }
-
-    document.getElementById('logout-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('logout-popup').style.display = 'block';
-});
-
-document.getElementById('logout-no').addEventListener('click', function() {
-    document.getElementById('logout-popup').style.display = 'none';
-});
-
-document.getElementById('logout-yes').addEventListener('click', function() {
-    // Handle logout here
-    document.getElementById('logout-popup').style.display = 'none';
-    window.location.href = '/logout';
-});
-
-
-function getCookie(name) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.startsWith(name + '=')) {
-            return cookie.substring(name.length + 1);
-        }
-    }
-    return null;
-}
-
   
   const darkModePreference = localStorage.getItem('darkMode');
 const dark = document.getElementById("dark");
@@ -199,11 +131,9 @@ window.addEventListener("load", () => {
     // Prevent the form from automatically redirecting
     document.getElementById("uploadForm").addEventListener("submit", function (event) {
         event.preventDefault();
-    
+
         const formData = new FormData(this);
-    
-        // Log the FormData object before sending it to the server
-        console.log("Form Data:", formData);
+
         fetch("/upload", {
             method: "POST",
             body: formData,
@@ -214,15 +144,12 @@ window.addEventListener("load", () => {
             if (response.ok) {
                 successMessage.classList.remove("hidden");
                 console.log("Files uploaded successfully");
-                console.log("Form Data:", formData);
                 setTimeout(() => {
                     successMessage.classList.add("hidden");
                 }, 3000);
                 filewrapper.style.display = "none";
             } else {
                 ErrorMessage.classList.add("Er");
-                console.log("Form Data:", formData);
-
                 return response.text().then(errorMsg => {
                     console.error("Error:", errorMsg);
                 });
@@ -250,7 +177,7 @@ function loadFileContent(editorId, input) {
     reader.readAsText(file);
 }
 
-
+/*
 function handleFileSelect() {
     var fileInput = document.getElementById("fileInput");
     var uploadButton = document.getElementById("uploadButton");
@@ -262,8 +189,8 @@ function handleFileSelect() {
         // No files selected, show the upload button
         uploadButton.style.display = "none";
     }
-}
-//// fileuploaded code /////
+}*/
+//// file uploaded code /////
 
 function handleFileSelect(event) {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -591,29 +518,3 @@ function cancelFileSelection() {
 }
 
 
-document.getElementById('logout-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('logout-popup').style.display = 'block';
-});
-
-document.getElementById('logout-no').addEventListener('click', function() {
-    document.getElementById('logout-popup').style.display = 'none';
-});
-
-document.getElementById('logout-yes').addEventListener('click', function() {
-    // Handle logout here
-    document.getElementById('logout-popup').style.display = 'none';
-    window.location.href = '/logout';
-});
-
-
-function getCookie(name) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.startsWith(name + '=')) {
-            return cookie.substring(name.length + 1);
-        }
-    }
-    return null;
-}

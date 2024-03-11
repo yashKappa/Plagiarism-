@@ -161,6 +161,7 @@
 								<tr>
 								  <th>Username</th>
 								  <th>project name</th>
+								  <th>Summary</th>
 								</tr>
 								<% data.forEach(row => { %>
 								  <tr>
@@ -168,9 +169,10 @@
 									<td>
 									  <p class="data">
 										<!-- Update the link to point to the related route with username and project name parameters -->
-										<a class="data" href="/related/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
+										<a class="data" href="/fileDetails/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
 									  </p>
 									</td>
+									<td><p class="data"><%= row.summary %></p></td>
 								  </tr>
 								<% }); %>
 							</table>

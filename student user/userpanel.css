@@ -236,11 +236,16 @@ a{
     margin-top: 0;
 }
  
-.set:hover{
-    background-color: #3d9fe0;
+.set{
+    background-color: #1e5375;
     padding: 6px 6px 6px 6px;
     border-radius: 0.5rem;
+}
 
+.set:hover{
+    background-color: #113146;
+    padding: 6px 6px 6px 6px;
+    border-radius: 0.5rem;
 }
 
 .dropdown-menu li{

@@ -60,6 +60,7 @@
           <tr>
             <th>Username</th>
             <th>Project name</th>
+            <th>Summary</th>
           </tr>
           <% data.forEach(row => { %>
             <tr>
@@ -79,6 +80,7 @@
                 </div>
                 <button type="button" onclick="deleteProject('<%= row.username %>', '<%= row.project_name %>')" disabled>Delete</button>                
               </td>
+              <td><p class="datas"><%= row.summary %></p></td>
             </tr>
           <% }); %>
         </table>
@@ -308,6 +310,12 @@ console.error('Error fetching file content:', error);
     background:var(--background-color);
 }
 
+.datas{
+  width: 35vw;
+  text-align: justify;
+  margin-right: -6rem;
+}
+
 .sidebar {
     width: 250px;
     height: 100%;
@@ -467,7 +475,7 @@ button:hover {
 }
     
     .container {
-        max-width: 800px;
+        max-width: 1000px;
         margin: 20px auto;
         background-color: #fff;
         padding: 20px;
@@ -533,7 +541,6 @@ button:hover {
     th, td {
         border: 1px solid #ddd;
         padding: 15px;
-        text-align: left;
     }
     
     th {
@@ -541,6 +548,9 @@ button:hover {
         color: #fff;
     }
     
+    .data{
+      width: 10vw;
+    }
     a.data {
         text-decoration: none;
         color: #007bff;
