@@ -54,38 +54,41 @@
     <div class="container">
       <div class="find">
         <div class="form">
-      <div class="search">
-        <p>Project name : - </p>
-        <input type="text" id="searchInput" placeholder="Search project name...">
+          <div class="search">
+            <p>Project name: - </p>
+            <input type="text" id="searchInput" placeholder="Search project name...">
+          </div>
+          <div class="file-input">
+            <p>Choose your project files: - </p>
+            <label for="fileUpload">Choose files:</label>
+            <input type="file" id="fileUpload" name="fileUpload[]" multiple>
+          </div>
+        </div>
+        <div class="file-display">
+          <!-- Placeholder for file names -->
+        </div>
+        <div class="enter">
+          <button id="searchButton">Search <i class="fas fa-search"></i></button>
+        </div>
+        <div class="related" id="relatedProjectsContainer"></div>
+        <div class="enter">
+          <button id="CheckPlagiarism">Check Plagiarism <i class="fas fa-check"></i></button>
+        </div>
+      </div>
+      <div id="plagiarismResultsContainer">percentage</div> <!-- Adding the plagiarism results container -->
+
+      <div class="da">
+      <div id="fileContentContainer"></div>
     </div>
-    
-    <div class="file-input">
-      <p>Choose your project files :- </p>
-      <label for="fileUpload">Choose files:</label>
-      <input type="file" id="fileUpload" name="fileUpload[]" multiple>
-  </div>
-  </div>
-  <div class="file-display">
-    <!-- Placeholder for file names -->
-  </div>
-  <div class="enter">
-  <button id="searchButton">Search <i class="fas fa-search"></i></button>
-  </div>
-  <div class="related" id="relatedProjectsContainer"></div>
-  <div class="enter">
-    <button id="CheckPlagiarism">Check Plagiarism <i class="fas fa-check"></i></button>
-    </div>
-  </div>
-    
-      <!--<div class="file-data">
-        <h3>File Data:</h3>
-        <div id="editor"></div>
-      </div>-->
+
+    <div id="editor"></div>
+
+
       <div class="order">
         <div class="head">
           <h3>Projects</h3>
-          <i class='bx bx-search' ></i>
-          <i class='bx bx-filter' ></i>
+          <i class='bx bx-search'></i>
+          <i class='bx bx-filter'></i>
         </div>
         <table id="projectTable">
           <thead>
@@ -97,123 +100,199 @@
           </thead>
           <tbody>
             <% if (data && data.length > 0) { %>
-              <% data.forEach(row => { %>
-              <tr>
-                <td><p class="datas"><%= row.username %></p></td>
-                <td>
-                  <p class="datas">
-                    <!-- Update the link to point to the related route with username and project name parameters -->
-                    <a class="data" href="#" onclick="loadRelatedProjects('<%= row.username %>', '<%= row.project_name %>')"><%= row.project_name %></a>
-                  </p>
-                </td>
-                <td><p class="data"><%= row.summary %></p></td>
-              </tr>
-              <% }); %>
+            <% data.forEach(row => { %>
+            <tr>
+              <td>
+                <p class="datas"><%= row.username %></p>
+              </td>
+              <td>
+                <p class="datas">
+                  <!-- Update the link to point to the related route with username and project name parameters -->
+                  <a class="data" href="#" onclick="loadRelatedProjects('<%= row.username %>', '<%= row.project_name %>')"><%= row.project_name %></a>
+                </p>
+              </td>
+              <td>
+                <p class="data"><%= row.summary %></p>
+              </td>
+            </tr>
+            <% }); %>
             <% } else { %>
-
-              <tr>
-                <td><p class="message">Data was not found or Empty</p></td>
-              </tr>
+            <tr>
+              <td>
+                <p class="message">Data was not found or Empty</p>
+              </td>
+            </tr>
             <% } %>
           </tbody>
         </table>
       </div>
     </div>
     
+    <script>
 
-      <script>
-        document.getElementById('CheckPlagiarism').addEventListener('click', function() {
-          // Get content from the "file-display" section
-          const fileDisplayContent = getFileDisplayContent();
-          
-          // Get content from the "relatedProjectsContainer" section
-          const relatedContent = getRelatedContent();
-          
-          // Perform plagiarism check
-          const plagiarismPercentage = calculatePlagiarismPercentage(fileDisplayContent, relatedContent);
-          
-          // Display the results to the user
-          displayPlagiarismPercentage(plagiarismPercentage);
-      });
-      
-      function getFileDisplayContent() {
-          const fileDisplaySection = document.querySelector('.file-display');
-          const fileContent = fileDisplaySection.textContent.trim();
-          return fileContent;
-      }
-      
-      function getRelatedContent() {
-          const relatedSection = document.getElementById('relatedProjectsContainer');
-          const fileElements = relatedSection.querySelectorAll('.file');
-          const fileContent = Array.from(fileElements).map(fileElement => fileElement.textContent).join('\n');
-          return fileContent;
-      }
-      
-      function calculatePlagiarismPercentage(content1, content2) {
-          // Convert content to lowercase for case-insensitive comparison
-          const lowerCaseContent1 = content1.toLowerCase();
-          const lowerCaseContent2 = content2.toLowerCase();
-        
-          // Split content into words
-          const words1 = lowerCaseContent1.split(/\s+/);
-          const words2 = lowerCaseContent2.split(/\s+/);
-        
-          // Calculate the number of common words
-          const commonWords = words1.filter(word => words2.includes(word)).length;
-        
-          // Calculate the plagiarism percentage
-          const totalWords = Math.max(words1.length, words2.length); // Total words in the longer content
-          const plagiarismPercentage = (commonWords / totalWords) * 100;
-        
-          return plagiarismPercentage;
-      }
-      
-      function displayPlagiarismPercentage(percentage) {
-          // Display the plagiarism percentage to the user
-          const resultsContainer = document.createElement('div');
-          resultsContainer.classList.add('plagiarism-results');
-        
-          const resultElement = document.createElement('div');
-          resultElement.textContent = `Plagiarism Percentage: ${percentage.toFixed(2)}%`;
-          resultsContainer.appendChild(resultElement);
-        
-          // Add the results container to the page
-          document.body.appendChild(resultsContainer);
-      }
-      
-      
-      
-        // After displaying files, scroll the container into view
-        function loadRelatedProjects(username, projectName) {
-          // Make an AJAX request to fetch related projects
-          fetch(`/plagiarism/${username}/${projectName}`)
-              .then(response => response.json())
-              .then(data => {
-                  // Clear the container
-                  const container = document.getElementById('relatedProjectsContainer');
-                  container.innerHTML = '';
-      
-                  // Iterate through the data and append to the container
-                  data.forEach(row => {
-                      const filename = row.filename;
-                      const fileId = row.id;
-                      const fileElement = document.createElement('div');
-                      fileElement.classList.add('file');
-                      fileElement.textContent = filename;
-                      container.appendChild(fileElement);
-                  });
-      
-                  // After displaying files, scroll the container into view
-                  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              })
-              .catch(error => {
-                  console.error('Error fetching related projects:', error);
-              });
-      }
-      
+// Get the button element
+const checkPlagiarismButton = document.getElementById('CheckPlagiarism');
 
+// Add event listener for button click
+checkPlagiarismButton.addEventListener('click', checkPlagiarism);
+
+      // Function to compare content and calculate similarity
+function compareContent(content1, content2) {
+  const words1 = new Set(content1.split(/\s+/).filter(word => word.trim() !== '')); // Unique words in content1
+  const words2 = new Set(content2.split(/\s+/).filter(word => word.trim() !== '')); // Unique words in content2
+
+  // Find common words
+  const commonWords = [...words1].filter(word => words2.has(word));
+
+  // Calculate similarity percentage
+  const similarityPercentage = (commonWords.length / Math.max(words1.size, words2.size)) * 100;
+
+  return similarityPercentage.toFixed(2);
+}
+
+// Function to check plagiarism
+function checkPlagiarism() {
+  console.log("Checking plagiarism...");
+  const fileDisplays = document.querySelectorAll('.file-display .file-item');
+  console.log("File Displays:", fileDisplays);
+  const relatedProjectsFiles = document.querySelectorAll('#relatedProjectsContainer .file');
+  console.log("Related Projects Files:", relatedProjectsFiles);
+
+  // Convert files' data into plain text
+  const fileContents1 = Array.from(fileDisplays, fileDisplay => fileDisplay.textContent);
+  const fileContents2 = Array.from(relatedProjectsFiles, relatedFile => relatedFile.textContent);
+
+  // Compare each file's content from both containers
+  let totalSimilarity = 0;
+  let totalComparisons = 0;
+  fileContents1.forEach(content1 => {
+    fileContents2.forEach(content2 => {
+      console.log("Comparing:", content1, "with", content2);
+      const similarity = compareContent(content1, content2);
+      console.log("Similarity:", similarity);
+      totalSimilarity += parseFloat(similarity);
+      totalComparisons++;
+    });
+  });
+
+  // Calculate average similarity percentage
+  const averageSimilarity = totalComparisons > 0 ? totalSimilarity / totalComparisons : 0;
+  const plagiarismPercentage = averageSimilarity.toFixed(2);
+
+  // Display plagiarism percentage in the container
+  console.log("Plagiarism Percentage:", plagiarismPercentage);
+  const plagiarismContainer = document.getElementById('plagiarismResultsContainer');
+  if (plagiarismContainer) {
+    plagiarismContainer.textContent = `Plagiarism Percentage: ${plagiarismPercentage}%`;
+  } else {
+    console.error('Element with ID "plagiarismResultsContainer" not found.');
+  }
+}
+
+
+
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const relatedProjectsContainer = document.getElementById('relatedProjectsContainer');
+        const fileContentContainer = document.getElementById('fileContentContainer');
+    
+        // Function to fetch related projects from the server
+        function fetchRelatedProjects(username, projectName) {
+            fetch(`/plagiarism/${username}/${projectName}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear the container
+                    relatedProjectsContainer.innerHTML = '';
+    
+                    // Iterate through the data and append to the container
+                    data.forEach(row => {
+                        const filename = row.filename;
+                        const dataContent = row.data;
+                        const fileElement = document.createElement('div');
+                        fileElement.classList.add('file');
+    
+                        // Set the content icon based on dataContent existence
+                        const contentIcon = dataContent ? ' ✔️' : ' ❌';
+    
+                        fileElement.textContent = filename + contentIcon;
+                        fileElement.addEventListener('click', () => {
+                            // When a file is clicked, display its content as plain text
+                            displayFileContent(filename, dataContent);
+                        });
+                        relatedProjectsContainer.appendChild(fileElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching related projects:', error);
+                });
+        }
+    
+        // Function to display file content
+        function displayFileContent(filename, content) {
+            const fileContentContainer = document.getElementById('fileContentContainer');
+            // Check if the content is an object (likely numerical data), if so, stringify it
+            // Otherwise, assume it's already plain text
+            fileContentContainer.textContent = typeof content === 'object' ? JSON.stringify(content) : content;
+        }
+    
+        // Call fetchRelatedProjects function when the page loads
+        fetchRelatedProjects('username', 'projectName'); // Replace 'username' and 'projectName' with actual values
+    });
       
-  /* // Get the file input element
+      // Function to load related projects
+      function loadRelatedProjects(username, projectName) {
+        fetch(`/plagiarism/${username}/${projectName}`)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('relatedProjectsContainer');
+                container.innerHTML = '';
+    
+                data.forEach(row => {
+                    const filename = row.filename;
+                    const dataContent = row.data;
+                    const fileElement = document.createElement('div');
+                    fileElement.classList.add('file');
+    
+                    // Set the content icon based on dataContent existence
+                    const contentIcon = dataContent ? ' ✔️' : ' ❌';
+    
+                    fileElement.textContent = filename + contentIcon;
+                    container.appendChild(fileElement);
+    
+                    if (dataContent) {
+                        fileElement.addEventListener('click', () => displayFileContent(filename, dataContent));
+                    }
+                });
+    
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            })
+            .catch(error => {
+                console.error('Error fetching related projects:', error);
+            });
+    }
+    
+    function displayFileContent(filename, content) {
+      const fileContentContainer = document.getElementById('fileContentContainer');
+    
+      // Check if the content is an object (likely JSON data)
+      if (typeof content === 'object') {
+        // Convert the JSON object to a formatted string
+        fileContentContainer.textContent = JSON.stringify(content, null, 2); // 2 is the number of spaces for indentation
+      } else {
+        // Otherwise, assume it's plain text and display it as is
+        fileContentContainer.textContent = content;
+      }
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        loadRelatedProjects('username', 'projectName');
+    });
+    
+    
+    
+      
+   // Get the file input element
 const fileInput = document.getElementById('fileUpload');
 // Get the file display element
 const fileDisplay = document.querySelector('.file-display');
@@ -255,8 +334,8 @@ function displayFileData(file) {
   // Read the file as text
   reader.readAsText(file);
 }
-*/
-      // Get the file input element
+
+/*/ Get the file input element
 const fileInput = document.getElementById('fileUpload');
 // Get the file display element
 const fileDisplay = document.querySelector('.file-display');
@@ -278,24 +357,28 @@ fileInput.addEventListener('change', function() {
     // Append the file div to the file display container
     fileDisplay.appendChild(fileDiv);
     
-    // Add click event listener to each file div
-    fileDiv.addEventListener('click', function() {
-      displayFileData(file);
-    });
+    // Read file content and display it
+    readFileContent(file, fileDiv);
   }
 });
 
-// Function to display file data
-function displayFileData(file) {
+// Function to read file content and display it
+function readFileContent(file, fileDiv) {
   const reader = new FileReader();
   reader.onload = function(event) {
     // Display the file content
-    fileContent.textContent = event.target.result;
+    const content = event.target.result;
+    if (content.trim() !== '') {
+      // Content found, display a checkmark
+      fileDiv.textContent = file.name + ' ✔️';
+    } else {
+      // No content found, display a cross
+      fileDiv.textContent = file.name + ' ❌';
+    }
   };
   // Read the file as text
   reader.readAsText(file);
-}
-
+}*/
 
 
 const searchInput = document.getElementById('searchInput');
@@ -406,6 +489,38 @@ searchInput.addEventListener('input', () => {
       </script>
       
   <style>
+
+    .da {
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: black;
+      color: white;
+      height: 20vh;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    
+    #fileContentContainer {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      width: 50vw; /* Set the width to 400 pixels */
+      word-wrap: break-word; /* Wrap long words */
+      
+    }
+    
+    
+    
+    #plagiarismResultsContainer{
+      background-color: #0a75e7;
+      padding: 10px;
+      color: white;
+      border-radius: 0.5rem;
+      margin: 1rem;
+    }
+
+
     .related {
       margin-top: 10px;
       color: white;

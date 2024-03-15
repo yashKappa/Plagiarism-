@@ -43,43 +43,50 @@
             <span class="ty"><a class="Acc" href="one-to-one.html">HTML</a></span>
             <a class="ty" href="css.html">CSS</a>
             <a class="ty" href="js.html">JS</a>
-        </div>
+    </div>
         <h1>One-To-One <br> Plagiarize two codes with each other</h1>
-        <input type="file" id="file1" onchange="updateEditorFromFile(this, ace.edit('editor'))">
-        <div class="editor-container1">
-            <div id="editor1">// testing 1</div>
-            
+        
+       
+        
+        <div class="upload-btn-wrapper">
+            <button class="btn">Upload a file</button>
+            <input type="file" class="put" id="file1" onchange="updateEditorFromFile(this, ace.edit('editor'))">
         </div>
-        <input type="file" id="file2" onchange="updateEditorFromFile(this, ace.edit('editor1'))">
-
-        <div class="editor-container">
+        
+        <div class="upload-btn-wrapper1">
+            <button class="btn1">Upload a file</button>
+            <input type="file" class="put1" id="file2" onchange="updateEditorFromFile(this, ace.edit('editor1'))">
+        </div>
+                <div class="editor-container">
             <div id="editor">// testing 1</div>
+            <div id="editor1">// testing 1</div>
         </div>
+    
     
         <div class="check">
             <button id="check" onclick="checkPlagiarism()">Check Plagiarism</button>
         </div>
         <div class="res">
+            <div class="ResPec">
             <h2 id="result">Plagiarism</h2>
-    
-            <div id="copied-lines" style="display: none;">
-                <h3>Similar Lines:</h3>
-                <ul id="copied-lines-list"></ul>
-            </div>
-    
-            <div id="not-similar-lines" style="display: none;">
-                <h3>Not Similar Lines:</h3>
-                <ul id="not-similar-lines-list"></ul>
-            </div>
         </div>
+        <div id="copied-lines" style="display: none;">
+            <h3>similar Lines:</h3>
+           <ul id="copied-lines-list"></ul>
+        </div> 
+
+        <div id="not-similar-lines" style="display: none;">
+            <h3>Not Similar Lines:</h3>
+            <ul id="not-similar-lines-list"></ul>
+        </div>
+    </div>
     
         <!-- Popup for the message -->
+        
         <div id="popup" class="popup">
             <p id="popupMessage"></p>
             <button onclick="closePopup()">OK</button>
         </div>
-    </div>
-    
     <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {

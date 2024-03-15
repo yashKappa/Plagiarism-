@@ -348,24 +348,6 @@ function checkPlagiarism() {
         return; // Exit the function
     }
 
-    // Check for HTML/JavaScript in the CSS editor
-    if (containsCSSorJS(cleanLines1)) {
-        displayPopup('Error: The HTML editor should only contain CSS code.');
-        // Clear any previously displayed copied lines and not similar lines
-        clearCopiedLines();
-        clearNotSimilarLines();
-        return; // Exit the function
-    }
-
-    // Check for HTML/JavaScript in the CSS editor
-    if (containsCSSorJS(cleanLines2)) {
-        displayPopup('Error: The HTML editor should only contain CSS code.');
-        // Clear any previously displayed copied lines and not similar lines
-        clearCopiedLines();
-        clearNotSimilarLines();
-        return; // Exit the function
-    }
-
     // Find common lines between the two code snippets
     const commonLines = getCommonLines(cleanLines1, cleanLines2);
 
@@ -394,14 +376,7 @@ function checkPlagiarism() {
 
     // Display not similar lines
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
-
-    function containsHTMLorJS(lines) {
-        const htmlJSRegex = /<[^>]+>|<\/[^>]+>|<script[^>]*>[\s\S]*?<\/script>/i;
-        return lines.some(line => htmlJSRegex.test(line));
-    }
 }
-
-// ... (rest of the functions remain unchanged)
 
 
 

@@ -55,6 +55,10 @@
               <i class="bx bx-filter"></i>
           </div>
       </div>
+      <% if (data && data.length > 0) { %>
+        <p class="message">Total projects displayed: <%= data.length %></p>
+        <% } %>
+     
       <form id="deleteForm" action="/user/delete" method="post">
         <table border="1">
           <tr>
@@ -85,8 +89,8 @@
           <% }); %>
         </table>
         <% if (data && data.length > 0) { %>
-          <!-- Your other content here -->
-        <% } else { %>
+       
+          <% } else { %>
           <p class="message">Data was not found or Empty</p>
         <% } %>
       </form>
@@ -562,9 +566,15 @@ button:hover {
     }
       
     .message {
-        font-style: italic;
-        color: #777;
-    }
+        color: #ffffff;
+        background-color: #1d1d1d;
+        width: calc(25% - 10px);
+        padding: 10px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.849);
+      }
     
     /* Dark mode styles */
     .dark-mode .container {

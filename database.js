@@ -988,9 +988,9 @@ app.get('/plagiarism', (req, res) => {
 app.get('/plagiarism/:username/:projectName', (req, res) => {
   const projectName = req.params.projectName;
 
-  // Query the MySQL database to fetch files related to the project name
+  // Query the MySQL database to fetch filenames and data related to the project name
   const query = `
-    SELECT *
+    SELECT filename, data
     FROM file
     WHERE project_name = ?
   `;
@@ -1000,11 +1000,18 @@ app.get('/plagiarism/:username/:projectName', (req, res) => {
       console.error('Error executing MySQL query:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
-      // Send the query results as JSON
-      res.json(results);
+      // Convert binary data to plain text
+      const filesData = results.map(result => ({
+        filename: result.filename,
+        data: result.data.toString('utf-8') // Convert binary data to text
+      }));
+      res.json(filesData);
     }
   });
 });
+
+
+
 
 
 app.get('/plagiarism', (req, res) => {
@@ -1026,12 +1033,12 @@ app.get('/plagiarism', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-  // Execute the SQL query
-  connection.query('SELECT COUNT(*) AS totalProjects FROM student WHERE project_name', (error, results) => {
+  // Execute the SQL query to get total projects count
+  connection.query('SELECT COUNT(*) AS totalProjects FROM student WHERE project_name IS NOT NULL', (error, results) => {
     if (error) {
       throw error;
     }
-    // Render the EJS template with the query result
+    // Render the EJS template with the count of total projects
     res.render('profile', { totalProjects: results[0].totalProjects });
   });
 });
