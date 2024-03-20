@@ -34,7 +34,7 @@
                 <div class="table1">
                     <div class="profile-dropdown">
                         <a href="profile.html">
-                            <div class="img"><div id="image-container1">profile</div></div>
+                            <div class="img"><div id="image-container1"></div></div>
                         </a>
                         <div class="dropdown-menu">
                             <ul>
@@ -96,6 +96,24 @@
     
       
       <script>
+        // Function to display the saved image
+function displaySavedImage(imageData) {
+  const imageContainer = document.getElementById('image-container1');
+  const image = new Image();
+  image.src = imageData;
+  imageContainer.appendChild(image);
+}
+
+// Load the saved image from local storage when the page loads
+window.onload = function() {
+  const savedImageData = localStorage.getItem('kappa_savedImage');
+  if (savedImageData) {
+      displaySavedImage(savedImageData);
+  }
+};
+
+
+        
         const searchInput = document.getElementById('searchInput');
         const projectTable = document.getElementById('projectTable');
         const projectBody = document.getElementById('projectBody');

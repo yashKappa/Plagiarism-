@@ -1000,15 +1000,21 @@ app.get('/plagiarism/:username/:projectName', (req, res) => {
       console.error('Error executing MySQL query:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
-      // Convert binary data to plain text
-      const filesData = results.map(result => ({
-        filename: result.filename,
-        data: result.data.toString('utf-8') // Convert binary data to text
-      }));
-      res.json(filesData);
+      try {
+        // Convert binary data to plain text
+        const filesData = results.map(result => ({
+          filename: result.filename,
+          data: result.data.toString('utf-8') // Convert binary data to text
+        }));
+        res.json(filesData);
+      } catch (err) {
+        console.error('Error processing data:', err);
+        res.status(500).json({ error: 'Error processing data' });
+      }
     }
   });
 });
+
 
 
 

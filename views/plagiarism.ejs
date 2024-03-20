@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
     <link rel="stylesheet" href="../student user/userpanel.css">   
     <link rel="node" href="../node.js">
     <link rel="script" href="script.js">
@@ -34,12 +35,12 @@
                 <div class="table1">
                     <div class="profile-dropdown">
                         <a href="profile.html">
-                            <div class="img"><div id="image-container1">profile</div></div>
+                          <div class="img"><div id="image-container1"></div></div>
                         </a>
                         <div class="dropdown-menu">
                             <ul>
                                 <li><a href="#"><img id="dark" src="suns.png"></a></li>
-                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span ><a href="../student user/profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
                                 <li><span class="fe" ><a id="logout-btn" class="noo">log out</a>
                                 </span></li>
                             </ul>
@@ -65,7 +66,6 @@
           </div>
         </div>
         <div class="file-display">
-          <!-- Placeholder for file names -->
         </div>
         <div class="enter">
           <button id="searchButton">Search <i class="fas fa-search"></i></button>
@@ -77,11 +77,10 @@
       </div>
       <div id="plagiarismResultsContainer">percentage</div> <!-- Adding the plagiarism results container -->
 
-      <div class="da">
-      <div id="fileContentContainer"></div>
+      <div id="editor"></div>
+
     </div>
 
-    <div id="editor"></div>
 
 
       <div class="order">
@@ -130,63 +129,118 @@
     
     <script>
 
-// Get the button element
+      // Function to display the saved image
+function displaySavedImage(imageData) {
+  const imageContainer = document.getElementById('image-container1');
+  const image = new Image();
+  image.src = imageData;
+  imageContainer.appendChild(image);
+}
+
+// Load the saved image from local storage when the page loads
+window.onload = function() {
+  const savedImageData = localStorage.getItem('kappa_savedImage');
+  if (savedImageData) {
+      displaySavedImage(savedImageData);
+  }
+};
+
+const darkModePreference = localStorage.getItem('darkMode');
+
+// Function to toggle dark mode
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-theme");
+
+  if (document.body.classList.contains("dark-theme")) {
+    localStorage.setItem('darkMode', 'enabled');
+    dark.src = "moons.png";
+    loo.src = "dark1.png";
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+    dark.src = "suns.png";
+    loo.src = "light1.png";
+  }
+}
+
+// Apply dark mode based on user preference
+if (darkModePreference === 'enabled') {
+  document.body.classList.add('dark-theme');
+  dark.src = "moons.png";
+  loo.src = "dark1.png";
+} else {
+  dark.src = "suns.png";
+  loo.src = "light1.png";
+}
+
+dark.onclick = toggleDarkMode;
+
 const checkPlagiarismButton = document.getElementById('CheckPlagiarism');
 
 // Add event listener for button click
 checkPlagiarismButton.addEventListener('click', checkPlagiarism);
 
-      // Function to compare content and calculate similarity
-function compareContent(content1, content2) {
-  const words1 = new Set(content1.split(/\s+/).filter(word => word.trim() !== '')); // Unique words in content1
-  const words2 = new Set(content2.split(/\s+/).filter(word => word.trim() !== '')); // Unique words in content2
-
-  // Find common words
-  const commonWords = [...words1].filter(word => words2.has(word));
-
-  // Calculate similarity percentage
-  const similarityPercentage = (commonWords.length / Math.max(words1.size, words2.size)) * 100;
-
-  return similarityPercentage.toFixed(2);
-}
-
 // Function to check plagiarism
-function checkPlagiarism() {
+async function checkPlagiarism() {
   console.log("Checking plagiarism...");
   const fileDisplays = document.querySelectorAll('.file-display .file-item');
-  console.log("File Displays:", fileDisplays);
-  const relatedProjectsFiles = document.querySelectorAll('#relatedProjectsContainer .file');
-  console.log("Related Projects Files:", relatedProjectsFiles);
+  const editor = ace.edit("editor");
+  editor.session.clearAnnotations(); // Clear any previous annotations
 
-  // Convert files' data into plain text
-  const fileContents1 = Array.from(fileDisplays, fileDisplay => fileDisplay.textContent);
-  const fileContents2 = Array.from(relatedProjectsFiles, relatedFile => relatedFile.textContent);
-
-  // Compare each file's content from both containers
+  // Variables to store total similarity and total comparisons
   let totalSimilarity = 0;
   let totalComparisons = 0;
-  fileContents1.forEach(content1 => {
-    fileContents2.forEach(content2 => {
-      console.log("Comparing:", content1, "with", content2);
-      const similarity = compareContent(content1, content2);
-      console.log("Similarity:", similarity);
-      totalSimilarity += parseFloat(similarity);
-      totalComparisons++;
-    });
-  });
+
+  // Fetch and compare each file's content with others
+  for (let i = 0; i < fileDisplays.length; i++) {
+    const content1 = await fetchFileContent(fileDisplays[i].textContent); // Get content of the current file
+    for (let j = 0; j < fileDisplays.length; j++) {
+      if (i !== j) {
+        const content2 = await fetchFileContent(fileDisplays[j].textContent); // Get content of the related file
+        console.log("Comparing:", fileDisplays[i].textContent, "with", fileDisplays[j].textContent);
+        const similarity = compareContent(content1, content2);
+        console.log("Similarity:", similarity);
+
+        // Increment total similarity and total comparisons
+        totalSimilarity += similarity;
+        totalComparisons++;
+      }
+    }
+  }
 
   // Calculate average similarity percentage
-  const averageSimilarity = totalComparisons > 0 ? totalSimilarity / totalComparisons : 0;
-  const plagiarismPercentage = averageSimilarity.toFixed(2);
+  const averageSimilarity = totalComparisons > 0 ? (totalSimilarity / totalComparisons) * 100 : 0;
 
-  // Display plagiarism percentage in the container
-  console.log("Plagiarism Percentage:", plagiarismPercentage);
+  // Display plagiarism percentage
+  console.log("Plagiarism Percentage:", averageSimilarity.toFixed(2) + "%");
   const plagiarismContainer = document.getElementById('plagiarismResultsContainer');
   if (plagiarismContainer) {
-    plagiarismContainer.textContent = `Plagiarism Percentage: ${plagiarismPercentage}%`;
+    plagiarismContainer.textContent = `Plagiarism Percentage: ${averageSimilarity.toFixed(2)}%`;
   } else {
     console.error('Element with ID "plagiarismResultsContainer" not found.');
   }
+}
+
+// Function to fetch file content using AJAX
+function fetchFileContent(fileName) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          resolve(xhr.responseText);
+        } else {
+          reject(new Error(`Failed to fetch content of file: ${fileName}`));
+        }
+      }
+    };
+    xhr.open('GET', fileName);
+    xhr.send();
+  });
+}
+
+// Function to compare content and calculate similarity
+function compareContent(content1, content2) {
+  // Your comparison logic here
 }
 
 
@@ -194,95 +248,180 @@ function checkPlagiarism() {
 
       document.addEventListener('DOMContentLoaded', function() {
         const relatedProjectsContainer = document.getElementById('relatedProjectsContainer');
-        const fileContentContainer = document.getElementById('fileContentContainer');
+        const editor = document.getElementById('editor');
     
         // Function to fetch related projects from the server
-        function fetchRelatedProjects(username, projectName) {
-            fetch(`/plagiarism/${username}/${projectName}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear the container
-                    relatedProjectsContainer.innerHTML = '';
-    
-                    // Iterate through the data and append to the container
-                    data.forEach(row => {
-                        const filename = row.filename;
-                        const dataContent = row.data;
-                        const fileElement = document.createElement('div');
-                        fileElement.classList.add('file');
-    
-                        // Set the content icon based on dataContent existence
-                        const contentIcon = dataContent ? ' ✔️' : ' ❌';
-    
-                        fileElement.textContent = filename + contentIcon;
-                        fileElement.addEventListener('click', () => {
-                            // When a file is clicked, display its content as plain text
-                            displayFileContent(filename, dataContent);
-                        });
-                        relatedProjectsContainer.appendChild(fileElement);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching related projects:', error);
-                });
+       // Function to fetch related projects from the server
+// Function to fetch related projects from the server
+function fetchRelatedProjects(username, projectName) {
+  fetch(`/plagiarism/${username}/${projectName}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Clear the container
+      relatedProjectsContainer.innerHTML = '';
+
+      // Iterate through the data and append to the container
+      data.forEach(row => {
+        const filename = row.filename;
+        let dataContent = row.data;
+
+        // Parse JSON data if present
+        if (dataContent && typeof dataContent === 'string') {
+          try {
+            dataContent = JSON.parse(dataContent);
+          } catch (error) {
+            console.error('Error parsing JSON data:', error);
+          }
         }
-    
+
+        const fileElement = document.createElement('div');
+        fileElement.classList.add('file');
+
+        // Set the content icon based on dataContent existence and type
+        const contentIcon = dataContent ? (typeof dataContent === 'string' ? ' 🔄' : ' ✔️') : ' ❌';
+        
+        fileElement.textContent = filename + contentIcon;
+
+        fileElement.addEventListener('click', () => {
+          displayFileContent(filename, dataContent);
+        });
+
+        relatedProjectsContainer.appendChild(fileElement);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching related projects:', error);
+    });
+} 
         // Function to display file content
-        function displayFileContent(filename, content) {
-            const fileContentContainer = document.getElementById('fileContentContainer');
-            // Check if the content is an object (likely numerical data), if so, stringify it
-            // Otherwise, assume it's already plain text
-            fileContentContainer.textContent = typeof content === 'object' ? JSON.stringify(content) : content;
+        function displayFileContent(filename, content, plagiarismPercentage) {
+          const editor = document.getElementById('editor');
+        
+          // Check if the content is an object (likely JSON data)
+          if (typeof content === 'object') {
+            // Convert the JSON object to a formatted string
+            editor.textContent = `File: ${filename}\n\n${JSON.stringify(content, null, 2)}\n\nPlagiarism Percentage: ${plagiarismPercentage}%`;
+          } else {
+            // Otherwise, assume it's plain text and display it as is
+            editor.textContent = `File: ${filename}\n\n${content}\n\nPlagiarism Percentage: ${plagiarismPercentage}%`;
+          }
         }
+        
     
         // Call fetchRelatedProjects function when the page loads
         fetchRelatedProjects('username', 'projectName'); // Replace 'username' and 'projectName' with actual values
     });
       
-      // Function to load related projects
-      function loadRelatedProjects(username, projectName) {
-        fetch(`/plagiarism/${username}/${projectName}`)
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('relatedProjectsContainer');
-                container.innerHTML = '';
-    
-                data.forEach(row => {
-                    const filename = row.filename;
-                    const dataContent = row.data;
-                    const fileElement = document.createElement('div');
-                    fileElement.classList.add('file');
-    
-                    // Set the content icon based on dataContent existence
-                    const contentIcon = dataContent ? ' ✔️' : ' ❌';
-    
-                    fileElement.textContent = filename + contentIcon;
-                    container.appendChild(fileElement);
-    
-                    if (dataContent) {
-                        fileElement.addEventListener('click', () => displayFileContent(filename, dataContent));
-                    }
-                });
-    
-                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            })
-            .catch(error => {
-                console.error('Error fetching related projects:', error);
-            });
-    }
-    
+// Function to load related projects
+function loadRelatedProjects(username, projectName) {
+  fetch(`/plagiarism/${username}/${projectName}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const container = document.getElementById('relatedProjectsContainer');
+      container.innerHTML = '';
+
+      data.forEach(row => {
+        const filename = row.filename;
+        let dataContent = row.data;
+
+        // Parse JSON data if present
+        if (typeof dataContent === 'string') {
+          try {
+            dataContent = JSON.parse(dataContent);
+          } catch (error) {
+            // If parsing fails, assume it's plain text
+          }
+        }
+
+        const fileElement = document.createElement('div');
+        fileElement.classList.add('file');
+
+        // Set the content icon based on dataContent existence and type
+        let contentIcon = '';
+        if (!dataContent) {
+          contentIcon = ' ❌'; // No data
+        } else if (typeof dataContent === 'string') {
+          contentIcon = ' 🔄'; // Plain text
+        } else {
+          contentIcon = ' ✔️'; // Other data types
+        }
+
+        fileElement.textContent = filename + contentIcon;
+        container.appendChild(fileElement);
+
+        if (dataContent) {
+          fileElement.addEventListener('click', () => displayFileContent(filename, dataContent));
+        }
+      });
+
+      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    })
+    .catch(error => {
+      console.error('Error fetching related projects:', error);
+    });
+}
+
+      
     function displayFileContent(filename, content) {
-      const fileContentContainer = document.getElementById('fileContentContainer');
-    
+      const editor = ace.edit("editor");
+      editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
+      editor.session.setMode("ace/mode/css"); // Set the mode (replace 'css' with the appropriate mode for your content)
+      
       // Check if the content is an object (likely JSON data)
       if (typeof content === 'object') {
         // Convert the JSON object to a formatted string
-        fileContentContainer.textContent = JSON.stringify(content, null, 2); // 2 is the number of spaces for indentation
-      } else {
-        // Otherwise, assume it's plain text and display it as is
-        fileContentContainer.textContent = content;
+        content = JSON.stringify(content, null, 2);
       }
+    
+      // Set the content of the editor
+      editor.setValue(content);
+    
+      // Get all the file contents to compare
+      const allFileContents = Array.from(document.querySelectorAll('.file-item'), fileItem => fileItem.textContent);
+    
+      // Iterate through each file content to find plagiarized parts
+      allFileContents.forEach(fileContent => {
+        // Highlight plagiarized parts in the editor
+        highlightPlagiarizedContent(editor, content, fileContent);
+      });
+    
+      // Move the cursor to the beginning of the content
+      editor.gotoLine(1);
     }
+    
+    // Function to highlight plagiarized content in the editor
+    function highlightPlagiarizedContent(editor, content, otherContent) {
+      // Split the content into words
+      const contentWords = content.split(/\s+/);
+      const otherContentWords = otherContent.split(/\s+/);
+    
+      // Find common words
+      const commonWords = contentWords.filter(word => otherContentWords.includes(word));
+    
+      // Get the range for each plagiarized word and apply the highlight
+      commonWords.forEach(word => {
+        const range = editor.find(word, {
+          backwards: false,
+          wrap: true,
+          caseSensitive: false,
+          wholeWord: true
+        });
+        if (range) {
+          editor.session.addMarker(range, "highlight", "text");
+        }
+      });
+    }
+    
     
     
     document.addEventListener('DOMContentLoaded', function() {
@@ -292,48 +431,41 @@ function checkPlagiarism() {
     
     
       
-   // Get the file input element
-const fileInput = document.getElementById('fileUpload');
-// Get the file display element
-const fileDisplay = document.querySelector('.file-display');
-// Get the ACE Editor element
-const editor = ace.edit("editor");
-editor.setTheme("ace/theme/monokai"); // Set the theme (optional)
-editor.session.setMode("ace/mode/text"); // Set the mode (optional)
-
-// Add event listener for file input change
-fileInput.addEventListener('change', function() {
-  // Clear previous file display
-  fileDisplay.innerHTML = '';
-  // Loop through each selected file
-  for (const file of this.files) {
-    // Create a div element for each file
-    const fileDiv = document.createElement('div');
-    // Set the class for styling
-    fileDiv.classList.add('file-item');
-    // Display the file name
-    fileDiv.textContent = file.name;
-    // Append the file div to the file display container
-    fileDisplay.appendChild(fileDiv);
+    const fileInput = document.getElementById('fileUpload');
+    const fileDisplay = document.querySelector('.file-display');
     
-    // Add click event listener to each file div
-    fileDiv.addEventListener('click', function() {
-      displayFileData(file);
+    fileInput.addEventListener('change', function() {
+      // Clear previous content in the file display container
+      fileDisplay.innerHTML = '';
+      
+      // Loop through each selected file
+      for (let i = 0; i < this.files.length; i++) {
+        const file = this.files[i];
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+          const fileContent = event.target.result;
+          
+          // Create a new ACE Editor element for each file
+          const editorContainer = document.createElement('div');
+          editorContainer.classList.add('file-content');
+          fileDisplay.appendChild(editorContainer); // Append the editor container to the file display container
+          
+          // Initialize the ACE Editor
+          const editor = ace.edit(editorContainer);
+          editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
+          editor.session.setMode("ace/mode/css"); // Set the mode (optional)
+          
+          // Set the file content to the ACE Editor
+          editor.setValue(fileContent);
+          editor.clearSelection();
+        };
+        
+        // Read the file as text
+        reader.readAsText(file);
+      }
     });
-  }
-});
-
-// Function to display file data in ACE Editor
-function displayFileData(file) {
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    // Set the file content to the ACE Editor
-    editor.setValue(event.target.result);
-    editor.clearSelection();
-  };
-  // Read the file as text
-  reader.readAsText(file);
-}
+    
 
 /*/ Get the file input element
 const fileInput = document.getElementById('fileUpload');
@@ -485,8 +617,8 @@ searchInput.addEventListener('input', () => {
     filterRows(); // Call filterRows function to update display based on search input
   }
 });
+</script>
 
-      </script>
       
   <style>
 
@@ -501,7 +633,7 @@ searchInput.addEventListener('input', () => {
       margin-bottom: 1rem;
     }
     
-    #fileContentContainer {
+    #editor {
       font-family: Arial, sans-serif;
       font-size: 14px;
       line-height: 1.6;
@@ -575,8 +707,15 @@ searchInput.addEventListener('input', () => {
   flex-wrap: wrap; /* Allow items to wrap to the next line */
   cursor: pointer;
   justify-content: center;
+  overflow: auto;
 }
 
+.file-content{
+  width: 20vw;
+  height: 20vh;
+  overflow: auto;
+  margin: 1rem;
+}
 
 .file-item:hover {
   background-color: rgb(29, 28, 28);
@@ -731,8 +870,9 @@ searchInput.addEventListener('input', () => {
 
 
 .order {
-  margin-bottom: 20px;
-}
+  margin: 3rem;
+  padding-bottom: 2rem;
+  }
 
 table{
   margin-top: 1rem;
@@ -766,6 +906,7 @@ td{
   margin-right: 0.5rem;
   padding: 10px;
  }
+
 
  
   </style>
