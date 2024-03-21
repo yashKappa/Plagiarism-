@@ -246,77 +246,73 @@ function compareContent(content1, content2) {
 
 
 
-      document.addEventListener('DOMContentLoaded', function() {
-        const relatedProjectsContainer = document.getElementById('relatedProjectsContainer');
-        const editor = document.getElementById('editor');
-    
-        // Function to fetch related projects from the server
-       // Function to fetch related projects from the server
+document.addEventListener('DOMContentLoaded', function() {
+  const relatedProjectsContainer = document.getElementById('relatedProjectsContainer');
+  const editor = document.getElementById('editor');
+
+  // Function to fetch related projects from the server
+ // Function to fetch related projects from the server
 // Function to fetch related projects from the server
 function fetchRelatedProjects(username, projectName) {
-  fetch(`/plagiarism/${username}/${projectName}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Clear the container
-      relatedProjectsContainer.innerHTML = '';
+fetch(`/plagiarism/${username}/${projectName}`)
+.then(response => {
+if (!response.ok) {
+  throw new Error('Network response was not ok');
+}
+return response.json();
+})
+.then(data => {
+// Clear the container
+relatedProjectsContainer.innerHTML = '';
 
-      // Iterate through the data and append to the container
-      data.forEach(row => {
-        const filename = row.filename;
-        let dataContent = row.data;
+// Iterate through the data and append to the container
+data.forEach(row => {
+  const filename = row.filename;
+  let dataContent = row.data;
 
-        // Parse JSON data if present
-        if (dataContent && typeof dataContent === 'string') {
-          try {
-            dataContent = JSON.parse(dataContent);
-          } catch (error) {
-            console.error('Error parsing JSON data:', error);
-          }
-        }
+  // Parse JSON data if present
+  if (dataContent && typeof dataContent === 'string') {
+    try {
+      dataContent = JSON.parse(dataContent);
+    } catch (error) {
+      console.error('Error parsing JSON data:', error);
+    }
+  }
 
-        const fileElement = document.createElement('div');
-        fileElement.classList.add('file');
+  const fileElement = document.createElement('div');
+  fileElement.classList.add('file');
 
-        // Set the content icon based on dataContent existence and type
-        const contentIcon = dataContent ? (typeof dataContent === 'string' ? ' 🔄' : ' ✔️') : ' ❌';
-        
-        fileElement.textContent = filename + contentIcon;
+  // Set the content icon based on dataContent existence and type
+  const contentIcon = dataContent ? (typeof dataContent === 'string' ? ' 🔄' : ' ✔️') : ' ❌';
+  
+  fileElement.textContent = filename + contentIcon;
 
-        fileElement.addEventListener('click', () => {
-          displayFileContent(filename, dataContent);
-        });
+  fileElement.addEventListener('click', () => {
+    displayFileContent(filename, dataContent);
+  });
 
-        relatedProjectsContainer.appendChild(fileElement);
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching related projects:', error);
-    });
+  relatedProjectsContainer.appendChild(fileElement);
+});
+})
+.catch(error => {
+console.error('Error fetching related projects:', error);
+});
 } 
-        // Function to display file content
-        function displayFileContent(filename, content, plagiarismPercentage) {
-          const editor = document.getElementById('editor');
-        
-          // Check if the content is an object (likely JSON data)
-          if (typeof content === 'object') {
-            // Convert the JSON object to a formatted string
-            editor.textContent = `File: ${filename}\n\n${JSON.stringify(content, null, 2)}\n\nPlagiarism Percentage: ${plagiarismPercentage}%`;
-          } else {
-            // Otherwise, assume it's plain text and display it as is
-            editor.textContent = `File: ${filename}\n\n${content}\n\nPlagiarism Percentage: ${plagiarismPercentage}%`;
-          }
-        }
-        
-    
-        // Call fetchRelatedProjects function when the page loads
-        fetchRelatedProjects('username', 'projectName'); // Replace 'username' and 'projectName' with actual values
-    });
-      
+  // Function to display file content
+  function displayFileContent(content) {
+    const editor = ace.edit("editor");
+    editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
+    editor.session.setMode("ace/mode/javascript"); // Set the mode (optional)
+
+    // Clear the editor and set the content
+    editor.session.setValue(content);
+}
+
+
+  // Call fetchRelatedProjects function when the page loads
+  fetchRelatedProjects('username', 'projectName'); // Replace 'username' and 'projectName' with actual values
+});
+
 // Function to load related projects
 function loadRelatedProjects(username, projectName) {
   fetch(`/plagiarism/${username}/${projectName}`)
@@ -331,7 +327,6 @@ function loadRelatedProjects(username, projectName) {
       container.innerHTML = '';
 
       data.forEach(row => {
-        const filename = row.filename;
         let dataContent = row.data;
 
         // Parse JSON data if present
@@ -343,25 +338,19 @@ function loadRelatedProjects(username, projectName) {
           }
         }
 
-        const fileElement = document.createElement('div');
-        fileElement.classList.add('file');
+        const contentElement = document.createElement('div');
+        contentElement.classList.add('file-content');
 
-        // Set the content icon based on dataContent existence and type
-        let contentIcon = '';
+        // Set the content of the element based on dataContent existence and type
         if (!dataContent) {
-          contentIcon = ' ❌'; // No data
+          contentElement.textContent = 'No data available';
         } else if (typeof dataContent === 'string') {
-          contentIcon = ' 🔄'; // Plain text
+          contentElement.textContent = dataContent;
         } else {
-          contentIcon = ' ✔️'; // Other data types
+          contentElement.textContent = JSON.stringify(dataContent, null, 2);
         }
 
-        fileElement.textContent = filename + contentIcon;
-        container.appendChild(fileElement);
-
-        if (dataContent) {
-          fileElement.addEventListener('click', () => displayFileContent(filename, dataContent));
-        }
+        container.appendChild(contentElement);
       });
 
       container.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -371,72 +360,49 @@ function loadRelatedProjects(username, projectName) {
     });
 }
 
-      
-    function displayFileContent(filename, content) {
-      const editor = ace.edit("editor");
-      editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
-      editor.session.setMode("ace/mode/css"); // Set the mode (replace 'css' with the appropriate mode for your content)
-      
-      // Check if the content is an object (likely JSON data)
-      if (typeof content === 'object') {
-        // Convert the JSON object to a formatted string
-        content = JSON.stringify(content, null, 2);
-      }
-    
-      // Set the content of the editor
-      editor.setValue(content);
-    
-      // Get all the file contents to compare
-      const allFileContents = Array.from(document.querySelectorAll('.file-item'), fileItem => fileItem.textContent);
-    
-      // Iterate through each file content to find plagiarized parts
-      allFileContents.forEach(fileContent => {
-        // Highlight plagiarized parts in the editor
-        highlightPlagiarizedContent(editor, content, fileContent);
-      });
-    
-      // Move the cursor to the beginning of the content
-      editor.gotoLine(1);
-    }
-    
-    // Function to highlight plagiarized content in the editor
-    function highlightPlagiarizedContent(editor, content, otherContent) {
-      // Split the content into words
-      const contentWords = content.split(/\s+/);
-      const otherContentWords = otherContent.split(/\s+/);
-    
-      // Find common words
-      const commonWords = contentWords.filter(word => otherContentWords.includes(word));
-    
-      // Get the range for each plagiarized word and apply the highlight
-      commonWords.forEach(word => {
-        const range = editor.find(word, {
-          backwards: false,
-          wrap: true,
-          caseSensitive: false,
-          wholeWord: true
-        });
-        if (range) {
-          editor.session.addMarker(range, "highlight", "text");
-        }
-      });
-    }
-    
-    
+
+
+function displayFileContent(filename, content) {
+const editor = ace.edit("editor");
+editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
+editor.session.setMode("ace/mode/css"); // Set the mode (replace 'css' with the appropriate mode for your content)
+
+// Check if the content is an object (likely JSON data)
+if (typeof content === 'object') {
+  // Convert the JSON object to a formatted string
+  content = JSON.stringify(content, null, 2);
+}
+
+// Set the content of the editor
+editor.setValue(content);
+
+// Get all the file contents to compare
+const allFileContents = Array.from(document.querySelectorAll('.file-item'), fileItem => fileItem.textContent);
+
+// Iterate through each file content to find plagiarized parts
+allFileContents.forEach(fileContent => {
+  // Highlight plagiarized parts in the editor
+  highlightPlagiarizedContent(editor, content, fileContent);
+});
+
+// Move the cursor to the beginning of the content
+editor.gotoLine(1);
+}
     
     document.addEventListener('DOMContentLoaded', function() {
         loadRelatedProjects('username', 'projectName');
     });
     
     
-    
-      
     const fileInput = document.getElementById('fileUpload');
     const fileDisplay = document.querySelector('.file-display');
     
     fileInput.addEventListener('change', function() {
       // Clear previous content in the file display container
       fileDisplay.innerHTML = '';
+      
+      // Check if the system or browser preference is dark or light mode
+      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       
       // Loop through each selected file
       for (let i = 0; i < this.files.length; i++) {
@@ -453,7 +419,8 @@ function loadRelatedProjects(username, projectName) {
           
           // Initialize the ACE Editor
           const editor = ace.edit(editorContainer);
-          editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
+          const theme = "ace/theme/tomorrow_night_bright";
+          editor.setTheme(theme); // Set the theme based on dark or light mode
           editor.session.setMode("ace/mode/css"); // Set the mode (optional)
           
           // Set the file content to the ACE Editor
@@ -710,11 +677,14 @@ searchInput.addEventListener('input', () => {
   overflow: auto;
 }
 
+
 .file-content{
-  width: 20vw;
-  height: 20vh;
+  width: 15vw;
+  height: 15vh;
   overflow: auto;
   margin: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid white;
 }
 
 .file-item:hover {
