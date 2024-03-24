@@ -63,6 +63,7 @@ body{
     --submit-hover-color:rgba(49, 175, 248, 0.767);
     --cancel-hover-color:rgba(248, 49, 49, 0.767);
     --info-color:rgb(100, 162, 197);
+    --data-color:rgba(206, 203, 203, 0.719);
 }
 .dark-theme{
     --h1-color:rgb(255, 255, 255);
@@ -95,7 +96,7 @@ body{
     --submit-color:rgb(59, 59, 59);
     --submit-hover-color:rgba(80, 80, 80, 0.767);
     --info-color:rgb(69, 100, 141);
-
+    --data-color:rgba(66, 66, 66, 0.719);
 }
 nav{
     width: 100%;
@@ -1203,6 +1204,8 @@ margin-left: -60%;
 .head1 h1{
     color: var(--h1-color);
 }
+
+
 /*  
 .gero {
     display: flex;

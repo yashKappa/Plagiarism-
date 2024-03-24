@@ -76,15 +76,12 @@
         </div>
       </div>
       <div id="plagiarismResultsContainer">percentage</div> <!-- Adding the plagiarism results container -->
-
-      <div id="editor"></div>
-
     </div>
 
 
 
       <div class="order">
-        <div class="head">
+        <div class="head2">
           <h3>Projects</h3>
           <i class='bx bx-search'></i>
           <i class='bx bx-filter'></i>
@@ -174,51 +171,74 @@ if (darkModePreference === 'enabled') {
 
 dark.onclick = toggleDarkMode;
 
-const checkPlagiarismButton = document.getElementById('CheckPlagiarism');
+function compareContent(content1, content2) {
+  // Assuming a very simple comparison algorithm for demonstration purposes
+  const minLength = Math.min(content1.length, content2.length);
+  let matchingChars = 0;
 
-// Add event listener for button click
-checkPlagiarismButton.addEventListener('click', checkPlagiarism);
-
-// Function to check plagiarism
-async function checkPlagiarism() {
-  console.log("Checking plagiarism...");
-  const fileDisplays = document.querySelectorAll('.file-display .file-item');
-  const editor = ace.edit("editor");
-  editor.session.clearAnnotations(); // Clear any previous annotations
-
-  // Variables to store total similarity and total comparisons
-  let totalSimilarity = 0;
-  let totalComparisons = 0;
-
-  // Fetch and compare each file's content with others
-  for (let i = 0; i < fileDisplays.length; i++) {
-    const content1 = await fetchFileContent(fileDisplays[i].textContent); // Get content of the current file
-    for (let j = 0; j < fileDisplays.length; j++) {
-      if (i !== j) {
-        const content2 = await fetchFileContent(fileDisplays[j].textContent); // Get content of the related file
-        console.log("Comparing:", fileDisplays[i].textContent, "with", fileDisplays[j].textContent);
-        const similarity = compareContent(content1, content2);
-        console.log("Similarity:", similarity);
-
-        // Increment total similarity and total comparisons
-        totalSimilarity += similarity;
-        totalComparisons++;
-      }
+  for (let i = 0; i < minLength; i++) {
+    if (content1[i] === content2[i]) {
+      matchingChars++;
     }
   }
 
-  // Calculate average similarity percentage
-  const averageSimilarity = totalComparisons > 0 ? (totalSimilarity / totalComparisons) * 100 : 0;
-
-  // Display plagiarism percentage
-  console.log("Plagiarism Percentage:", averageSimilarity.toFixed(2) + "%");
-  const plagiarismContainer = document.getElementById('plagiarismResultsContainer');
-  if (plagiarismContainer) {
-    plagiarismContainer.textContent = `Plagiarism Percentage: ${averageSimilarity.toFixed(2)}%`;
-  } else {
-    console.error('Element with ID "plagiarismResultsContainer" not found.');
-  }
+  // Calculate plagiarism percentage based on the number of matching characters
+  const plagiarismPercentage = (matchingChars / minLength) * 100;
+  return plagiarismPercentage.toFixed(2); // Return percentage with 2 decimal places
 }
+
+function checkPlagiarism() {
+  const relatedEditors = Array.from(document.querySelectorAll('#relatedProjectsContainer .ace_editor'));
+  const fileEditors = Array.from(document.querySelectorAll('.file-display .ace_editor'));
+
+  const plagiarismResultsContainer = document.getElementById('plagiarismResultsContainer');
+  plagiarismResultsContainer.innerHTML = '';
+
+  let maxTotalPlagiarismPercentage = 0; // Variable to store the maximum total plagiarism percentage
+
+  // Iterate through each related editor
+  relatedEditors.forEach((relatedEditorNode, i) => {
+    const relatedEditor = ace.edit(relatedEditorNode);
+    const relatedContent = relatedEditor.getValue();
+
+    let maxPlagiarismPercentage = 0; // Variable to store the highest plagiarism percentage for this related editor
+    let matchedFileEditor = null; // Variable to store the file editor that matches the plagiarism percentage
+
+    // Iterate through each file editor and calculate plagiarism percentage
+    fileEditors.forEach((fileEditorNode, j) => {
+      const fileEditor = ace.edit(fileEditorNode);
+      const fileContent = fileEditor.getValue();
+      const plagiarismPercentage = parseFloat(compareContent(relatedContent, fileContent));
+
+      // Update the maximum plagiarism percentage for this related editor
+      if (plagiarismPercentage > maxPlagiarismPercentage) {
+        maxPlagiarismPercentage = plagiarismPercentage;
+        matchedFileEditor = j + 1; // Update the matched file editor number
+      }
+    });
+
+    // Update the maximum total plagiarism percentage
+    if (maxPlagiarismPercentage > maxTotalPlagiarismPercentage) {
+      maxTotalPlagiarismPercentage = maxPlagiarismPercentage;
+    }
+
+    // Display the highest plagiarism percentage for this related editor along with its editor number and the matched file editor
+    const resultElement = document.createElement('div');
+    resultElement.textContent = `Plagiarism Percentage for Editor ${i + 1}: ${maxPlagiarismPercentage}% (matched with File Editor ${matchedFileEditor})`;
+    plagiarismResultsContainer.appendChild(resultElement);
+  });
+
+  // Display the total plagiarism percentage
+  const totalResultElement = document.createElement('div');
+  totalResultElement.textContent = `Total Plagiarism Percentage: ${maxTotalPlagiarismPercentage}%`;
+  plagiarismResultsContainer.appendChild(totalResultElement);
+}
+
+
+// Add event listener to the button for checking plagiarism
+const checkPlagiarismButton = document.getElementById('CheckPlagiarism');
+checkPlagiarismButton.addEventListener('click', checkPlagiarism);
+
 
 // Function to fetch file content using AJAX
 function fetchFileContent(fileName) {
@@ -238,10 +258,45 @@ function fetchFileContent(fileName) {
   });
 }
 
-// Function to compare content and calculate similarity
-function compareContent(content1, content2) {
-  // Your comparison logic here
-}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const editors = Array.from(document.querySelectorAll('.editor'));
+  
+  // Initialize an object to store the highest plagiarism percentage for each comparison
+  const highestPlagiarism = {};
+  
+  // Iterate over each editor
+  editors.forEach((currentEditor, i) => {
+      const currentEditorContent = currentEditor.getValue();
+      
+      // Compare with all other editors
+      editors.forEach((comparedEditor, j) => {
+          if (i !== j) {
+              const comparedEditorContent = comparedEditor.getValue();
+              
+              // Compare contents and calculate plagiarism percentage
+              const plagiarismPercentage = compareContent(currentEditorContent, comparedEditorContent);
+              
+              // Update highest plagiarism percentage for this editor
+              if (!highestPlagiarism[i] || plagiarismPercentage > highestPlagiarism[i].percentage) {
+                  highestPlagiarism[i] = {
+                      editorIndex: j,
+                      percentage: plagiarismPercentage
+                  };
+              }
+          }
+      });
+  });
+
+  // Display the highest plagiarism percentage for each editor comparison
+  for (const editorIndex in highestPlagiarism) {
+      const comparedEditorIndex = highestPlagiarism[editorIndex].editorIndex;
+      const plagiarismPercentage = highestPlagiarism[editorIndex].percentage;
+      
+      console.log(`Plagiarism Percentage between Editor ${parseInt(editorIndex) + 1} and Editor ${comparedEditorIndex + 1}: ${plagiarismPercentage.toFixed(2)}%`);
+  }
+});
 
 
 
@@ -341,25 +396,35 @@ function loadRelatedProjects(username, projectName) {
         const contentElement = document.createElement('div');
         contentElement.classList.add('file-content');
 
-        // Set the content of the element based on dataContent existence and type
-        if (!dataContent) {
-          contentElement.textContent = 'No data available';
-        } else if (typeof dataContent === 'string') {
-          contentElement.textContent = dataContent;
+        // Append the content element to the container
+        container.appendChild(contentElement);
+
+        // Create a new Ace Editor instance for the content element
+        const editor = ace.edit(contentElement);
+        editor.setTheme("ace/theme/merbivore"); // Set the theme
+        editor.session.setMode("ace/mode/javascript"); // Set the mode
+
+        // Set the content of the editor
+        if (typeof dataContent === 'object') {
+          editor.session.setValue(JSON.stringify(dataContent, null, 2));
         } else {
-          contentElement.textContent = JSON.stringify(dataContent, null, 2);
+          editor.session.setValue(dataContent);
         }
 
-        container.appendChild(contentElement);
-      });
+        // Set editor options
+        editor.setReadOnly(true); // Make the editor read-only
 
-      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Adjust editor size if needed
+        editor.resize();
+
+        // Scroll the container into view
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     })
     .catch(error => {
       console.error('Error fetching related projects:', error);
     });
 }
-
 
 
 function displayFileContent(filename, content) {
@@ -761,6 +826,7 @@ searchInput.addEventListener('input', () => {
       margin-left: 2rem;
       border-radius: 0.5rem;
       margin-bottom: 2rem;
+      box-shadow: 0 0 5px var(--h1-color);
     }
     #searchInput {
       width: 300px;
@@ -836,6 +902,7 @@ searchInput.addEventListener('input', () => {
   flex-direction: column;
   align-items: center;
   margin-right: 1.8rem;
+  
 }
 
 
@@ -846,38 +913,59 @@ searchInput.addEventListener('input', () => {
 
 table{
   margin-top: 1rem;
+  color: var(--h1-color);
 }
 
 thead th{
   background-color: #0a75e7;
   width: 30vw;
-  color: aliceblue;
+  color: var(--h1-color);
   font-size: large;
   padding: 10px;
   border-radius: 0.5rem;
+  border: 1px solid var(--h1-color);
+
 }
 
 td{
-  background-color: #ffffff;
+  background:var(--secondary-color);
   padding-left: 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid black;
+  color: var(--h1-color);
+  border: 2px solid var(--h1-color);
+
  }
 
  td:hover{
-  background-color: #dddbdbcb;
+  background:var(--data-color);
   padding-left: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid black;
+  border: 2px solid var(--h1-color);
  }
 
  .data{
   text-align: justify;
   margin-right: 0.5rem;
   padding: 10px;
+  color:  var(--h1-color);
  }
 
-
+.head2{
+  width: 80%; 
+  background:var(--file-back-color);
+  margin-left: 6.5rem;
+  text-align: center;
+  padding-right: 1.5rem;
+  border-radius: 0.3rem;
+  margin-top: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  text-decoration: 3px underline;
+  color: var(--h1-color);
+  box-shadow: 0 0 10px var(--h1-color);
+  border: 2px solid rgb(255, 255, 255);
+}
  
   </style>
   </html>
