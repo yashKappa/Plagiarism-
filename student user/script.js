@@ -493,3 +493,18 @@ function cancelFileSelection() {
 }
 
 
+
+document.getElementById('logout-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('logout-popup').style.display = 'block';
+});
+
+document.getElementById('logout-no').addEventListener('click', function() {
+    document.getElementById('logout-popup').style.display = 'none';
+});
+
+document.getElementById('logout-yes').addEventListener('click', function() {
+    // Handle logout here
+    document.getElementById('logout-popup').style.display = 'none';
+    window.location.href = '/logout';
+});

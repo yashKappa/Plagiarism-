@@ -171,20 +171,28 @@ if (darkModePreference === 'enabled') {
 
 dark.onclick = toggleDarkMode;
 
+function removeComments(content) {
+  // Regular expression to match comments (// single-line comments and /* multi-line comments */)
+  const commentRegex = /\/\/.*?$|\/\*[\s\S]*?\*\//gm;
+  return content.replace(commentRegex, ''); // Remove comments from the content
+}
+
 function compareContent(content1, content2) {
-  // Assuming a very simple comparison algorithm for demonstration purposes
-  const minLength = Math.min(content1.length, content2.length);
+  // Remove comments from both contents
+  const trimmedContent1 = removeComments(content1).trim();
+  const trimmedContent2 = removeComments(content2).trim();
+
+  const minLength = Math.min(trimmedContent1.length, trimmedContent2.length);
   let matchingChars = 0;
 
   for (let i = 0; i < minLength; i++) {
-    if (content1[i] === content2[i]) {
+    if (trimmedContent1[i] === trimmedContent2[i]) {
       matchingChars++;
     }
   }
 
-  // Calculate plagiarism percentage based on the number of matching characters
   const plagiarismPercentage = (matchingChars / minLength) * 100;
-  return plagiarismPercentage.toFixed(2); // Return percentage with 2 decimal places
+  return plagiarismPercentage.toFixed(2);
 }
 
 function checkPlagiarism() {
@@ -194,43 +202,37 @@ function checkPlagiarism() {
   const plagiarismResultsContainer = document.getElementById('plagiarismResultsContainer');
   plagiarismResultsContainer.innerHTML = '';
 
-  let maxTotalPlagiarismPercentage = 0; // Variable to store the maximum total plagiarism percentage
+  let totalPlagiarismPercentage = 0; // Total plagiarism percentage
+  let editorCount = 0; // Number of editors
 
-  // Iterate through each related editor
   relatedEditors.forEach((relatedEditorNode, i) => {
     const relatedEditor = ace.edit(relatedEditorNode);
     const relatedContent = relatedEditor.getValue();
 
-    let maxPlagiarismPercentage = 0; // Variable to store the highest plagiarism percentage for this related editor
-    let matchedFileEditor = null; // Variable to store the file editor that matches the plagiarism percentage
+    let maxPlagiarismPercentage = 0;
 
-    // Iterate through each file editor and calculate plagiarism percentage
     fileEditors.forEach((fileEditorNode, j) => {
       const fileEditor = ace.edit(fileEditorNode);
       const fileContent = fileEditor.getValue();
       const plagiarismPercentage = parseFloat(compareContent(relatedContent, fileContent));
 
-      // Update the maximum plagiarism percentage for this related editor
       if (plagiarismPercentage > maxPlagiarismPercentage) {
         maxPlagiarismPercentage = plagiarismPercentage;
-        matchedFileEditor = j + 1; // Update the matched file editor number
       }
     });
 
-    // Update the maximum total plagiarism percentage
-    if (maxPlagiarismPercentage > maxTotalPlagiarismPercentage) {
-      maxTotalPlagiarismPercentage = maxPlagiarismPercentage;
-    }
+    totalPlagiarismPercentage += maxPlagiarismPercentage;
+    editorCount++;
 
-    // Display the highest plagiarism percentage for this related editor along with its editor number and the matched file editor
     const resultElement = document.createElement('div');
-    resultElement.textContent = `Plagiarism Percentage for Editor ${i + 1}: ${maxPlagiarismPercentage}% (matched with File Editor ${matchedFileEditor})`;
+    resultElement.textContent = `Plagiarism Percentage for Editor ${i + 1}: ${maxPlagiarismPercentage}%`;
     plagiarismResultsContainer.appendChild(resultElement);
   });
 
-  // Display the total plagiarism percentage
+  const averagePlagiarismPercentage = totalPlagiarismPercentage / editorCount;
+
   const totalResultElement = document.createElement('div');
-  totalResultElement.textContent = `Total Plagiarism Percentage: ${maxTotalPlagiarismPercentage}%`;
+  totalResultElement.textContent = `Total Plagiarism Percentage: ${averagePlagiarismPercentage.toFixed(2)}%`;
   plagiarismResultsContainer.appendChild(totalResultElement);
 }
 

@@ -48,6 +48,12 @@
                 </div>
             </div>
     </nav><br><br><br><br><br>
+    <div id="logout-popup" class="popup1">
+        <h2>Logout Confirmation</h2>
+        <p>Are you sure you want to logout?</p>
+        <button href="/logout" id="logout-yes">Yes</button>
+        <button id="logout-no">No</button>
+      </div>
     <div class="up">
         <div class="upload">
             <h1>File Upload</h1>
@@ -160,6 +166,23 @@
         }
         return null;
     }
+
+    
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('logout-popup').style.display = 'block';
+    });
+    
+    document.getElementById('logout-no').addEventListener('click', function() {
+        document.getElementById('logout-popup').style.display = 'none';
+    });
+    
+    document.getElementById('logout-yes').addEventListener('click', function() {
+        // Handle logout here
+        document.getElementById('logout-popup').style.display = 'none';
+        window.location.href = '/logout';
+    });
+
 
 </script>
 <style>

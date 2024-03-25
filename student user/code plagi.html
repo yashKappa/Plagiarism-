@@ -11,7 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
     <link rel="stylesheet" href="userpanel.css">   
-    <link rel="database" href="database.js">
+    <link rel="database" href="../database.js">
+    <link rel="script" href="script.js">
+
 
 </head>
 <body>
@@ -20,11 +22,12 @@
         <div class="Pname">
             <img class="logo" id="loo" src="light1.png">
         <div class="menu">
-            <span class="feat"><a class="no" href="../student user/userpanel.html">Home</a></span>
+            <span class="feat"><a class="no" href="userpanel.html">Home</a></span>
+            <span class="feat"><a class="no" href="../plagi">Search</a></span>
             <span class="feat"><a class="no" href="one-to-one.html">one-to-one</a></span>
             <span class="feat"><a class="no" href="self detect.html">self detect</a></span>
             <span class="feat"><a class="Active" href="code plagi.html">code</a></span>
-            <span class="feat"><a class="no" href="All plagi.html">All plagi</a></span>
+            <span class="feat"><a class="no" href="../plagiarism">All plagi</a></span>
             <span class="feat"><a class="no" href="userupload.html">File upload</a></span>
                 
             <!--<span class="feat"><a class="no" href="http://localhost:3000/">File upload</a></span>-->
@@ -37,8 +40,7 @@
                         <div class="dropdown-menu">
                             <ul>
                                 <li><a href="#"><img id="dark" src="suns.png"></a></li>
-                                <li ><span ><a href="profile.html"  class="set" >
-                                  <i class="fas fa-cog"></i>setting</a></li></span>
+                                <li><span ><a href="profile.html"  class="set" ><i class="fas fa-cog"></i>setting</a></li></span>
                                 <li><span class="fe" ><a id="logout-btn" class="noo">log out</a>
                                 </span></li>
                             </ul>
@@ -46,6 +48,12 @@
                     </div>
                 </div>
             </div>
+            <div id="logout-popup" class="popup1">
+                <h2>Logout Confirmation</h2>
+                <p>Are you sure you want to logout?</p>
+                <button href="/logout" id="logout-yes">Yes</button>
+                <button id="logout-no">No</button>
+              </div>
     </nav><br><br><br><br><br>
     <div class="content">
 
@@ -127,6 +135,23 @@
                 const result = document.getElementById('result');
                 result.textContent = `Similarity score: ${data.similarity}%`;
               });
+
+
+              document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('logout-popup').style.display = 'block';
+            });
+            
+            document.getElementById('logout-no').addEventListener('click', function() {
+                document.getElementById('logout-popup').style.display = 'none';
+            });
+            
+            document.getElementById('logout-yes').addEventListener('click', function() {
+                // Handle logout here
+                document.getElementById('logout-popup').style.display = 'none';
+                window.location.href = '/logout';
+            });
+        
      
             </script>
         

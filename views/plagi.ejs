@@ -57,7 +57,7 @@
     
     <div class="container">
       <div class="order">
-        <div class="head">
+        <div class="head2">
           <h3>Projects</h3>
           <i class='bx bx-search' ></i>
           <i class='bx bx-filter' ></i>
@@ -96,6 +96,34 @@
     
       
       <script>
+        const darkModePreference = localStorage.getItem('darkMode');
+
+// Function to toggle dark mode
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-theme");
+
+  if (document.body.classList.contains("dark-theme")) {
+    localStorage.setItem('darkMode', 'enabled');
+    dark.src = "moons.png";
+    loo.src = "dark1.png";
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+    dark.src = "suns.png";
+    loo.src = "light1.png";
+  }
+}
+
+// Apply dark mode based on user preference
+if (darkModePreference === 'enabled') {
+  document.body.classList.add('dark-theme');
+  dark.src = "moons.png";
+  loo.src = "dark1.png";
+} else {
+  dark.src = "suns.png";
+  loo.src = "light1.png";
+}
+
+dark.onclick = toggleDarkMode;
         // Function to display the saved image
 function displaySavedImage(imageData) {
   const imageContainer = document.getElementById('image-container1');
@@ -277,37 +305,60 @@ searchInput.addEventListener('input', () => {
 
 table{
   margin-top: 1rem;
+  color: var(--h1-color);
 }
 
 thead th{
   background-color: #0a75e7;
   width: 30vw;
-  color: aliceblue;
+  color: var(--h1-color);
   font-size: large;
   padding: 10px;
   border-radius: 0.5rem;
+  border: 1px solid var(--h1-color);
+
 }
 
 td{
-  background-color: #ffffff;
+  background:var(--secondary-color);
   padding-left: 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid black;
+  color: var(--h1-color);
+  border: 2px solid var(--h1-color);
+
  }
 
  td:hover{
-  background-color: #dddbdbcb;
+  background:var(--data-color);
   padding-left: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid black;
+  border: 2px solid var(--h1-color);
  }
 
  .data{
   text-align: justify;
   margin-right: 0.5rem;
   padding: 10px;
+  color:  var(--h1-color);
  }
+  
 
+ .head2{
+  width: 80%; 
+  background:var(--file-back-color);
+  margin-left: 6.5rem;
+  text-align: center;
+  padding-right: 1.5rem;
+  border-radius: 0.3rem;
+  margin-top: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  text-decoration: 3px underline;
+  color: var(--h1-color);
+  box-shadow: 0 0 10px var(--h1-color);
+  border: 2px solid rgb(255, 255, 255);
+}
  
   </style>
   </html>

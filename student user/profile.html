@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="database" href="../database.js">
     <title>Settings</title>
 </head>
 <body>
@@ -15,22 +20,21 @@
         <a href="../profile"><i class="fas fa-user"></i> Profile</a>
         <a href="../user"><i class="fas fa-poll"></i> Status</a>
         <a href="#"><i class="fas fa-moon"></i> Dark Mode</a>
-        
         <div class="home">
-            <a class="fea" href="userpanel.html"><i class="fas fa-home"> </i>Home</a>
-            <a class="feat" href="/logout" id="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Sign Out
-            </a>
-        </div> 
-            <div id="logout-popup" class="popup">
-                <h2>Logout Confirmation</h2>
-                <p>Are you sure you want to logout?</p>
-                <button id="logout-yes">Yes</button>
-                <button id="logout-no">No</button>
-            </div>
-            
-            <div id="logout-overlay" class="overlay"></div>
-    </div>
+            <a class="fea" href="../student user/userpanel.html"><i class="fas fa-home"> </i>Home</a>
+            <a class="feat" id="logout-btn">
+              <i class="fas fa-sign-out-alt"></i> Sign Out
+          </a>
+          
+        </div>
+        
+        <div id="logout-popup" class="popup">
+          <h2>Logout Confirmation</h2>
+          <p>Are you sure you want to logout?</p>
+          <button href="/logout" id="logout-yes">Yes</button>
+          <button id="logout-no">No</button>
+        </div> </div>
+
      
     <div class="content">
         <!-- Your content goes here -->
@@ -40,25 +44,58 @@
 </body>
 </html>
 
-<script>
-    document.getElementById('logout-btn').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('logout-popup').style.display = 'block';
-    });
-    
-    document.getElementById('logout-no').addEventListener('click', function() {
-        document.getElementById('logout-popup').style.display = 'none';
-    });
-    
-    document.getElementById('logout-yes').addEventListener('click', function() {
-        // Handle logout here
-        document.getElementById('logout-popup').style.display = 'none';
-        window.location.href = '/logout';
-    });
+<script src="script.js"></script>
 
+<script>
     document.getElementById("backButton").addEventListener("click", function () {
         window.history.back();
     });
+    const darkModePreference = localStorage.getItem('darkMode');
+
+    // Function to toggle dark mode
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-theme");
+    
+      if (document.body.classList.contains("dark-theme")) {
+        localStorage.setItem('darkMode', 'enabled');
+        dark.src = "moons.png";
+        loo.src = "dark1.png";
+      } else {
+        localStorage.setItem('darkMode', 'disabled');
+        dark.src = "suns.png";
+        loo.src = "light1.png";
+      }
+    }
+    
+    // Apply dark mode based on user preference
+    if (darkModePreference === 'enabled') {
+      document.body.classList.add('dark-theme');
+      dark.src = "moons.png";
+      loo.src = "dark1.png";
+    } else {
+      dark.src = "suns.png";
+      loo.src = "light1.png";
+    }
+    
+    dark.onclick = toggleDarkMode;
+
+  document.getElementById('logout-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('logout-popup').style.display = 'block';
+});
+
+document.getElementById('logout-no').addEventListener('click', function() {
+    document.getElementById('logout-popup').style.display = 'none';
+});
+
+document.getElementById('logout-yes').addEventListener('click', function() {
+    // Handle logout here
+    document.getElementById('logout-popup').style.display = 'none';
+    window.location.href = '/logout';
+});
+
+
+
 
     function saveImage() {
       const input = document.getElementById('image-input');
@@ -125,10 +162,88 @@
 </script>
 
 <style>
+    :root{
+        --h1-color:black;
+        --primary-color:rgb(252, 245, 245);
+        --secondary-color: #eaeaec;
+        --third-color:rgb(41, 41, 41);
+        --study-color:linear-gradient(135deg,rgb(98, 161, 255), rgb(48, 65, 161));;
+        --content-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
+        --study-hover-color:linear-gradient(133deg,rgb(48, 65, 161), rgb(98, 161, 255),rgb(48, 65, 161));
+        --shadow-color:rgb(0, 0, 0);
+        --line-color:rgb(0, 0, 0);
+        --result-color:rgb(255, 255, 255);
+        --copied-color:rgb(176, 193, 230);
+        --list-color:rgb(255, 252, 252);
+        --check-color:#ff9100;
+        --check-hover-color:rgb(204, 122, 14);
+        --scroll-color:rgb(184, 184, 184);
+        --scroll-hover-color:#868484;
+        --navfont-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
+        --navfont-hover-color:linear-gradient(135deg,rgb(68, 67, 67), rgb(49, 46, 46), rgb(71, 65, 65));
+        --scroll-border-color:black;
+        --type-color: rgb(234, 236, 103);
+        --about-color:linear-gradient(135deg,rgb(85, 84, 84), rgb(39, 34, 34), rgb(85, 84, 84));
+        --file-color:linear-gradient(133deg,rgb(114, 90, 219), rgb(28, 58, 228));
+        --file-back-color:white;
+        --success-color:linear-gradient(133deg,rgb(76, 247, 90), rgb(105, 231, 132),rgb(47, 189, 78));;
+        --time-color:linear-gradient(135deg,rgb(0, 0, 0), rgb(82, 80, 80), rgb(20, 20, 20));
+        --dis-color:linear-gradient(135deg, rgb(55, 55, 253), rgb(12, 149, 190), rgb(0, 87, 250));
+        --error-color:white;
+        --go-color: rgb(47, 175, 235);
+        --submit-color:rgb(0, 162, 255);
+        --cancel-color:rgba(253, 21, 21, 0.884);
+        --submit-hover-color:rgba(49, 175, 248, 0.767);
+        --cancel-hover-color:rgba(248, 49, 49, 0.767);
+        --info-color:rgb(100, 162, 197);
+        --data-color:rgba(206, 203, 203, 0.719);
+    }
+    .dark-theme{
+        --h1-color:rgb(255, 255, 255);
+        --primary-color:rgb(0, 0, 0);
+        --secondary-color: #171718;
+        --third-color:rgb(255, 255, 255);
+        --study-color:linear-gradient(135deg,rgb(51, 50, 50), rgb(117, 117, 121), rgb(68, 67, 67));
+        --content-color:rgb(165, 159, 159);
+        --study-hover-color:linear-gradient(133deg,rgb(22, 31, 59), rgb(30, 37, 48),rgb(10, 14, 37));
+        --navfont-color:rgb(218, 18, 18);
+        --navfont-hover-color:rgb(226, 37, 37);
+        --line-color:rgb(255, 0, 0);
+        --result-color:rgb(12, 10, 10);
+        --copied-color:rgb(19, 18, 18);
+        --list-color:rgb(36, 36, 36);
+        --check-color:rgb(226, 3, 3);
+        --check-hover-color:rgb(170, 4, 4);
+        --scroll-color:red;
+        --scroll-hover-color:#b30000;
+        --scroll-border-color:rgb(255, 250, 250);
+        --type-color: rgb(255, 0, 0);
+        --about-color:rgb(179, 7, 7);
+        --file-color:linear-gradient(133deg,rgb(27, 35, 56), rgb(42, 52, 66),rgb(34, 41, 80));
+        --file-back-color:rgb(128, 124, 124);
+        --success-color: linear-gradient(133deg,rgb(22, 31, 59), rgb(30, 37, 48),rgb(10, 14, 37));;
+        --time-color:linear-gradient(135deg, rgb(245, 18, 18),rgb(243, 83, 83),rgb(170, 2, 2));
+        --dis-color:linear-gradient(135deg, rgb(43, 43, 46), rgb(44, 45, 48));
+        --error-color:rgb(32, 29, 29);
+        --go-color:gray;
+        --submit-color:rgb(59, 59, 59);
+        --submit-hover-color:rgba(80, 80, 80, 0.767);
+        --info-color:rgb(69, 100, 141);
+        --data-color::rgba(66, 66, 66, 0.719);
+    }
+
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+    }
+
+    h1{
+        color: var(--h1-color);
+    }
+
+    p{
+        color: var(--h1-color);
     }
 
     .sidebar {
@@ -157,6 +272,8 @@
     .content {
         margin-left: 250px;
         padding: 20px;
+        background: var(--secondary-color);
+        height: 100vh;
     }
     
     .sidebar button {
