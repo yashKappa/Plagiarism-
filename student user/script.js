@@ -1,4 +1,19 @@
-function saveImage() {
+function displaySavedImage(imageData) {
+    const imageContainer = document.getElementById('image-container1');
+    const image = new Image();
+    image.src = imageData;
+    imageContainer.appendChild(image);
+  }
+  
+  // Load the saved image from local storage when the page loads
+  window.onload = function() {
+    const savedImageData = localStorage.getItem('kappa_savedImage');
+    if (savedImageData) {
+        displaySavedImage(savedImageData);
+    }
+  };
+  
+    function saveImage() {
     const input = document.getElementById('image-input');
     const file = input.files[0];
     
