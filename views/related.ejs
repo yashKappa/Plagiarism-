@@ -21,78 +21,101 @@
 <!-- user.ejs -->
 
 <body>
-    <div class="container">
-      <div class="header">
-          <h1>Users Files Files</h1>
-          <div class="actions">
-              <i class="bx bx-search"></i>
-              <i class="bx bx-filter"></i>
+  <div class="sidebar">
+    <% data.forEach(row => { %>
+      <tr>
+        <td>
+          <a class="data" class="active" href="#" data-file-id="<%= row.id %>"><%= row.filename %></a>
+        </td>
+      </tr>
+
+    <% }); %>
+    <div class="go"></div>
+
+</div>
+
+<div class="content">
+  <div class="editor-container"> 
+    <div id="editor">// testing 1</div>
           </div>
-      </div>
-      <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
-      <table border="1">
-        <tr>
-          <th>Files</th>
-        </tr>
-        <% data.forEach(row => { %>
-          <tr>
-            <td>
-              <a class="data" href="/download/<%= row.id %>"><%= row.filename %></a>
-            </td>
-          </tr>
-        <% }); %>
-      </table>
-      <% if (data && data.length > 0) { %>
-        <!-- Your other content here -->
-      <% } else { %>
-        <p class="message">Data was not found or Empty</p>
-      <% } %>
-    </div>
-  </body>
+</div>
+</body>
   
 <script>
+  $(document).ready(function () {
+    // Add a click event listener to all elements with the class 'data'
+    $('.data').click(function (e) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        console.log("Clicked on a link"); // Add this line for debugging
+
+        const fileId = $(this).data('file-id');
+
+        // Fetch the file content from the server
+        fetch(`/getFileContent/${fileId}`)
+        .then(response => response.text())
+        .then(content => {
+            // Set the content in the Ace editor
+            const editor = ace.edit("editor");
+            editor.setValue(content, -1); // -1 moves cursor to end
+        })
+        .catch(error => {
+            console.error('Error fetching file content:', error);
+        });
+    });
+});
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const editor = ace.edit("editor");
+    editor.setTheme("ace/theme/cobalt");
+    editor.getSession().setMode("ace/mode/html");
+  });
+
+ // Function to resize the Ace editor based on its content height
+ function resizeEditor() {
+  const editor = ace.edit("editor");
+  const lineHeight = editor.renderer.lineHeight;
+  const rows = editor.getSession().getDocument().getLength();
+  const editorHeight = lineHeight * rows;
+  document.getElementById("editor").style.height = editorHeight + "px";
+}
+
+// Call the resize function initially and whenever the content changes
+resizeEditor();
+const editor = ace.edit("editor");
+editor.getSession().on('change', resizeEditor);
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const editor2 = ace.edit("editor");
+    editor2.setTheme("ace/theme/cobalt");
+    editor2.getSession().setMode("ace/mode/html");
+});
+
 document.getElementById("backButton").addEventListener("click", function () {
-window.history.back();
+    window.history.back();
 });
 
 // Assuming you have jQuery included
 $(document).ready(function () {
-// Add a click event listener to all elements with the class 'download-link'
-$('.download-link').click(function (e) {
-e.preventDefault(); // Prevent the default link behavior
+    // Add a click event listener to all elements with the class 'data'
+    $('.data').click(function (e) {
+        e.preventDefault(); // Prevent the default link behavior
 
-// Get the file ID from the data attribute
-const fileId = $(this).data('file-id');
+        const fileId = $(this).data('file-id');
 
-// Fetch the file content from the server
-fetch(`/getFileContent/${fileId}`)
-.then(response => response.text())
-.then(content => {
-// Create a blob with the file content
-const blob = new Blob([content], { type: 'text/plain' });
-
-// Create a link element
-const downloadLink = document.createElement('a');
-
-// Set the download attribute with the filename
-downloadLink.download = $(this).data('filename');
-
-// Set the href attribute with the blob URL
-downloadLink.href = URL.createObjectURL(blob);
-
-// Append the link to the body
-document.body.appendChild(downloadLink);
-
-// Trigger a click on the link to start the download
-downloadLink.click();
-
-// Remove the link from the DOM
-document.body.removeChild(downloadLink);
-})
-.catch(error => {
-console.error('Error fetching file content:', error);
-});
-});
+        // Fetch the file content from the server
+        fetch(`/getFileContent/${fileId}`)
+        .then(response => response.text())
+        .then(content => {
+            // Set the content in the Ace editor
+            const editor = ace.edit("editor");
+            editor.setValue(content, -1); // -1 moves cursor to end
+        })
+        .catch(error => {
+            console.error('Error fetching file content:', error);
+        });
+    });
 });
 
 const darkModePreference = localStorage.getItem('darkMode');
@@ -127,32 +150,187 @@ dark.onclick = toggleDarkMode;
 </script>
 
 <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        margin: 0;
-        padding: 0;
-        transition: background-color 0.3s ease; /* Added transition for smoother mode change */
-        background-color: var(--background-color);
-    }
-    
-    :root {
-        --background-color: #f5f5f5;
-        --color: #333;
-    }
-    
-    .dark-theme {
-        --background-color: #000127;
-        --color: #fff;
-    }
+
+
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background:var(--background-color);
+}
+
+.datas{
+  width: 35vw;
+  text-align: justify;
+  margin-right: -6rem;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidebar a {
+    padding: 10px;
+    text-decoration: none;
+    color: #fff;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #555;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.sidebar button {
+    font-size: 15px;
+    padding: 7px 15px;
+    cursor: pointer;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.sidebar a{
+    padding-left: 15px;
+    width: 80%;
+    margin-left: 10px;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+
+.sidebar a.active {
+    background-color: #2b3ac4;
+    box-shadow: 0 0 10px rgba(255, 254, 254, 0.329);
+}
+
+.active:hover{
+    background-color: #fdfdfd;
+}
+
+.sidebar .no{
+    margin-top: 2rem;
+}
+
+.sidebar .home{
+    width: 100%;
+    margin-top: 7rem;
+    color: #000000;
+    border-top: 1px solid white;
+}
+
+.sidebar .home:hover{
+    color: #fff;
+}
+
+.sidebar i{
+    margin-right: 0.5rem;
+}
+
+.sidebar .feat{
+    background-color: #e40606b6;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.sidebar .feat:hover{
+    background-color: #ff0000b6;
+    font-weight: bold;
+    border: 1px solid white;
+}
+
+.fea{
+    padding: 0.5rem;
+}
+
+
+#image-container1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.4rem;
+}
+
+#image-container1 img {
+  width: 8vw;
+  height: 15vh;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none;
+  color: #000000;
+  border-radius: 0.5rem;
+}
+
+.popup h2 {
+  margin-top: 0;
+}
+
+.popup button {
+  margin-left: 2.6rem;
+}
+
+.popup button:hover {
+  background-color: red;
+}
+
+
+:root {
+  --background-color: #f5f5f5;
+  --color: #333;
+  --box-color: #7e7f83;
+  --shadow-color:rgb(0, 0, 0);
+}
+
+.dark-theme {
+  --background-color: #171718;
+  --color: #fff;
+  --box-color: #ffffff70;
+  --shadow-color:white;
+}
     
     .container {
-        max-width: 800px;
+        max-width: 1000px;
         margin: 20px auto;
         background-color: #fff;
         padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px var(--box-color);
         transition: background-color 0.3s ease;
-        border-radius: 1rem;
+        border-radius: 2rem;
     }
     
     .header {
@@ -170,10 +348,9 @@ dark.onclick = toggleDarkMode;
         display: flex;
     }
     
-    i {
-        font-size: 24px;
+    .content i {
+        font-size: 15px;
         color: #ffffff;
-        margin-right: 10px;
         cursor: pointer;
         transition: color 0.3s ease;
     }
@@ -183,15 +360,17 @@ dark.onclick = toggleDarkMode;
     }
     
     button {
-        padding: 10px 15px;
-        cursor: pointer;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-        margin-top: 10px;
-        margin-bottom: 1rem;
+      font-size: 15px;
+      padding: 7px 15px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+      margin-bottom: 1rem;
+      margin-left: 1rem;
     }
     
     button:hover {
@@ -211,7 +390,6 @@ dark.onclick = toggleDarkMode;
     th, td {
         border: 1px solid #ddd;
         padding: 15px;
-        text-align: left;
     }
     
     th {
@@ -219,20 +397,26 @@ dark.onclick = toggleDarkMode;
         color: #fff;
     }
     
+    .data{
+      width: 10vw;
+    }
     a.data {
         text-decoration: none;
-        color: #007bff;
+        color: var(--background-color);
         transition: color 0.3s ease;
     }
     
-    a.data:hover {
-        color: #0056b3;
-    }
-      
+
     .message {
-        font-style: italic;
-        color: #777;
-    }
+        color: #ffffff;
+        background-color: #1d1d1d;
+        width: calc(25% - 10px);
+        padding: 10px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.849);
+      }
     
     /* Dark mode styles */
     .dark-mode .container {
@@ -256,5 +440,11 @@ dark.onclick = toggleDarkMode;
     .dark-mode a.data:hover {
         color: #00bfff;
     }
+    
+    .go{
+      margin-bottom: 2rem;
+    }
 </style>
 </html>
+
+

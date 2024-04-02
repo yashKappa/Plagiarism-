@@ -644,6 +644,37 @@ app.get('/related', (req, res) => {
   }
 });
 
+app.get('/getFileContent/:id', (req, res) => {
+  const fileId = req.params.id;
+
+  try {
+    // Query the MySQL database to fetch the content of the file with the given ID
+    const query = `
+      SELECT data
+      FROM file
+      WHERE id = ?
+    `;
+
+    connection.query(query, [fileId], (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else if (results.length === 0) {
+        // If no file with the given ID is found, return a 404 Not Found response
+        res.status(404).send('File Not Found');
+      } else {
+        // Return the content of the file
+        res.send(results[0].data);
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
 app.get('/userdata', (req, res) => {
   try {
     // Query the MySQL database
