@@ -412,18 +412,39 @@ function checkPlagiarism() {
 
 
 // Function to find common lines between two arrays
+
 function getCommonLines(array1, array2) {
     const common = [];
-    array1.forEach((line1, index1) => {
-        array2.forEach((line2, index2) => {
-            if (line1 === line2) {
-                common.push({ editor1Line: index1 + 1, editor2Line: index2 + 1, text: line1 });
+
+    const minLength = Math.min(array1.length, array2.length);
+
+    for (let i = 0; i < minLength; i++) {
+        const line1 = array1[i];
+        const line2 = array2[i];
+
+        if (line1 === line2) {
+            common.push({ editor1Line: i + 1, editor2Line: i + 1, text: line1 });
+        } else {
+            // If lines don't match, continue checking remaining lines in longer snippet
+            for (let j = i + 1; j < array1.length; j++) {
+                if (array1[j] === array2[i]) {
+                    // Found a matching line in the longer snippet
+                    common.push({ editor1Line: j + 1, editor2Line: i + 1, text: array1[j] });
+                    break;
+                }
             }
-        });
-    });
+            for (let k = i + 1; k < array2.length; k++) {
+                if (array2[k] === array1[i]) {
+                    // Found a matching line in the longer snippet
+                    common.push({ editor1Line: i + 1, editor2Line: k + 1, text: array2[k] });
+                    break;
+                }
+            }
+        }
+    }
+
     return common;
 }
-
 // Function to display copied lines
 function displayCopiedLines(commonLines) {
     const copiedLinesList = document.getElementById('copied-lines-list');

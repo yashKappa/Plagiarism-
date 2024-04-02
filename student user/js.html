@@ -404,9 +404,10 @@ function checkPlagiarism() {
 
     function containsJS(lines) {
         // Regular expression to match JavaScript and Node.js code
-        const jsRegex = /^(?!<p>|<plaintext>)(?:const|let|var|function|if|else|for|while|do|switch|case|break|continue|return|try|catch|finally|throw|import|export|module.exports)[\s\S]*$/;
+        const jsRegex = /\b(const|let|var|function|if|else|for|while|do|switch|case|break|continue|return|try|catch|finally|throw|import|export|module.exports)\b/;
         return lines.some(line => jsRegex.test(line));
     }
+    
 }
 
 

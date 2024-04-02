@@ -412,10 +412,9 @@ function checkPlagiarism() {
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
 }
 
-// Function to find common lines between two arrays
-// Function to find common lines between two arrays
 function getCommonLines(array1, array2) {
     const common = [];
+
     const minLength = Math.min(array1.length, array2.length);
 
     for (let i = 0; i < minLength; i++) {
@@ -424,11 +423,28 @@ function getCommonLines(array1, array2) {
 
         if (line1 === line2) {
             common.push({ editor1Line: i + 1, editor2Line: i + 1, text: line1 });
+        } else {
+            // If lines don't match, continue checking remaining lines in longer snippet
+            for (let j = i + 1; j < array1.length; j++) {
+                if (array1[j] === array2[i]) {
+                    // Found a matching line in the longer snippet
+                    common.push({ editor1Line: j + 1, editor2Line: i + 1, text: array1[j] });
+                    break;
+                }
+            }
+            for (let k = i + 1; k < array2.length; k++) {
+                if (array2[k] === array1[i]) {
+                    // Found a matching line in the longer snippet
+                    common.push({ editor1Line: i + 1, editor2Line: k + 1, text: array2[k] });
+                    break;
+                }
+            }
         }
     }
 
     return common;
 }
+
 
 
 // Function to display copied lines
