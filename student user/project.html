@@ -12,7 +12,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
     <link rel="stylesheet" href="userpanel.css">   
     <link rel="node" href="../node.js">
-    <link rel="script" href="script.js">
 
 </head>
 <body>
@@ -64,7 +63,7 @@
         <div class="upload">
             <h1>Apply Your Projects Ideas</h1>
            <!-- Your HTML form -->
-           <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+           <form id="uploadForm" action="/project" method="post" enctype="multipart/form-data">
             <div class="info">
         <span class="nam">Username</span><input type="text" id="username" name="username" placeholder="Username" required />
         <span class="nam">Project</span><input type="text" id="projectName" name="projectName" placeholder="Project Name" required /><br>
@@ -110,6 +109,94 @@
     </div>
 
 <script>
+    window.addEventListener("load", () => {
+        const input = document.getElementById("fileInput");
+        const filewrapper = document.getElementById("filewrapper");
+        const successMessage = document.getElementById("successMessage");
+    
+        input.addEventListener("change", (e) => {
+            const fileList = e.target.files;
+            if (fileList.length > 0) {
+                displaySelectedFiles(fileList);
+            }
+        });
+    
+        function displaySelectedFiles(fileList) {
+            const listElem = document.createElement("ul");
+    
+            for (const file of fileList) {
+                const listItemElem = document.createElement("li");
+                listItemElem.textContent = file.name;
+    
+                // Add a delete button for each file
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.addEventListener("click", () => {
+                    listElem.removeChild(listItemElem);
+                });
+    
+                listItemElem.appendChild(deleteButton);
+                listElem.appendChild(listItemElem);
+            }
+    
+            // Clear existing file list
+            while (filewrapper.firstChild) {
+                filewrapper.removeChild(filewrapper.firstChild);
+            }
+    
+            filewrapper.appendChild(listElem);
+            filewrapper.style.display = "block"; // Show the file list
+        }
+    
+        // Prevent the form from automatically redirecting
+        document.getElementById("uploadForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+    
+            const formData = new FormData(this);
+    
+            fetch("/project", {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => {
+                console.log("Response Status:", response.status); // Log the HTTP status code
+    
+                if (response.ok) {
+                    successMessage.classList.remove("hidden");
+                    console.log("Files uploaded successfully");
+                    setTimeout(() => {
+                        successMessage.classList.add("hidden");
+                    }, 3000);
+                    filewrapper.style.display = "none";
+                } else {
+                    ErrorMessage.classList.add("Er");
+                    return response.text().then(errorMsg => {
+                        console.error("Error:", errorMsg);
+                    });
+                }
+            })
+            .catch(error => {
+                showPopupMessage("Invalid username");
+                console.error("Network error:", error);
+            })
+            .finally(() => {
+                this.reset();
+            });
+        });
+    });
+    
+    function loadFileContent(editorId, input) {
+        const file = input.files[0];
+        const reader = new FileReader();
+    
+        reader.onload = function (e) {
+            const content = e.target.result;
+            document.getElementById(editorId).textContent = content;
+        };
+    
+        reader.readAsText(file);
+    }
+    
     function saveImage() {
         const input = document.getElementById('image-input');
         const file = input.files[0];
@@ -189,7 +276,32 @@
         window.location.href = '/logout';
     });
 
-
+    const darkModePreference = localStorage.getItem('darkMode');
+    const dark = document.getElementById("dark");
+    const loo = document.getElementById("loo");
+    
+    if (darkModePreference === 'enabled') {
+        document.body.classList.add('dark-theme');
+        dark.src = "moons.png"; // Set the image to sun.png in dark mode
+        loo.src = "dark1.png";
+    } else {
+        dark.src = "suns.png"; // Set the image to moon.png in light mode
+        loo.src = "light1.png";
+    }
+    
+    dark.onclick = function () {
+        document.body.classList.toggle("dark-theme");
+    
+        if (document.body.classList.contains("dark-theme")) {
+            localStorage.setItem('darkMode', 'enabled');
+            dark.src = "moons.png";
+            loo.src = "dark1.png";
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+            dark.src = "suns.png";
+            loo.src = "light1.png";
+        }
+    }
 </script>
 <style>
     .profile-dropdown {
@@ -632,7 +744,7 @@ input[type="file"] {
 }
 
 </style>
-    <script src="script.js"></script>
+   
 
     <footer class="footer">
         <div class="container">

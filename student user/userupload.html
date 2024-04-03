@@ -56,7 +56,7 @@
       </div>
       <div class="option">
         <a class="goe feat" id="feat" href="#">Project files upload</a>
-        <a class="goe feat" href="project.html">New Project files upload</a>
+        <a class="goe feat" id="hideLink" href="project.html">New Project files upload</a>
       </div>
       
       
@@ -110,6 +110,43 @@
     </div>
 
 <script>
+    window.onload = function() {
+        // Read the value of the 'student' and 'logged' cookies
+        var cookies = document.cookie.split(';').map(cookie => cookie.trim().split('='));
+        console.log("Cookies:", cookies); // Debug: Log the cookies
+
+        var student;
+        var logged;
+
+        for (var i = 0; i < cookies.length; i++) {
+            if (cookies[i][0] === 'student') {
+                student = cookies[i][1];
+            }
+            if (cookies[i][0] === 'logged') {
+                logged = cookies[i][1];
+            }
+        }
+
+        console.log("Student:", student); // Debug: Log the value of 'student' cookie
+        console.log("Logged:", logged); // Debug: Log the value of 'logged' cookie
+
+        // Get the link element by its ID
+        var link = document.getElementById("hideLink");
+
+        // Check if both 'student' and 'logged' cookies exist and have the appropriate values
+        if (student && logged === 'true') {
+            // Display the link by setting its display property to "block"
+            if (link) {
+                link.style.display = "block";
+            }
+        } else {
+            // Hide the link by setting its display property to "none"
+            if (link) {
+                link.style.display = "none";
+            }
+        }
+    }
+
     function saveImage() {
         const input = document.getElementById('image-input');
         const file = input.files[0];

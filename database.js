@@ -30,13 +30,30 @@ connection.connect((err) => {
 
 // Routes
 app.get("/", function (req, res) {
-  const username = req.cookies.username;
+  const student = req.cookies.student;
   const logged = req.cookies.logged;
   const teacher = req.cookies.teacher;
   const admin = req.cookies.admin;
 
 
-  if (username && logged === 'true') {
+  app.get('/userupload.html', (req, res) => {
+    // Get the value of the "logged" cookie
+    const logged = req.cookies.logged;
+  
+    // Determine whether to hide or display the element based on the value of the "logged" cookie
+    let hideLinkStyle = '';
+    if (logged === 'true') {
+      // If the user is logged in, hide the element with id "hideLink"
+      hideLinkStyle = 'display: none;';
+    }
+  
+    // Render the userupload.html page with the "hideLink" element style applied
+    res.sendFile(path.join(__dirname, 'userupload.html'), {
+      hideLinkStyle: hideLinkStyle
+    });
+  });
+  
+  if (student && logged === 'true') {
     // If the user is logged in, redirect to the user panel page
     res.redirect(`/student user/userpanel.html?username=${username}`);
   } else if (teacher && logged === 'true') {
@@ -64,7 +81,7 @@ app.post("/student", (req, res) => {
       res.status(500).send("Internal server error");
     } else if (results.length > 0) {
       // Set cookies for username and login status
-      res.cookie('username', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+      res.cookie('student', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
       res.cookie('logged', 'true', { maxAge: 3 * 24 * 60 * 60 * 1000 });
       // Set session variable
       req.cookies.user = username;
@@ -322,6 +339,45 @@ files.forEach((file, index, array) => {
 });
 // ...
 
+app.post("/project", upload.array("files"), (req, res) => {
+  const files = req.files;
+  const projectName = req.body.projectName;
+  const inputUsername = req.body.username;
+  const summary = req.body.summary;
+
+  if (!files || files.length === 0 || !projectName) {
+      return res.status(400).send("Please provide a project name and select files to upload.");
+  }
+
+  // Check if the input username matches the one stored in cookies
+  const storedUsername = req.cookies.username;
+
+  if (inputUsername !== storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  let filesUploaded = 0;
+
+  files.forEach((file, index, array) => {
+    const filename = file.originalname;
+    const mimeType = file.mimetype;
+    const fileData = file.buffer;
+
+    const query = "INSERT INTO project (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)";
+    connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary], (err, result) => {
+      if (err) {
+          console.error("Error uploading file: ", err);
+      } else {
+          filesUploaded++;
+
+          if (filesUploaded === array.length) {
+              // All files have been uploaded
+              res.status(200).send("Files uploaded successfully");
+          }
+      }
+    });
+  });
+});
 
 
 app.get("/status", (req, res) => {
@@ -1077,5 +1133,46 @@ app.get('/profile', (req, res) => {
     }
     // Render the EJS template with the count of total projects
     res.render('profile', { totalProjects: results[0].totalProjects });
+  });
+});
+
+
+app.post('/project', upload.array('files'), (req, res) => {
+  const files = req.files;
+  const projectName = req.body.projectName;
+  const inputUsername = req.body.username;
+  const summary = req.body.summary;
+
+  if (!files || files.length === 0 || !projectName) {
+    return res.status(400).send('Please provide a project name and select files to upload.');
+  }
+
+  // Check if the input username matches the one stored in cookies
+  const storedUsername = req.cookies.username;
+
+  if (inputUsername !== storedUsername) {
+    return res.status(401).send('Invalid username. Please log in with the correct username.');
+  }
+
+  let filesUploaded = 0;
+
+  files.forEach((file, index, array) => {
+    const filename = file.originalname;
+    const mimeType = file.mimetype;
+    const fileData = file.buffer;
+
+    const query = 'INSERT INTO project (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)';
+    connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary], (err, result) => {
+      if (err) {
+        console.error('Error uploading file: ', err);
+      } else {
+        filesUploaded++;
+
+        if (filesUploaded === array.length) {
+          // All files have been uploaded
+          res.status(200).send('Files uploaded successfully');
+        }
+      }
+    });
   });
 });
