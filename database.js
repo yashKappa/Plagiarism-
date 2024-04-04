@@ -30,30 +30,13 @@ connection.connect((err) => {
 
 // Routes
 app.get("/", function (req, res) {
-  const student = req.cookies.student;
+  const username = req.cookies.username;
   const logged = req.cookies.logged;
   const teacher = req.cookies.teacher;
   const admin = req.cookies.admin;
 
 
-  app.get('/userupload.html', (req, res) => {
-    // Get the value of the "logged" cookie
-    const logged = req.cookies.logged;
-  
-    // Determine whether to hide or display the element based on the value of the "logged" cookie
-    let hideLinkStyle = '';
-    if (logged === 'true') {
-      // If the user is logged in, hide the element with id "hideLink"
-      hideLinkStyle = 'display: none;';
-    }
-  
-    // Render the userupload.html page with the "hideLink" element style applied
-    res.sendFile(path.join(__dirname, 'userupload.html'), {
-      hideLinkStyle: hideLinkStyle
-    });
-  });
-  
-  if (student && logged === 'true') {
+  if (username && logged === 'true') {
     // If the user is logged in, redirect to the user panel page
     res.redirect(`/student user/userpanel.html?username=${username}`);
   } else if (teacher && logged === 'true') {
@@ -81,8 +64,9 @@ app.post("/student", (req, res) => {
       res.status(500).send("Internal server error");
     } else if (results.length > 0) {
       // Set cookies for username and login status
-      res.cookie('student', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
-      res.cookie('logged', 'true', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+      res.cookie('username', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('student', 'student', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('logged', 'true', { maxAge: 3 * 24 * 60 * 60 * 1000 });
       // Set session variable
       req.cookies.user = username;
       // Redirect to the user panel page
@@ -100,6 +84,7 @@ app.get("/logout", (req, res) => {
   // Clear cookies and session and redirect to index.html
   res.clearCookie('username');
   res.clearCookie('logged');
+  res.clearCookie('student');
   res.clearCookie('teacher');
   res.clearCookie('admin');
     res.redirect("/index.html");
@@ -133,7 +118,10 @@ app.post('/register', (req, res) => {
       } else {
         // Check if the query was successful
         if (results.affectedRows > 0) {
+          // Assuming `student` is a property in the results object
+          const student = results.student; // Adjust this line according to your query results
           res.cookie('username', username);
+          res.cookie('student', 'student');
           res.cookie('logged', 'true');
           // Set session variable
           req.cookies.user = username;
@@ -144,6 +132,7 @@ app.post('/register', (req, res) => {
         }
       }
     });
+    
   } catch (error) {
     console.error("Error occurred during registration:", error);
     res.redirect('/student/student register.html');
@@ -177,11 +166,12 @@ app.post("/log", (req, res) => {
       res.redirect("/");
     } else if (results.length > 0) {
       // Set cookies for username, teacher, and logged status
-      res.cookie('teacher', username);
+      res.cookie('username', username);
+      res.cookie('teacher', 'teacher');
       res.cookie('logged', 'true'); // Add this line to set the 'logged' cookie
       // Redirect to the user panel page
       req.cookies.user = username;
-      res.redirect(`/teacher and MU.html?username=${username}`);
+      res.redirect(`/student user/userpanel.html?username=${username}`);
     } else {
       res.redirect("/teacher/teacher login.html?error=Invalid Username or Password");
     }
@@ -208,12 +198,13 @@ app.post('/go', (req, res) => {
       } else {
         // Check if the query was successful
         if (results.affectedRows > 0) {
-          res.cookie('teacher', username);
+          res.cookie('username', username);
+          res.cookie('teacher', 'teacher');
           res.cookie('logged', 'true');
           // Set session variable
           req.cookies.user = username;
           // Redirect to the user panel page
-          res.redirect('/teacher and MU.html');
+          res.redirect('/student user/userpanel.html');
         } else {
           res.redirect('/teacher/teacher register.html');
         }
@@ -749,7 +740,6 @@ app.get('/userdata', (req, res) => {
   }
 });
 
-
 app.get('/profile', (req, res) => {
   try {
     const storedUsername = req.cookies.username;
@@ -758,17 +748,12 @@ app.get('/profile', (req, res) => {
       return res.status(401).send('Unauthorized. Please log in.');
     }
 
-    connection.query('SELECT DISTINCT username, email, password, image, lang, exp, professional, education, skill FROM student WHERE username = ?', [storedUsername], (error, results) => {
+    connection.query('SELECT DISTINCT username, email, password, lang, exp, professional, education, skill FROM student WHERE username = ?', [storedUsername], (error, results) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
       } else {
-        // Convert image data to Base64 string
-        if (results[0].image && results[0].image instanceof Buffer) {
-          results[0].image = 'data:image/jpeg;base64,' + results[0].image.toString('base64');
-        }
-
-        res.render('profile', { data: results, title: 'User Projects' });
+        res.render('profile', { data: results, title: 'User Profile' });
       }
     });
   } catch (err) {
@@ -776,6 +761,29 @@ app.get('/profile', (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.get('/teacher_profile', (req, res) => {
+  try {
+    const storedUsername = req.cookies.username;
+
+    if (!storedUsername) {
+      return res.status(401).send('Unauthorized. Please log in.');
+    }
+
+    connection.query('SELECT DISTINCT username, email, password, lang, exp, professional, education, skill FROM teacher WHERE username = ?', [storedUsername], (error, results) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        res.render('teacher_profile', { data: results, title: 'User teacher_profile' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 /*
 app.post("/profile/image", (req, res) => {
   try {
@@ -854,6 +862,41 @@ app.post("/profile/data", (req, res) => {
   }
 });
 
+app.post("/teacher_profile/data", (req, res) => {
+  try {
+      const storedUsername = req.cookies.username;
+
+      if (!storedUsername) {
+          return res.status(401).send("Invalid username. Please log in with the correct username.");
+      }
+
+      const { lang, skill, exp, professional, education } = req.body;
+
+      const updateQuery = `
+          UPDATE teacher
+          SET lang = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM lang), ''), ''), ?)),
+              skill = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM skill), ''), ''), ?)),
+              exp = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM exp), ''), ''), ?)),
+              professional = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM professional), ''), ''), ?)),
+              education = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM education), ''), ''), ?))
+          WHERE username = ?
+      `;
+
+      connection.query(updateQuery, [lang, skill, exp, professional, education, storedUsername], (err, result) => {
+          if (err) {
+              console.error("Error updating profile data:", err);
+              res.status(500).send("Error updating profile data");
+          } else {
+              console.log("Profile updated successfully");
+              res.status(200).send("Profile updated successfully");
+          }
+      });
+  } catch (error) {
+      console.error("Error in profile data update route:", error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
 
 app.post('/removeSkill', (req, res) => {
   // Extract the username from the request
@@ -894,7 +937,44 @@ app.post('/removeSkill', (req, res) => {
   });
 });
 
+app.post('/deleteSkill', (req, res) => {
+  // Extract the username from the request
+  const storedUsername = req.cookies.username;
 
+  // Check if the username is defined
+  if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Extract the skill to remove from the request body
+  const langToRemove = req.body.langName;
+
+  // Fetch the current list of skills from the database
+  connection.query('SELECT lang FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching skills:", err);
+          res.status(500).send("Error fetching skills");
+      } else {
+          // Extract the skills from the result
+          const currentLang = result[0].lang.split(',').map(lang => lang.trim());
+          const updatedLang = currentLang.filter(lang => lang !== langToRemove);
+          const updatedLangString = updatedLang.join(', ');
+
+          // Update the 'student' table with the updated skills
+
+          // Update the 'student' table with the updated skills
+          connection.query('UPDATE teacher SET lang = ? WHERE username = ?', [updatedLangString, storedUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating skills:", err);
+                  res.status(500).send("Error updating skills");
+              } else {
+                  console.log("Skill removed successfully");
+                  res.status(200).send("Skill removed successfully");
+              }
+          });
+      }
+  });
+});
 
 app.post('/removeDATA', (req, res) => {
   // Extract the username from the request
@@ -1005,6 +1085,8 @@ app.post('/removeProfessional', (req, res) => {
       }
   });
 });
+
+
 
 
 app.get('/fileDetails/:username/:projectName', (req, res) => {

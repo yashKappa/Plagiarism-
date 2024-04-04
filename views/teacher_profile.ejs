@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.3/css/boxicons.min.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="file.css">
+    <link rel="database" href="../database.js">
+    <title>User Profile</title>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="img"><div id="image-container2"></div></div>
+        <a class="no" href="../student user/profile.html"><i class="fas fa-cog"> </i>Setting</a>
+        <a class="active" href="../profile"><i class="fas fa-user"> </i>Profile</a>
+        <a href="../user"><i class="fas fa-poll"> </i>Status</a>
+        <a href="#"><i class="fas fa-moon"> </i>Dark Mode</a>
+        <div class="home">
+        <a class="fea" href="../student user/userpanel.html"><i class="fas fa-home"> </i>Home</a>
+        <a class="feat" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Sign Out
+      </a>
+      
+    </div>
+    
+    <div id="logout-popup" class="popup">
+      <h2>Logout Confirmation</h2>
+      <p>Are you sure you want to logout?</p>
+      <button href="/logout" id="logout-yes">Yes</button>
+      <button id="logout-no">No</button>
+    </div> </div>
+
+    <div class="content">
+    <div class="bb">
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>User Profile</h1>
+            <div class="actions">
+                <i class="bx bx-search"></i>
+                <i class="bx bx-filter"></i>
+            </div>
+        </div>
+
+        <div class="table1">
+            <div class="img"><div id="image-container1"></div></div>
+        <button><label for="image-input" class="update-btn">Choose Image</label></button>
+        <input type="file" id="image-input" accept="image/*" style="display: none;">
+        <button onclick="saveImage()">Save Image</button>
+    </div>
+
+        <form id="updateProfileForm" action="/teacher_profile/data" method="post" enctype="multipart/form-data" onsubmit="submitForm(event)">
+            <div class="table">
+                <% data.forEach(user => { %>
+                    
+                    <div class="section">
+                        <div class="head"><i class="fas fa-user"></i> Username </div>
+                        <p><%= user.username %></p>
+                        <p>Total number of projects: <%= user.totalProjects %></p>
+
+                    </div>
+                    <div class="section">
+                        <div class="head"><i class="fas fa-envelope"></i> Email </div>
+                        <p><%= user.email %></p>
+                    </div>
+                    <div class="section1">
+                        <div class="head"><i class="fas fa-lock"></i> Password </div>
+                        <p><%= '*'.repeat(user.password.length) %></p>
+                    </div>
+                    <!-- Skill Section -->
+                    <div class="section" id="skill-section">
+                        <div class="head"><i class="fas fa-code"></i> Skill </div>
+                        <ul class="data-list" id="skill-list">
+                            <% 
+                            const skills = user.skill.split(',').map(skill => skill.trim()).filter(Boolean);
+                            
+                            if (skills.length === 0) { %>
+                                <p class="message">Data was empty or not found</p>
+                            <% } else { %>
+                                <% skills.forEach((skill, index) => { %>
+                                    <li>
+                                        <div class="skill-item">
+                                            <textarea readonly><%= skill %></textarea>
+                                            <button class="remove-btn" onclick="deleteDATA('<%= skill %>')"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </li>
+                                <% }); %>
+                            <% } %>
+                        </ul>
+                        <div class="put">
+                            <input type="text" name="skill" placeholder="Add new Skill" />
+                            <button class="update-btn" data-section="skill">ADD</button>
+                        </div>
+                    </div>
+
+                    <div class="section" id="lang-section">
+                        <div class="head"><i class="fas fa-language"></i> lang </div>
+                        <ul class="data-list" id="lang-list">
+                            <% 
+                            const lang = user.lang.split(',').map(lang => lang.trim()).filter(Boolean);
+                            
+                            if (lang.length === 0) { %>
+                                <p class="message">Data was empty or not found</p>
+                            <% } else { %>
+                                <% lang.forEach((lang, index) => { %>
+                                    <li>
+                                        <div class="lang-item">
+                                            <textarea readonly><%= lang %></textarea>
+                                            <button class="remove-btn" onclick="deleteSkill('<%= lang %>')"><i class="fas fa-times"></i></button>
+                                        </div>
+                                    </li>
+                                <% }); %>
+                            <% } %>
+                        </ul>
+                        <div class="put">
+                            <input type="text" name="lang" placeholder="Add new lang" />
+                            <button class="update-btn" data-section="lang">ADD</button>
+                        </div>
+                    </div>
+
+                    
+                        <div class="section" id="education-section">
+                            <div class="head"><i class="fas fa-graduation-cap"></i> education </div>
+                            <ul class="data-list" id="education-list">
+                                <% 
+                                const education = user.education.split(',').map(education => education.trim()).filter(Boolean);
+                                
+                                if (education.length === 0) { %>
+                                    <p class="message">Data was empty or not found</p>
+                                <% } else { %>
+                                    <% education.forEach((education, index) => { %>
+                                        <li>
+                                            <div class="education-item">
+                                                <textarea readonly><%= education %></textarea>
+                                                <button class="remove-btn" onclick="removeEDU('<%= education %>')"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </li>
+                                    <% }); %>
+                                <% } %>
+                            </ul>
+                            <div class="put">
+                                <input type="text" name="education" placeholder="Add new education" />
+                                <button class="update-btn" data-section="education">ADD</button>
+                            </div>
+                        </div>
+
+                        <div class="section" id="professional-section">
+                            <div class="head"><i class="fas fa-briefcase"></i> Professional </div>
+                            <ul class="data-list" id="professional-list">
+                                <% 
+                                const professional = user.professional.split(',').map(prof => prof.trim()).filter(Boolean);
+                                
+                                if (professional.length === 0) { %>
+                                    <p class="message">Data was empty or not found</p>
+                                <% } else { %>
+                                    <% professional.forEach((prof, index) => { %>
+                                        <li>
+                                            <div class="professional-item">
+                                                <textarea readonly><%= prof %></textarea>
+                                                <button class="remove-btn" onclick="removeProfessional('<%= prof %>')"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </li>
+                                    <% }); %>
+                                <% } %>
+                            </ul>
+                            <div class="put">
+                                <input type="text" name="professional" placeholder="Add new professional data" />
+                                <button class="update-btn" data-section="professional">ADD</button>
+                            </div>
+                        </div>
+                        
+                <% }); %>
+            </div>
+            <% if (data && data.length > 0) { %>
+                <!-- Your other content here -->
+            <% } else { %>
+                <p class="message">Data was not found or Empty</p>
+            <% } %>
+        </form>
+    </div>
+    </div>
+</body>
+
+<script>
+
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('logout-popup').style.display = 'block';
+    });
+    
+    document.getElementById('logout-no').addEventListener('click', function() {
+        document.getElementById('logout-popup').style.display = 'none';
+    });
+    
+    document.getElementById('logout-yes').addEventListener('click', function() {
+        // Handle logout here
+        document.getElementById('logout-popup').style.display = 'none';
+        window.location.href = '/logout';
+    });
+
+    
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+
+    function saveImage() {
+        const input = document.getElementById('image-input');
+        const file = input.files[0];
+        
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            alert("Please enter your username first.");
+            return;
+        }
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageData = event.target.result;
+                // Store image data along with username in local storage
+                localStorage.setItem(username + '_savedImage', imageData);
+                displayImageInMultipleContainers(imageData);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function displayImageInMultipleContainers(imageData) {
+        // Get both image containers by their IDs
+        const container1 = document.getElementById('image-container1');
+        const container2 = document.getElementById('image-container2');
+        
+        // Set the inner HTML of both containers to display the image
+        container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+        container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+    }
+
+    // Load the image from localStorage when the page loads
+    window.onload = function() {
+        // Check if username exists in cookies
+        const username = getCookie('username');
+        if (!username) {
+            const usernamePrompt = prompt("Please enter your username:");
+            if (usernamePrompt) {
+                document.cookie = `username=${usernamePrompt}`;
+            }
+        }
+        
+        const savedImageData = localStorage.getItem(username + '_savedImage');
+        if (savedImageData) {
+            displayImageInMultipleContainers(savedImageData);
+        }
+    };
+    
+
+    function deleteSkill(langName) {
+        // Assuming your server endpoint for removing a skill is '/removeSkill'
+        $.post('/deleteSkill', { langName: langName }, function(response) {
+            // Handle the success response
+            console.log('Skill removed successfully');
+            // Reload the page or update the UI as needed
+            window.location.reload(true);
+        }).fail(function(error) {
+            // Handle the error response
+            console.error('Error removing skill:', error);
+        });
+    }
+    
+    function deleteDATA(skillName) {
+        // Assuming your server endpoint for removing a skill is '/removeSkill'
+        $.post('/deleteDATA', { skillName: skillName }, function(response) {
+            // Handle the success response
+            console.log('Skill removed successfully');
+            // Reload the page or update the UI as needed
+            window.location.reload(true);
+        }).fail(function(error) {
+            // Handle the error response
+            console.error('Error removing skill:', error);
+        });
+    }
+    
+    function removeEDU(educationName) {
+        // Assuming your server endpoint for removing education is '/removeEDU'
+        $.post('/removeEDU', { educationName: educationName }, function(response) {
+            // Handle the success response
+            console.log('Education removed successfully');
+            // Reload the page or update the UI as needed
+            window.location.reload(true);
+        }).fail(function(error) {
+            // Handle the error response
+            console.error('Error removing education:', error);
+        });
+    }
+    
+    function removeProfessional(profName) {
+        // Assuming your server endpoint for removing professional data is '/removeProfessional'
+        $.post('/removeProfessional', { profName: profName }, function(response) {
+            // Handle the success response
+            console.log('Professional data removed successfully');
+            // Reload the page or update the UI as needed
+            window.location.reload(true);
+        }).fail(function(error) {
+            // Handle the error response
+            console.error('Error removing professional data:', error);
+        });
+    }
+    
+    document.getElementById("backButton").addEventListener("click", function () {
+        window.history.back();
+    });
+
+    const darkModePreference = localStorage.getItem('darkMode');
+    const dark = document.getElementById("dark");
+    const loo = document.getElementById("loo");
+
+    if (darkModePreference === 'enabled') {
+        document.body.classList.add('dark-theme');
+        dark.src = "moons.png"; // Set the image to sun.png in dark mode
+        loo.src = "dark1.png";
+    } else {
+        dark.src = "suns.png"; // Set the image to moon.png in light mode
+        loo.src = "light1.png";
+    }
+
+    dark.onclick = function () {
+        document.body.classList.toggle("dark-theme");
+
+        if (document.body.classList.contains("dark-theme")) {
+            localStorage.setItem('darkMode', 'enabled');
+            dark.src = "moons.png";
+            loo.src = "dark1.png";
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+            dark.src = "suns.png";
+            loo.src = "light1.png";
+        }
+    }
+
+    function submitForm(event) {
+        event.preventDefault(); // Prevent the default form submission
+        const form = event.target;
+
+        // Use FormData to serialize the form data
+        const formData = new FormData(form);
+
+        // Use AJAX to submit the form data
+        $.ajax({
+            type: form.method,
+            url: form.action,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log(response); // Handle the success response if needed
+                window.location.reload(true); // Reload the page after a successful update
+            },
+            error: function (error) {
+                console.error("Error submitting form:", error);
+                // Handle errors if needed
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        // Intercept form submission
+        $("#updateProfileForm").submit(function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Serialize the form data
+            const formData = $(this).serialize();
+
+            // Make an AJAX request to the server to update the profile
+            $.ajax({
+                type: "POST",
+                url: "/teacher_profile/data", // Adjust the URL if needed
+                data: formData,
+                success: function (data) {
+                    // Redirect to the profile page after a successful update
+                    window.location.href = "../teacher_profile";
+                },
+                error: function (error) {
+                    console.error("Error updating profile data:", error);
+                    // Handle errors if needed
+                },
+            });
+        });
+    });
+
+</script>
+
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar {
+        width: 250px;
+        height: 100%;
+        background-color: #333;
+        color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow-x: hidden;
+        padding-top: 20px;
+    }
+
+    .sidebar a {
+        padding: 10px;
+        text-decoration: none;
+        color: #fff;
+        display: block;
+    }
+
+    .sidebar a:hover {
+        background-color: #555;
+    }
+
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+    
+    .sidebar button {
+        font-size: 15px;
+        padding: 7px 15px;
+        cursor: pointer;
+        background-color: #000000;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+        margin-bottom: 1rem;
+        margin-left: 1rem;
+
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .sidebar a{
+        padding-left: 15px;
+        width: 80%;
+        margin-left: 10px;
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+
+    .sidebar a.active {
+        background-color: #2b3ac4;
+        box-shadow: 0 0 10px rgb(255, 255, 255);
+    }
+
+    .active:hover{
+        background-color: #fdfdfd;
+    }
+
+    .sidebar .no{
+        margin-top: 2rem;
+    }
+
+    .sidebar .home{
+        width: 100%;
+        margin-top: 7rem;
+        color: #000000;
+        border-top: 1px solid white;
+    }
+
+    .sidebar .home:hover{
+        color: #fff;
+    }
+
+    .sidebar i{
+        margin-right: 0.5rem;
+    }
+
+    .sidebar .feat{
+        background-color: #e40606b6;
+        font-weight: bold;
+        margin-top: 1rem;
+    }
+
+    .sidebar .feat:hover{
+        background-color: #ff0000b6;
+        font-weight: bold;
+        border: 1px solid white;
+    }
+
+    .fea{
+        padding: 0.5rem;
+    }
+
+    #image-container1 {
+        width: 200px;
+        height: 200px;
+        border: 2px solid #ccc;
+        border-radius: 10rem;
+        overflow: hidden;
+        margin-bottom: 20px;  
+    }
+    
+    #image-container1 img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    #image-container2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1.4rem;
+      }
+      
+      #image-container2 img {
+        width: 8vw;
+        height: 15vh;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid white;
+      }
+
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: none;
+        color: #000000;
+        border-radius: 0.5rem;
+      }
+      
+      .popup h2 {
+        margin-top: 0;
+      }
+      
+      .popup button {
+        margin-left: 2.6rem;
+      }
+      
+      .popup button:hover {
+        background-color: red;
+      }
+      
+    .table1{
+        padding: 1rem;
+    }
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        transition: background-color 0.3s ease;
+        /* Added transition for smoother mode change */
+        background-color: var(--background-color);
+    }
+
+    :root {
+        --background-color: #f5f5f5;
+        --color: #333;
+        --box-color: #7e7f83;
+        --shadow-color:rgb(0, 0, 0);
+    }
+
+    .dark-theme {
+        --background-color: #171718;
+        --color: #fff;
+        --box-color: #ffffff70;
+        --shadow-color:white;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 8px var(--box-color);
+        transition: background-color 0.3s ease;
+        border-radius: 2rem;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h1 {
+        margin: 0;
+        transition: color 0.3s ease;
+    }
+
+    .actions {
+        display: flex;
+    }
+
+    .head i {
+        font-size: 15px;
+        color: #ffffff;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    button {
+        font-size: 15px;
+        padding: 7px 15px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+        margin-bottom: 1rem;
+        margin-left: 1rem;
+
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .container #edit-profile {
+        font-size: 15px;
+        padding: 10px 15px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+        margin-bottom: 1rem;
+        margin-right: 30rem;    
+    }
+
+    .container button:hover {
+        background-color: #0056b3;
+    }
+
+    .table-container {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 15px;
+        text-align: left;
+        width: 100%;
+    }
+
+    th {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    a.data {
+        text-decoration: none;
+        color: #007bff;
+        transition: color 0.3s ease;
+    }
+
+    a.data:hover {
+        color: #0056b3;
+    }
+
+    .message {
+        font-style: italic;
+        color: #777;
+    }
+
+    /* Dark mode styles */
+    .dark-mode .container {
+        background-color: #222;
+        color: #fff;
+    }
+
+    .dark-mode h1 {
+        color: #fff;
+    }
+
+    .dark-mode th {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .dark-mode a.data {
+        color: #1e90ff;
+    }
+
+    .dark-mode a.data:hover {
+        color: #00bfff;
+    }
+
+    .profile-image{
+        width: 15vw;
+        height: 32vh;
+        border-radius: 10rem;
+        box-shadow: 0 4px 8px var(--shadow-color);
+        margin-bottom: 2rem;
+        margin: 0.5rem;
+    }
+
+    .stusubmit{
+        background-color: #007bff;
+        padding: 10px 10px;
+        color: var(--background-color);
+        margin-top: 0.5rem;
+        border-radius: 0.33rem;
+        border: none;
+        margin-bottom: 1rem;
+        margin-left: 0.5rem;
+    }
+
+    .table1{
+        background-color: rgb(253, 251, 251);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 8px black;
+        margin-bottom: 2rem;
+    }
+    .table{
+        background-color: rgb(241, 240, 240);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 8px black;
+        padding: 0.5rem;
+    }
+
+   .head{
+        background-color: #007bff;  
+        border-top-right-radius: 0.5rem;
+        border-top-left-radius: 0.5rem;
+        padding: 0.8rem;
+        color: var(--background-color);
+    }
+
+    .section{
+        border: 0.5px solid black;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .section1{
+        border: 0.5px solid black;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .section p{
+        padding: 0.5rem;
+    }
+
+    .section1 p{
+        padding: 0.5rem;
+    }
+
+    .input-field{
+        background-color: #007bff;
+        width: 10vw;
+        color: var(--background-color);
+        margin: 0.5rem;
+        padding: 9px 8px;
+        font-size: 15px;
+        text-align: center;
+        border-radius: 0.3rem;
+        
+    }
+
+    .input-field input{
+        display: none;
+        width: 10vw;
+    }
+
+    .input-field i{
+        color: #161616;
+    }
+    
+    .up{
+        width: 15px;
+        margin-right: 0.5rem;
+    }
+
+    /* Add this to your existing CSS file or create a new one */
+    .table input {
+        border: none;
+        border-bottom: 1px solid rgb(48, 47, 47); /* Set initial color to transparent */
+        padding: 8px 18.3vw;
+        margin-left: 1rem;
+        text-align: center;
+        outline: none;
+        background-color: rgb(241, 240, 240);
+        transition: border-bottom 0.3s ease; /* Add transition properties */
+      }
+      
+      .table input:focus {
+        border-bottom: 2px solid rgb(255, 4, 4); 
+      }
+      
+/* Textarea */
+textarea {
+    width: calc(100% - 38px); /* Adjust width to accommodate remove button */
+    background-color: #f2f3f3;
+    position: relative;
+    resize: none;
+    margin-left: -1.5rem;
+    border-radius: 0.5rem;
+    padding-top: 0.8rem;
+    padding-left: 0.5rem;
+    margin-bottom: -1rem;
+    margin-top: 1rem;
+    text-decoration: dashed;
+    outline: none;
+    font-weight: bold;
+}
+
+/* Readonly Textarea */
+textarea[readonly] {
+    cursor: pointer; /* Change cursor for readonly textarea */
+}
+
+/* Hover Effect */
+textarea:hover {
+    border: 0.5px solid black;
+    background-color: #eeecec;
+}
+
+/* Put Section */
+.put {
+    margin-top: 2rem;
+}
+
+/* Remove Button */
+li .remove-btn {/* Adjust margin for spacing */
+    margin: 0;
+    justify-content:center;
+    text-align: center;
+}
+
+.remove-btn {
+    cursor: pointer;
+    background-color: #a30101;
+    color: #fff;
+    border: none;
+    border-radius: 10rem;
+    transition: background-color 0.3s ease;
+}
+
+.skill-item button:hover{
+    background-color:rgb(201, 48, 48);
+}
+.lang-item button:hover{
+    background-color:rgb(201, 48, 48);
+}
+
+.exp-item button:hover{
+    background-color:rgb(201, 48, 48);
+}
+
+.education-item button:hover{
+    background-color:rgb(201, 48, 48);
+}
+
+.professional-item button:hover{
+    background-color:rgb(201, 48, 48);
+}
+
+
+    @media (max-width: 600px) {
+        
+        body{
+            width: 100%;
+            
+        }
+
+        .input-field{
+            background-color: #007bff;
+            width: 40vw;
+            color: var(--background-color);
+            margin: 0.5rem;
+            padding: 9px 8px;
+            font-size: 15px;
+            text-align: center;
+            border-radius: 0.3rem;
+        }
+
+        #edit-profile{
+            width: 33vw;
+        }
+        .container{
+            width: 90%;
+            position: absolute;
+        }
+
+        #image-container{
+            width: 65vw;
+            border-radius: 10rem;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin-bottom: 2rem;
+            margin: 0.5rem;
+        }
+
+        .table{
+            width: 93vw;
+            margin-left: -1rem;
+        }
+
+        .table input {
+            border: none;
+            border-bottom: 1px solid rgb(48, 47, 47); /* Set initial color to transparent */
+            padding: 10px 80px 10px 0px;
+            margin-left: 1rem;
+            text-align: center;
+            outline: none;
+            background-color: rgb(236, 228, 228);
+            transition: border-bottom 0.3s ease; /* Add transition properties */
+          }
+          
+          .remove-btn{
+            background-color: rgb(241, 240, 240);
+            color: #000;
+        }
+        .skill-item button:hover{
+            background-color: rgb(241, 240, 240);
+        }
+        .lang-item button:hover{
+            background-color: rgb(241, 240, 240);
+        }
+        
+        .exp-item button:hover{
+            background-color: rgb(241, 240, 240);
+        }
+        
+        .education-item button:hover{
+            background-color: rgb(241, 240, 240);
+        }
+        
+        .professional-item button:hover{
+            background-color: rgb(241, 240, 240);
+        }
+         
+    }
+
+    
+</style>
+
+</html>

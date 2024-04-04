@@ -62,7 +62,7 @@
       
     <div class="up">
         <div class="upload">
-            <h1>File Upload</h1>
+            <h1>Upload Your Project Files</h1>
            <!-- Your HTML form -->
            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
             <div class="info">
@@ -110,42 +110,24 @@
     </div>
 
 <script>
-    window.onload = function() {
-        // Read the value of the 'student' and 'logged' cookies
-        var cookies = document.cookie.split(';').map(cookie => cookie.trim().split('='));
-        console.log("Cookies:", cookies); // Debug: Log the cookies
+// Read the value of the 'student' and 'logged' cookies
+var cookies = document.cookie.split(';').map(cookie => cookie.trim().split('='));
+console.log("Cookies:", cookies); // Debug: Log the cookies
 
-        var student;
-        var logged;
+var studentCookie = cookies.find(cookie => cookie[0].trim() === 'student');
+var loggedCookie = cookies.find(cookie => cookie[0].trim() === 'logged');
 
-        for (var i = 0; i < cookies.length; i++) {
-            if (cookies[i][0] === 'student') {
-                student = cookies[i][1];
-            }
-            if (cookies[i][0] === 'logged') {
-                logged = cookies[i][1];
-            }
-        }
+// Check if both 'student' and 'logged' cookies exist and have the appropriate values
+if (studentCookie && loggedCookie && loggedCookie[1].trim() === 'true') {
+    // Get the link element by its ID
+    var hideLink = document.getElementById("hideLink");
 
-        console.log("Student:", student); // Debug: Log the value of 'student' cookie
-        console.log("Logged:", logged); // Debug: Log the value of 'logged' cookie
-
-        // Get the link element by its ID
-        var link = document.getElementById("hideLink");
-
-        // Check if both 'student' and 'logged' cookies exist and have the appropriate values
-        if (student && logged === 'true') {
-            // Display the link by setting its display property to "block"
-            if (link) {
-                link.style.display = "block";
-            }
-        } else {
-            // Hide the link by setting its display property to "none"
-            if (link) {
-                link.style.display = "none";
-            }
-        }
+    // Hide the link by setting its display property to "none"
+    if (hideLink) {
+        hideLink.style.display = "none";
     }
+}
+
 
     function saveImage() {
         const input = document.getElementById('image-input');

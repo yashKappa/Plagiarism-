@@ -14,7 +14,7 @@
   <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="file.css">   
   <link rel="database" href="../database.js">
-  <link rel="script" href="script.js">
+  <link rel="script" href="/student user/script.js">
     <title>Users Files Table</title>
 </head>
 
@@ -25,8 +25,8 @@
     <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
     <div class="img"><div id="image-container1"></div></div>
     <a class="no" href="../student user/profile.html"><i class="fas fa-cog"> </i>Setting</a>
-    <a href="../profile"><i class="fas fa-user"> </i>Profile</a>
-    <a class="active" href="../user"><i class="fas fa-poll"> </i>Status</a>
+    <a href="../profile" id="hideLink"><i class="fas fa-user"></i> Profile</a>
+    <a href="../teacher_profile" id="teacherLink"><i class="fas fa-user"></i> Profile</a>    <a class="active" href="../user"><i class="fas fa-poll"> </i>Status</a>
     <a href="#"><i class="fas fa-moon"> </i>Dark Mode</a>
     <div class="home">
     <a class="fea" href="../student user/userpanel.html"><i class="fas fa-home"> </i>Home</a>
@@ -98,6 +98,30 @@
 </body>
   
 <script>
+  var student = getCookie('student');
+var teacher = getCookie('teacher');
+var logged = getCookie('logged');
+
+if (student && logged === 'true') {
+    // If the user is a student and logged in, hide the hideLink
+    document.getElementById('teacherLink').style.display = 'none';
+} else if (teacher && logged === 'true') {
+    // If the user is a teacher and logged in, hide the teacherLink
+    document.getElementById('hideLink').style.display = 'none';
+}
+
+// Function to get cookie value
+function getCookie(name) {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return '';
+}
+
 
   document.getElementById('logout-btn').addEventListener('click', function(e) {
     e.preventDefault();

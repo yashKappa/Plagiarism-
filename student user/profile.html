@@ -17,7 +17,8 @@
         <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
         <h1><div class="img"><div id="image-container1"></div></div></h1>
         <a class="active" href="#"><i class="fas fa-cog"></i> Settings</a>
-        <a href="../profile"><i class="fas fa-user"></i> Profile</a>
+        <a href="../profile" id="hideLink"><i class="fas fa-user"></i> Profile</a>
+        <a href="../teacher_profile" id="teacherLink"><i class="fas fa-user"></i> Profile</a>
         <a href="../user"><i class="fas fa-poll"></i> Status</a>
         <a href="#"><i class="fas fa-moon"></i> Dark Mode</a>
         <div class="home">
@@ -45,8 +46,15 @@
 </html>
 
 <script src="script.js"></script>
-
 <script>
+
+
+    // Hide the link with id "hideLink"
+  // Get the link element by its ID
+
+
+
+
     document.getElementById("backButton").addEventListener("click", function () {
         window.history.back();
     });
@@ -95,57 +103,6 @@ document.getElementById('logout-yes').addEventListener('click', function() {
 });
 
 
-
-
-    function saveImage() {
-      const input = document.getElementById('image-input');
-      const file = input.files[0];
-      
-      // Check if username exists in cookies
-      const username = getCookie('username');
-      if (!username) {
-          alert("Please enter your username first.");
-          return;
-      }
-      
-      if (file) {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-              const imageData = event.target.result;
-              // Store image data along with username in local storage
-              localStorage.setItem(username + '_savedImage', imageData);
-              displayImageInMultipleContainers(imageData);
-          };
-          reader.readAsDataURL(file);
-      }
-  }
-  
-  function displayImageInMultipleContainers(imageData) {
-      // Get both image containers by their IDs
-      const container1 = document.getElementById('image-container1');
-      const container2 = document.getElementById('image-container2');
-      
-      // Set the inner HTML of both containers to display the image
-      container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
-      container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
-  }
-
-  // Load the image from localStorage when the page loads
-  window.onload = function() {
-      // Check if username exists in cookies
-      const username = getCookie('username');
-      if (!username) {
-          const usernamePrompt = prompt("Please enter your username:");
-          if (usernamePrompt) {
-              document.cookie = `username=${usernamePrompt}`;
-          }
-      }
-      
-      const savedImageData = localStorage.getItem(username + '_savedImage');
-      if (savedImageData) {
-          displayImageInMultipleContainers(savedImageData);
-      }
-  };
 
   // Function to get the value of a cookie by its name
   function getCookie(name) {

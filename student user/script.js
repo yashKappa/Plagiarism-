@@ -1,3 +1,27 @@
+var student = getCookie('student');
+var teacher = getCookie('teacher');
+var logged = getCookie('logged');
+
+if (student && logged === 'true') {
+    // If the user is a student and logged in, hide the hideLink
+    document.getElementById('teacherLink').style.display = 'none';
+} else if (teacher && logged === 'true') {
+    // If the user is a teacher and logged in, hide the teacherLink
+    document.getElementById('hideLink').style.display = 'none';
+}
+
+// Function to get cookie value
+function getCookie(name) {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return '';
+}
+
 function displaySavedImage(imageData) {
     const imageContainer = document.getElementById('image-container1');
     const image = new Image();
