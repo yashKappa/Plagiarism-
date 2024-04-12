@@ -52,7 +52,7 @@
    
     
     
-    <div class="container">
+    <div class="container1">
       <div class="find">
         <div class="form">
           <div class="search">
@@ -70,21 +70,23 @@
         <div class="enter">
           <button id="searchButton">Search <i class="fas fa-search"></i></button>
         </div>
+        
         <div class="related" id="relatedProjectsContainer"></div>
+        
         <div class="enter">
           <button id="CheckPlagiarism">Check Plagiarism <i class="fas fa-check"></i></button>
         </div>
       </div>
-      <div id="plagiarismResultsContainer">percentage</div> <!-- Adding the plagiarism results container -->
+      <div id="plagiarismResultsContainer">percentage</div>
     </div>
 
 
-
+    <div class="container">
       <div class="order">
         <div class="head2">
           <h3>Projects</h3>
-          <i class='bx bx-search'></i>
-          <i class='bx bx-filter'></i>
+          <i class='bx bx-search' ></i>
+          <i class='bx bx-filter' ></i>
         </div>
         <table id="projectTable">
           <thead>
@@ -96,51 +98,180 @@
           </thead>
           <tbody>
             <% if (data && data.length > 0) { %>
-            <% data.forEach(row => { %>
-            <tr>
-              <td>
-                <p class="datas"><%= row.username %></p>
-              </td>
-              <td>
-                <p class="datas">
-                  <!-- Update the link to point to the related route with username and project name parameters -->
-                  <a class="data" href="#" onclick="loadRelatedProjects('<%= row.username %>', '<%= row.project_name %>')"><%= row.project_name %></a>
-                </p>
-              </td>
-              <td>
-                <p class="data"><%= row.summary %></p>
-              </td>
-            </tr>
-            <% }); %>
+              <% data.forEach(row => { %>
+              <tr>
+                <td>
+                  <h1>Username</h1><p class="data"><%= row.username %></p>
+                </td>
+                <td>
+                  <h1>Project name</h1>( Click on the Project name for files)
+                  <p class="data">
+                    <!-- Update the link to point to the related route with username and project name parameters -->
+                    <a href="#" onclick="loadRelatedProjects('<%= row.username %>', '<%= row.project_name %>')"><%= row.project_name %></a>                  </p>
+                </td>
+                <td>
+                  <h1>Summary</h1>
+                  <p class="data"><%= row.summary %></p>
+                </td>
+                <td>
+                  <h1>Frontend Technology used</h1>
+                  <p class="data"><%= row.front %></p>
+                </td>
+                <td>
+                  <h1>Backend Technology used</h1>
+                  <p class="data"><%= row.back %></p>
+                </td>
+                <td>
+                  <h1>Year</h1>
+                  <p class="data"><%= row.year %></p>
+                </td>
+              </tr>
+              <% }); %>
             <% } else { %>
-            <tr>
-              <td>
-                <p class="message">Data was not found or Empty</p>
-              </td>
-            </tr>
+              <div class="msg" id="msg-container" >
+                <img class="message" src="notdata.png">
+            </div>
+            
             <% } %>
+           
           </tbody>
         </table>
+        <div class="msg" id="msg-container">
+          <img class="message" src="https://www.archanaprojects.com/Frontend/images/not-found.png">
+        </div>
+        
       </div>
     </div>
-    
+   
     <script>
 
-      // Function to display the saved image
-function displaySavedImage(imageData) {
-  const imageContainer = document.getElementById('image-container1');
-  const image = new Image();
-  image.src = imageData;
-  imageContainer.appendChild(image);
-}
+      document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.getElementById('toggleButton');
+        const fileContents = document.querySelectorAll('.file-content');
+        const editorContainers = document.querySelectorAll('.editor-container');
+    
+        // Add click event listener to the toggle button
+        toggleButton.addEventListener('click', function() {
+            // Toggle the display of file contents and editor containers
+            fileContents.forEach(fileContent => {
+                toggleDisplay(fileContent);
+            });
+            editorContainers.forEach(editorContainer => {
+                toggleDisplay(editorContainer);
+            });
+        });
+    });
+    
+    // Function to toggle display property
+    function toggleDisplay(element) {
+        const currentDisplay = window.getComputedStyle(element).display;
+        element.style.display = currentDisplay === 'none' ? 'block' : 'none';
+    }
 
-// Load the saved image from local storage when the page loads
-window.onload = function() {
-  const savedImageData = localStorage.getItem('kappa_savedImage');
-  if (savedImageData) {
-      displaySavedImage(savedImageData);
+    
+      document.addEventListener('DOMContentLoaded', function() {
+        const fileContents = document.querySelectorAll('.file-content');
+        const editorContainers = document.querySelectorAll('.editor-container');
+    
+        // Add click event listeners to file contents
+        fileContents.forEach(fileContent => {
+            fileContent.addEventListener('click', function() {
+                toggleDisplay(fileContent);
+            });
+        });
+    
+        // Add click event listeners to editor containers
+        editorContainers.forEach(editorContainer => {
+            editorContainer.addEventListener('click', function() {
+                toggleDisplay(editorContainer);
+            });
+        });
+    });
+    
+    // Function to toggle display property
+    function toggleDisplay(element) {
+        const currentDisplay = window.getComputedStyle(element).display;
+        element.style.display = currentDisplay === 'none' ? 'block' : 'none';
+    }
+    
+
+
+    function displaySavedImage(imageData) {
+      const imageContainer = document.getElementById('image-container1');
+      const image = new Image();
+      image.src = imageData;
+      imageContainer.appendChild(image);
+    }
+    
+    // Load the saved image from local storage when the page loads
+    window.onload = function() {
+      const savedImageData = localStorage.getItem('kappa_savedImage');
+      if (savedImageData) {
+          displaySavedImage(savedImageData);
+      }
+    };
+    
+      function saveImage() {
+      const input = document.getElementById('image-input');
+      const file = input.files[0];
+      
+      // Check if username exists in cookies
+      const username = getCookie('username');
+      if (!username) {
+          alert("Please enter your username first.");
+          return;
+      }
+      
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+              const imageData = event.target.result;
+              // Store image data along with username in local storage
+              localStorage.setItem(username + '_savedImage', imageData);
+              displayImageInMultipleContainers(imageData);
+          };
+          reader.readAsDataURL(file);
+      }
   }
-};
+  
+  function displayImageInMultipleContainers(imageData) {
+      // Get both image containers by their IDs
+      const container1 = document.getElementById('image-container1');
+      const container2 = document.getElementById('image-container2');
+      
+      // Set the inner HTML of both containers to display the image
+      container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+      container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+  }
+  
+  // Load the image from localStorage when the page loads
+  window.onload = function() {
+      // Check if username exists in cookies
+      const username = getCookie('username');
+      if (!username) {
+          const usernamePrompt = prompt("Please enter your username:");
+          if (usernamePrompt) {
+              document.cookie = `username=${usernamePrompt}`;
+          }
+      }
+      
+      const savedImageData = localStorage.getItem(username + '_savedImage');
+      if (savedImageData) {
+          displayImageInMultipleContainers(savedImageData);
+      }
+  };
+  
+  // Function to get the value of a cookie by its name
+  function getCookie(name) {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+              return cookie.substring(name.length + 1);
+          }
+      }
+      return null;
+  }
 
 const darkModePreference = localStorage.getItem('darkMode');
 
@@ -300,77 +431,111 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
   const relatedProjectsContainer = document.getElementById('relatedProjectsContainer');
   const editor = document.getElementById('editor');
 
   // Function to fetch related projects from the server
- // Function to fetch related projects from the server
-// Function to fetch related projects from the server
-function fetchRelatedProjects(username, projectName) {
-fetch(`/plagiarism/${username}/${projectName}`)
-.then(response => {
-if (!response.ok) {
-  throw new Error('Network response was not ok');
-}
-return response.json();
-})
-.then(data => {
-// Clear the container
-relatedProjectsContainer.innerHTML = '';
+  function fetchRelatedProjects(username, projectName) {
+    fetch(`/plagiarism/${username}/${projectName}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Clear the container
+        relatedProjectsContainer.innerHTML = '';
 
-// Iterate through the data and append to the container
-data.forEach(row => {
-  const filename = row.filename;
-  let dataContent = row.data;
+        // Iterate through the data and append to the container
+        data.forEach(row => {
+          const filename = row.filename;
+          let dataContent = row.data;
 
-  // Parse JSON data if present
-  if (dataContent && typeof dataContent === 'string') {
-    try {
-      dataContent = JSON.parse(dataContent);
-    } catch (error) {
-      console.error('Error parsing JSON data:', error);
-    }
-  }
+          // Parse JSON data if present
+          if (dataContent && typeof dataContent === 'string') {
+            try {
+              dataContent = JSON.parse(dataContent);
+            } catch (error) {
+              console.error('Error parsing JSON data:', error);
+            }
+          }
 
-  const fileElement = document.createElement('div');
-  fileElement.classList.add('file');
+          const fileElement = document.createElement('div');
+          fileElement.classList.add('file');
 
-  // Set the content icon based on dataContent existence and type
-  const contentIcon = dataContent ? (typeof dataContent === 'string' ? ' 🔄' : ' ✔️') : ' ❌';
-  
-  fileElement.textContent = filename + contentIcon;
+          // Create a span element to hold the file name
+          const fileNameElement = document.createElement('span');
+          fileNameElement.textContent = filename;
+          fileElement.appendChild(fileNameElement);
 
-  fileElement.addEventListener('click', () => {
-    displayFileContent(filename, dataContent);
-  });
+          // Set the content icon based on dataContent existence and type
+          const contentIcon = dataContent ? (typeof dataContent === 'string' ? ' 🔄' : ' ✔️') : ' ❌';
+          
+          // Append the content icon to the file element
+          const contentIconElement = document.createElement('span');
+          contentIconElement.textContent = contentIcon;
+          fileElement.appendChild(contentIconElement);
 
-  relatedProjectsContainer.appendChild(fileElement);
-});
-})
-.catch(error => {
-console.error('Error fetching related projects:', error);
-});
-} 
+          fileElement.addEventListener('click', () => {
+            displayFileContent(filename, dataContent);
+          });
+
+          relatedProjectsContainer.appendChild(fileElement);
+
+          // Create a new div element for the ACE editor
+          const editorContainer = document.createElement('div');
+          editorContainer.classList.add('editor-container');
+          relatedProjectsContainer.appendChild(editorContainer);
+
+          // Create a new Ace Editor instance for the editor container
+          const editor = ace.edit(editorContainer);
+          editor.setTheme("ace/theme/merbivore"); // Set the theme
+          editor.session.setMode("ace/mode/javascript"); // Set the mode
+
+          // Set the content of the editor
+          if (typeof dataContent === 'object') {
+            editor.session.setValue(JSON.stringify(dataContent, null, 2));
+          } else {
+            editor.session.setValue(dataContent);
+          }
+
+          // Set editor options
+          editor.setReadOnly(true); // Make the editor read-only
+
+          // Adjust editor size if needed
+          editor.resize();
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching related projects:', error);
+      });
+  } 
+
   // Function to display file content
-  function displayFileContent(content) {
+  function displayFileContent(filename, content) {
     const editor = ace.edit("editor");
     editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
     editor.session.setMode("ace/mode/javascript"); // Set the mode (optional)
 
     // Clear the editor and set the content
-    editor.session.setValue(content);
-}
+    if (typeof content === 'object') {
+      editor.session.setValue(JSON.stringify(content, null, 2));
+    } else {
+      editor.session.setValue(content);
+    }
 
+    // Display the filename above the editor
+    const filenameElement = document.getElementById('filename');
+    filenameElement.textContent = filename;
+  }
 
   // Call fetchRelatedProjects function when the page loads
   fetchRelatedProjects('username', 'projectName'); // Replace 'username' and 'projectName' with actual values
 });
 
-// Function to load related projects
+
 function loadRelatedProjects(username, projectName) {
   fetch(`/plagiarism/${username}/${projectName}`)
     .then(response => {
@@ -384,6 +549,7 @@ function loadRelatedProjects(username, projectName) {
       container.innerHTML = '';
 
       data.forEach(row => {
+        let filename = row.filename; // Extract filename from the row
         let dataContent = row.data;
 
         // Parse JSON data if present
@@ -395,14 +561,23 @@ function loadRelatedProjects(username, projectName) {
           }
         }
 
-        const contentElement = document.createElement('div');
-        contentElement.classList.add('file-content');
+        // Create a new container for each file
+        const fileContainer = document.createElement('div');
+        fileContainer.classList.add('file-container');
+        container.appendChild(fileContainer);
 
-        // Append the content element to the container
-        container.appendChild(contentElement);
+        // Create a span element to hold the filename
+        const fileNameElement = document.createElement('span');
+        fileNameElement.textContent = filename; // Set the filename as text content
+        fileContainer.appendChild(fileNameElement);
 
-        // Create a new Ace Editor instance for the content element
-        const editor = ace.edit(contentElement);
+        // Create a new div element for the ACE editor
+        const editorContainer = document.createElement('div');
+        editorContainer.classList.add('editor-container');
+        fileContainer.appendChild(editorContainer);
+
+        // Create a new Ace Editor instance for the editor container
+        const editor = ace.edit(editorContainer);
         editor.setTheme("ace/theme/merbivore"); // Set the theme
         editor.session.setMode("ace/mode/javascript"); // Set the mode
 
@@ -418,9 +593,6 @@ function loadRelatedProjects(username, projectName) {
 
         // Adjust editor size if needed
         editor.resize();
-
-        // Scroll the container into view
-        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     })
     .catch(error => {
@@ -430,76 +602,90 @@ function loadRelatedProjects(username, projectName) {
 
 
 function displayFileContent(filename, content) {
-const editor = ace.edit("editor");
-editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
-editor.session.setMode("ace/mode/css"); // Set the mode (replace 'css' with the appropriate mode for your content)
+  const editor = ace.edit("editor");
+  editor.setTheme("ace/theme/cobalt"); // Set the theme (optional)
+  editor.session.setMode("ace/mode/css"); // Set the mode (replace 'css' with the appropriate mode for your content)
 
-// Check if the content is an object (likely JSON data)
-if (typeof content === 'object') {
-  // Convert the JSON object to a formatted string
-  content = JSON.stringify(content, null, 2);
+  // Check if the content is an object (likely JSON data)
+  if (typeof content === 'object') {
+      // Convert the JSON object to a formatted string
+      content = JSON.stringify(content, null, 2);
+  }
+
+  // Set the content of the editor
+  editor.setValue(content);
+
+  // Get all the file contents to compare
+  const allFileContents = Array.from(document.querySelectorAll('.file-item'), fileItem => fileItem.textContent);
+
+  // Iterate through each file content to find plagiarized parts
+  allFileContents.forEach(fileContent => {
+      // Highlight plagiarized parts in the editor
+      highlightPlagiarizedContent(editor, content, fileContent);
+  });
+
+  // Move the cursor to the beginning of the content
+  editor.gotoLine(1);
+
+  // Display the filename above the editor
+  const filenameElement = document.getElementById('filename');
+  filenameElement.textContent = filename;
 }
 
-// Set the content of the editor
-editor.setValue(content);
-
-// Get all the file contents to compare
-const allFileContents = Array.from(document.querySelectorAll('.file-item'), fileItem => fileItem.textContent);
-
-// Iterate through each file content to find plagiarized parts
-allFileContents.forEach(fileContent => {
-  // Highlight plagiarized parts in the editor
-  highlightPlagiarizedContent(editor, content, fileContent);
+document.addEventListener('DOMContentLoaded', function() {
+  loadRelatedProjects('username', 'projectName');
 });
 
-// Move the cursor to the beginning of the content
-editor.gotoLine(1);
-}
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        loadRelatedProjects('username', 'projectName');
-    });
-    
-    
-    const fileInput = document.getElementById('fileUpload');
-    const fileDisplay = document.querySelector('.file-display');
-    
-    fileInput.addEventListener('change', function() {
-      // Clear previous content in the file display container
-      fileDisplay.innerHTML = '';
-      
-      // Check if the system or browser preference is dark or light mode
-      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      // Loop through each selected file
-      for (let i = 0; i < this.files.length; i++) {
-        const file = this.files[i];
-        const reader = new FileReader();
-        
-        reader.onload = function(event) {
+
+const fileInput = document.getElementById('fileUpload');
+const fileDisplay = document.querySelector('.file-display');
+
+fileInput.addEventListener('change', function() {
+  // Clear previous content in the file display container
+  fileDisplay.innerHTML = '';
+
+  // Check if the system or browser preference is dark or light mode
+  const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Loop through each selected file
+  for (let i = 0; i < this.files.length; i++) {
+      const file = this.files[i];
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
           const fileContent = event.target.result;
-          
+
+          // Create a new container for the filename and ACE editor
+          const container = document.createElement('div');
+          container.classList.add('file-container');
+          fileDisplay.appendChild(container);
+
+          // Create a new div element for the filename
+          const filenameElement = document.createElement('div');
+          filenameElement.classList.add('filename');
+          filenameElement.textContent = file.name; // Set the filename as text content
+          container.appendChild(filenameElement);
+
           // Create a new ACE Editor element for each file
           const editorContainer = document.createElement('div');
           editorContainer.classList.add('file-content');
-          fileDisplay.appendChild(editorContainer); // Append the editor container to the file display container
-          
+          container.appendChild(editorContainer); // Append the editor container to the file display container
+
           // Initialize the ACE Editor
           const editor = ace.edit(editorContainer);
-          const theme = "ace/theme/tomorrow_night_bright";
-          editor.setTheme(theme); // Set the theme based on dark or light mode
+          const theme = isDarkMode ? "ace/theme/tomorrow_night_bright" : "ace/theme/chrome"; // Use dark or light theme based on system preference
+          editor.setTheme(theme);
           editor.session.setMode("ace/mode/css"); // Set the mode (optional)
-          
+
           // Set the file content to the ACE Editor
           editor.setValue(fileContent);
           editor.clearSelection();
-        };
-        
-        // Read the file as text
-        reader.readAsText(file);
-      }
-    });
-    
+      };
+
+      // Read the file as text
+      reader.readAsText(file);
+  }
+});
 
 /*/ Get the file input element
 const fileInput = document.getElementById('fileUpload');
@@ -549,9 +735,10 @@ function readFileContent(file, fileDiv) {
 
 const searchInput = document.getElementById('searchInput');
 const projectTable = document.getElementById('projectTable');
-const projectBody = document.getElementById('projectBody');
 const rows = projectTable.getElementsByTagName('tr');
 const searchButton = document.getElementById('searchButton'); // Get the search button element
+const msgContainer = document.getElementById('msg-container'); // Get the message container element
+const messageImage = document.querySelector('.message'); // Get the message image element
 
 // Function to hide all rows initially
 function hideAllRows() {
@@ -562,25 +749,36 @@ function hideAllRows() {
 
 // Call hideAllRows function initially to hide all rows
 hideAllRows();
+messageImage.style.display = 'none'; // Hide the message image initially
 
-// Function to filter rows based on search input
 // Function to filter rows based on search input
 function filterRows() {
   const searchText = searchInput.value.trim().toLowerCase(); // Trim whitespace from input
   if (searchText === '') {
     hideAllRows(); // If search input is empty, hide all rows
+    msgContainer.style.display = 'none'; // Hide the message container
+    messageImage.style.display = 'none'; // Hide the message image
     return; // Exit the function
   }
+  let dataFound = false; // Flag to track if data is found
   for (let i = 1; i < rows.length; i++) {
     const projectName = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
     if (projectName.includes(searchText)) {
       rows[i].style.display = ''; // Display rows that match the search query
+      dataFound = true; // Set dataFound flag to true
     } else {
       rows[i].style.display = 'none'; // Hide rows that don't match the search query
     }
   }
+  // Show or hide message container based on dataFound flag
+  if (dataFound) {
+    msgContainer.style.display = 'none'; // Hide the message container if data is found
+    messageImage.style.display = 'none'; // Hide the message image if data is found
+  } else {
+    msgContainer.style.display = 'block'; // Show the message container if no data is found
+    messageImage.style.display = 'block'; // Show the message image if no data is found
+  }
 }
-
 
 // Add event listener to the search button
 searchButton.addEventListener('click', function(event) {
@@ -595,76 +793,31 @@ searchInput.addEventListener('keyup', function(event) {
   }
 });
 
-// Pagination variables and functions...
-
-// Pagination variables
-let currentPage = 1;
-const projectsPerPage = 5; // Number of projects per page
-
-// Function to display projects based on pagination
-function displayProjects() {
-  let displayedCount = 0;
-  const start = (currentPage - 1) * projectsPerPage;
-  const end = currentPage * projectsPerPage;
-  for (let i = 0; i < rows.length; i++) {
-    if (displayedCount < projectsPerPage) {
-      if (i >= start && i < end) {
-        rows[i].style.display = '';
-        displayedCount++;
-        console.log(`Displaying row ${i}`);
-      } else {
-        rows[i].style.display = 'none';
-        console.log(`Hiding row ${i}`);
-      }
-    } else {
-      rows[i].style.display = 'none';
-      console.log(`Hiding row ${i}`);
-    }
-  }
-}
-
-// Previous page button event listener
-document.getElementById('prevButton').addEventListener('click', () => {
-  console.log("Previous button clicked");
-  if (currentPage > 1) {
-    currentPage--;
-    displayProjects();
-  }
-});
-
-// Next page button event listener
-document.getElementById('nextButton').addEventListener('click', () => {
-  console.log("Next button clicked");
-  if (currentPage < Math.ceil(rows.length / projectsPerPage)) {
-    currentPage++;
-    displayProjects();
-  }
-});
-
-// Reset display to pagination-based display when search input is cleared
-searchInput.addEventListener('input', () => {
-  console.log("Input value:", searchInput.value);
-  if (searchInput.value === '') {
-    currentPage = 1; // Reset current page to 1
-    hideAllRows(); // Hide all rows again
-  } else {
-    filterRows(); // Call filterRows function to update display based on search input
-  }
-});
 </script>
 
       
   <style>
 
-    .da {
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: black;
-      color: white;
-      height: 20vh;
-      overflow-y: auto;
-      margin-bottom: 1rem;
+    .container .msg{
+      justify-content: center;
+      display: flex;
+      width: 100%;
+    }
+
+    .container img{
+      margin: 35%;
+      margin-top: 0%;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+    }
+
+    .container1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 1.8rem;
+      
     }
     
     #editor {
@@ -690,29 +843,50 @@ searchInput.addEventListener('input', () => {
     .related {
       margin-top: 10px;
       color: white;
-      display: flex; /* Use flexbox */
-      flex-wrap: wrap; /* Allow items to wrap to the next line */
+      display: flex; 
+      flex-wrap: wrap;
       cursor: pointer;
       justify-content: center;
     }
     
-    .related .file {
-      background-color: black; 
-      padding: 5px;
-      margin-right: 10px; /* Add margin between file names */
-      color: white; 
+    .file-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      border: 1px solid #ccc;
+      background-color: #050016;
+      padding: 10px 10px 10px 10px;
       border-radius: 0.3rem;
-      display: inline-block; /* Display files inline */
-      /* Set width to accommodate 5 files in a row with margin */
-      width: calc(20% - 10px);
-      margin-bottom: 10px; /* Add margin at the bottom */
-      padding: 10px;
+      width: calc(20% - 20px);
+      margin-bottom: 1rem;
+      white-space: 2rem;
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      text-align: center;
+      display: inline;
     }
     
-    .related .file:hover {
+    .file {
+      background-color: rgb(2, 0, 22);
+      padding: 3px 10px 0px 10px;
+      border-radius: 0.3rem;
+      border: 2px solid white;
+    }
+    
+    .file-container:hover {
       background-color: rgb(29, 28, 28);
     }
 
+    .editor-container {
+      height: 10px; /* Set the height as desired */
+      border: 1px solid #ccc;
+      display: none;
+    }
+
+
+    .file-content{
+      display: none;
+}
 
 /* Adjustments for responsiveness */
 @media (max-width: 768px) {
@@ -787,7 +961,7 @@ searchInput.addEventListener('input', () => {
     /* Styles for ACE Editor */
     #editor {
       width: 50%;
-      height: 300px; 
+      height: 30px; 
       border: 1px solid #ccc;
       border-radius: 5px;
       position:relative;
@@ -898,77 +1072,172 @@ searchInput.addEventListener('input', () => {
       font-weight: bold;
 
     }
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 1.8rem;
+    .container {
+      width: 80vw;
+      margin: 0 auto;
+      color: var(--h1-color);
+    }
+    
   
-}
+    
+    .head2 {
+      margin-bottom: 20px;
+    }
+    
+  
+  
+    h3{
+      color: var(--primary-color);
+      background: var(--h1-color);
+      padding: 10px;
+      border-radius: 0.3rem;
+      text-align: center;
+      box-shadow: 0 0 10px var(--h1-color);
+      border: 1px solid var(--primary-color);
+    }
+  
+    #projectTable {
+      width: 100%;
+    }
+    
+    #projectTable tr {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--h1-color);
+      margin-bottom: 4rem;
+      margin-top: 1rem;
+      border-radius: 0.5rem;
+    }
+    
+    #projectTable th,
+    #projectTable td {
+      padding: 10px 10px 0px 10px;
+    }
+    
+    #projectTable th {
+      font-weight: bold;
+    }
+    
+    .datas {
+      display: flex;
+      flex-direction: row;
+    }
+    
+    .datas h4 {
+      margin: 0;
+      width: 120px; /* Adjust as needed for label width */
+    }
+    
+    .datas p {
+      margin: 0;
+    }
+    
+  
+  .option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    
+  }
+  
+  .goe {
+    text-align: center;
+    background-color:var(--study-color);
+    margin: 0 5px; /* Adjust the margin as needed */
+    padding: 5px 10px; /* Adjust the padding as needed */
+    text-decoration: none;
+    color: var(--third-color);
+    border-radius: 5px;
+  }
+  
+  .goe:hover {
+    background-color: var(--error-color);
+  }
+  
+  #feat{
+    text-decoration: underline;
+    box-shadow: 0 0 5px var(--h1-color);
+    border: 1px solid var(--third-color);
+  }
+  
 
-
-.order {
-  margin: 3rem;
-  padding-bottom: 2rem;
+  .input{
+    align-content: center;
+    padding: 0px 70px 0px 70px;
+    border-radius: 0.5rem;
+    width: 30vw;
+    background-color: #2268ff;
+  }
+  
+  i{
+    color: var(--h1-color);
+  }
+  
+  .no{
+    margin-bottom: 3rem;
+  }
+  
+  thead{
+    display: none;
+  }
+  
+  .container h1 {
+    font-size: 1.5em;
+    margin-bottom: 0.3rem;
+    background: var(--study-color);
+    padding: 6px 0px 6px 10px;
+    border-radius: 0.5rem;
+  }
+  
+  .datas {
+    margin-bottom: 4rem;
+    border: 2px solid var(--h1-color);
+    padding: 20px;
+    border-radius: 0.5rem
+  }
+  
+  .data {
+    font-size: 1em;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    background: var(--copied-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px var(--h1-color); /* Add box shadow */
+  }
+  
+  .Download {
+    background-color: #f80808;
+    padding: 10px;
+    display: flex;
+    width: max-content;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    color: white;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .Download:hover {
+    background-color: #d60606; 
+    transform: translateY(-4px); 
+  }
+  
+  .Download i{
+    margin-right: 0.5rem;
+  }
+  
+  .set i{
+    color: white;
   }
 
-table{
-  margin-top: 1rem;
-  color: var(--h1-color);
-}
-
-thead th{
-  background-color: #0a75e7;
-  width: 30vw;
-  color: var(--h1-color);
-  font-size: large;
-  padding: 10px;
-  border-radius: 0.5rem;
-  border: 1px solid var(--h1-color);
-
-}
-
-td{
-  background:var(--secondary-color);
-  padding-left: 0.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid black;
-  color: var(--h1-color);
-  border: 2px solid var(--h1-color);
-
- }
-
- td:hover{
-  background:var(--data-color);
-  padding-left: 0.5rem;
-  border-radius: 0.5rem;
-  border: 2px solid var(--h1-color);
- }
-
- .data{
-  text-align: justify;
-  margin-right: 0.5rem;
-  padding: 10px;
-  color:  var(--h1-color);
- }
-
-.head2{
-  width: 80%; 
-  background:var(--file-back-color);
-  margin-left: 6.5rem;
-  text-align: center;
-  padding-right: 1.5rem;
-  border-radius: 0.3rem;
-  margin-top: 2rem;
-  padding-top: 0.5rem;
-  padding-bottom: 1rem;
-  text-decoration: 3px underline;
-  color: var(--h1-color);
-  box-shadow: 0 0 10px var(--h1-color);
-  border: 2px solid rgb(255, 255, 255);
-}
- 
+  #filename {
+    font-weight: bold;
+    color: #333; /* Adjust color as needed */
+    width: 10px;
+  }
+  
+  
   </style>
   </html>
   

@@ -12,6 +12,10 @@ const multer = require('multer');
 const fileUpload = require('express-fileupload');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+// Set up static files serving
+app.use(express.static(path.join(__dirname, 'views')));
+
+// Now you can access the 'views' directory from the browser
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -19,6 +23,11 @@ const connection = mysql.createConnection({
   password: '',
   database: 'ads'
 });
+
+const usersRoutes = require('./routes/users');
+
+// Mount the user routes at the '/user' base path
+app.use('/users', usersRoutes);
 
 connection.connect((err) => {
   if (err) {
@@ -40,6 +49,9 @@ app.get("/", function (req, res) {
     // If the user is logged in, redirect to the user panel page
     res.redirect(`/student user/userpanel.html?username=${username}`);
   } else if (teacher && logged === 'true') {
+    // If the user is a teacher, redirect to the teacher page
+    res.redirect(`/teacher and MU.html?username=${username}`);
+  }  else if (developer && logged === 'true') {
     // If the user is a teacher, redirect to the teacher page
     res.redirect(`/teacher and MU.html?username=${username}`);
   } else {
@@ -86,6 +98,7 @@ app.get("/logout", (req, res) => {
   res.clearCookie('logged');
   res.clearCookie('student');
   res.clearCookie('teacher');
+  res.clearCookie('developer');
   res.clearCookie('admin');
     res.redirect("/index.html");
 });
@@ -227,52 +240,83 @@ app.get("/student/userpanel.html", (req, res) => {
 
   /*------------------------------------teacher register ---------------------------------*/
 
-    /*------------------------------------university login ---------------------------------*/
+ /*------------------------------------developer login ---------------------------------*/
 
-    app.post('/MU', (req, res) => {
-      const {username, password } = req.body;
-    
-     
-      const query = 'SELECT * FROM university WHERE username = ? AND password = ?';
-      connection.query(query, [username, password], (error, results) => {
-        if (error) {
-          console.error('Error executing query:', error);
-          res.sendStatus(500);
-        } else {
-          if (results.length > 0) {
-            res.redirect('/mu.html');
-          } else {
-            res.redirect('/university/university login.html');
-          }
-        }
-      });
-    });
-    
-    app.get('/mu.html', (req, res) => {
-      res.sendFile(__dirname + '/mu.html');
-    });
-    /*------------------------------------university login ---------------------------------*/
 
-/*------------------------------------ university register ---------------------------------*/
-app.post('/MUR', (req, res) => {
-  const { username, email, password, university, country, college } = req.body;
+app.post("/MU", (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
 
-  const query = 'INSERT INTO university (username, email, password, university, country, college) VALUES (?, ?, ?, ?, ?, ?)';
-  connection.query(query, [username, email, password, university, country, college], (error) => {
-     if (error) {
-      console.error('Error inserting data into the database:', error);
-      res.sendStatus(500);
+  const query = "SELECT * FROM teacher WHERE developer = ? AND password = ?";  const request = new sql.Request();
+  request.input('developer', sql.NVarChar, username);
+  request.input('password', sql.NVarChar, password);
+
+  connection.query(query, [username, password], (error, results) => {
+    if (error) {
+      console.error("Error occurred during login:", error);
+      res.redirect("/");
+    } else if (results.length > 0) {
+      // Set cookies for username, teacher, and logged status
+      res.cookie('username', username);
+      res.cookie('developer', 'developer');
+      res.cookie('logged', 'true'); // Add this line to set the 'logged' cookie
+      // Redirect to the user panel page
+      req.cookies.user = username;
+      res.redirect(`/student user/userpanel.html?username=${username}`);
     } else {
-      res.redirect('/mu.html');
+      res.redirect("/teacher/teacher login.html?error=Invalid Username or Password");
     }
   });
 });
 
-app.get('/mu.html', (req, res) => {
-  res.sendFile(__dirname + '/mu.html');
+
+
+/*------------------------------------developer login ---------------------------------*/
+
+
+
+/*------------------------------------developer register ---------------------------------*/
+
+app.post('/MUR', (req, res) => {
+  try {
+    const { username, email, password, university, college, teacher } = req.body;
+    const query = 'INSERT INTO teacher (username, email, password, university, college, teacher) VALUES (?, ?, ?, ?, ?, ?)';
+    
+    connection.query(query, [username, email, password, university, college, teacher], (error, results) => {
+      if (error) {
+        console.error("Error occurred during registration:", error);
+        res.redirect('/student/student register.html');
+      } else {
+        // Check if the query was successful
+        if (results.affectedRows > 0) {
+          res.cookie('username', username);
+          res.cookie('developer', 'developer');
+          res.cookie('logged', 'true');
+          // Set session variable
+          req.cookies.user = username;
+          // Redirect to the user panel page
+          res.redirect('/student user/userpanel.html');
+        } else {
+          res.redirect('/teacher/teacher register.html');
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.redirect('/teacher/teacher register.html');
+  }
 });
 
-/*------------------------------------university register ---------------------------------*/
+app.get("/student/userpanel.html", (req, res) => {
+  if (req.loggedInUser) {
+    res.sendFile(path.join(__dirname, "student user/userpanel.html"));
+  } else {
+    res.redirect("/login");
+  }
+});
+
+
+  /*------------------------------------developer register ---------------------------------*/
 
 
 /*------------------------------------file or folder upload---------------------------------*/
@@ -292,6 +336,8 @@ app.post("/upload", upload.array("files"), (req, res) => {
   const projectName = req.body.projectName;
   const inputUsername = req.body.username;
   const summary = req.body.summary;
+  const front = req.body.front;
+  const back = req.body.back;
 
   if (!files || files.length === 0 || !projectName) {
       return res.status(400).send("Please provide a project name and select files to upload.");
@@ -313,8 +359,8 @@ files.forEach((file, index, array) => {
   const mimeType = file.mimetype;
   const fileData = file.buffer;
 
-  const query = "INSERT INTO file (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)";
-  connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary], (err, result) => {
+  const query = "INSERT INTO file (filename, mime_type, data, project_name, username, summary, front, back) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary, front, back], (err, result) => {
       if (err) {
           console.error("Error uploading file: ", err);
       } else {
@@ -330,21 +376,24 @@ files.forEach((file, index, array) => {
 });
 // ...
 
+
 app.post("/project", upload.array("files"), (req, res) => {
   const files = req.files;
   const projectName = req.body.projectName;
   const inputUsername = req.body.username;
   const summary = req.body.summary;
+  const front = req.body.front;
+  const back = req.body.back;
 
   if (!files || files.length === 0 || !projectName) {
-      return res.status(400).send("Please provide a project name and select files to upload.");
+    return res.status(400).send("Please provide a project name and select files to upload.");
   }
 
   // Check if the input username matches the one stored in cookies
   const storedUsername = req.cookies.username;
 
   if (inputUsername !== storedUsername) {
-      return res.status(401).send("Invalid username. Please log in with the correct username.");
+    return res.status(401).send("Invalid username. Please log in with the correct username.");
   }
 
   let filesUploaded = 0;
@@ -354,22 +403,21 @@ app.post("/project", upload.array("files"), (req, res) => {
     const mimeType = file.mimetype;
     const fileData = file.buffer;
 
-    const query = "INSERT INTO project (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)";
-    connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary], (err, result) => {
+    const query = "INSERT INTO project (filename, mime_type, data, project_name, username, summary, front, back) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary, front, back], (err, result) => {
       if (err) {
-          console.error("Error uploading file: ", err);
+        console.error("Error uploading file: ", err);
       } else {
-          filesUploaded++;
+        filesUploaded++;
 
-          if (filesUploaded === array.length) {
-              // All files have been uploaded
-              res.status(200).send("Files uploaded successfully");
-          }
+        if (filesUploaded === array.length) {
+          // All files have been uploaded
+          res.status(200).send("Files uploaded successfully");
+        }
       }
     });
   });
 });
-
 
 app.get("/status", (req, res) => {
   const query = "SELECT filename, project_name, summary FROM file";
@@ -937,44 +985,6 @@ app.post('/removeSkill', (req, res) => {
   });
 });
 
-app.post('/deleteSkill', (req, res) => {
-  // Extract the username from the request
-  const storedUsername = req.cookies.username;
-
-  // Check if the username is defined
-  if (!storedUsername) {
-      return res.status(401).send("Invalid username. Please log in with the correct username.");
-  }
-
-  // Extract the skill to remove from the request body
-  const langToRemove = req.body.langName;
-
-  // Fetch the current list of skills from the database
-  connection.query('SELECT lang FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
-      if (err) {
-          console.error("Error fetching skills:", err);
-          res.status(500).send("Error fetching skills");
-      } else {
-          // Extract the skills from the result
-          const currentLang = result[0].lang.split(',').map(lang => lang.trim());
-          const updatedLang = currentLang.filter(lang => lang !== langToRemove);
-          const updatedLangString = updatedLang.join(', ');
-
-          // Update the 'student' table with the updated skills
-
-          // Update the 'student' table with the updated skills
-          connection.query('UPDATE teacher SET lang = ? WHERE username = ?', [updatedLangString, storedUsername], (err, result) => {
-              if (err) {
-                  console.error("Error updating skills:", err);
-                  res.status(500).send("Error updating skills");
-              } else {
-                  console.log("Skill removed successfully");
-                  res.status(200).send("Skill removed successfully");
-              }
-          });
-      }
-  });
-});
 
 app.post('/removeDATA', (req, res) => {
   // Extract the username from the request
@@ -1118,8 +1128,11 @@ app.get('/fileDetails/:username/:projectName', (req, res) => {
 
 app.get('/plagi', (req, res) => {
   try {
+    const searchTerm = req.query.term || ''; // Get the search term from query parameters or default to an empty string
+    const searchCondition = searchTerm ? `WHERE project_name LIKE '%${searchTerm}%'` : ''; // Construct search condition if search term is provided
+    
     // Query the MySQL database to select distinct username, project_name, and summary
-    connection.query('SELECT username, project_name, summary FROM file GROUP BY username, project_name, summary', (error, results, fields) => {
+    connection.query(`SELECT username, project_name, summary, front, back, year FROM file ${searchCondition} GROUP BY username, project_name, summary, front, back, year`, (error, results, fields) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
@@ -1138,7 +1151,7 @@ app.get('/plagi', (req, res) => {
 app.get('/plagiarism', (req, res) => {
   try {
     // Query the MySQL database to select distinct username, project_name, and summary
-    connection.query('SELECT username, project_name, summary FROM file GROUP BY username, project_name, summary', (error, results, fields) => {
+    connection.query('SELECT username, project_name, summary, front, back, year FROM file GROUP BY username, project_name, summary, front, back, year', (error, results, fields) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
@@ -1219,42 +1232,175 @@ app.get('/profile', (req, res) => {
 });
 
 
-app.post('/project', upload.array('files'), (req, res) => {
-  const files = req.files;
-  const projectName = req.body.projectName;
-  const inputUsername = req.body.username;
-  const summary = req.body.summary;
 
-  if (!files || files.length === 0 || !projectName) {
-    return res.status(400).send('Please provide a project name and select files to upload.');
-  }
 
-  // Check if the input username matches the one stored in cookies
+app.post('/deleteSkill', (req, res) => {
+  // Extract the username from the request
   const storedUsername = req.cookies.username;
 
-  if (inputUsername !== storedUsername) {
-    return res.status(401).send('Invalid username. Please log in with the correct username.');
+  // Check if the username is defined
+  if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
   }
 
-  let filesUploaded = 0;
+  // Extract the skill to remove from the request body
+  const langToRemove = req.body.langName;
 
-  files.forEach((file, index, array) => {
-    const filename = file.originalname;
-    const mimeType = file.mimetype;
-    const fileData = file.buffer;
-
-    const query = 'INSERT INTO project (filename, mime_type, data, project_name, username, summary) VALUES (?, ?, ?, ?, ?, ?)';
-    connection.query(query, [filename, mimeType, fileData, projectName, inputUsername, summary], (err, result) => {
+  // Fetch the current list of skills from the database
+  connection.query('SELECT lang FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
       if (err) {
-        console.error('Error uploading file: ', err);
+          console.error("Error fetching skills:", err);
+          res.status(500).send("Error fetching skills");
       } else {
-        filesUploaded++;
+          // Extract the skills from the result
+          const currentLang = result[0].lang.split(',').map(lang => lang.trim());
+          const updatedLang = currentLang.filter(lang => lang !== langToRemove);
+          const updatedLangString = updatedLang.join(', ');
 
-        if (filesUploaded === array.length) {
-          // All files have been uploaded
-          res.status(200).send('Files uploaded successfully');
-        }
+          // Update the 'student' table with the updated skills
+
+          // Update the 'student' table with the updated skills
+          connection.query('UPDATE teacher SET lang = ? WHERE username = ?', [updatedLangString, storedUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating skills:", err);
+                  res.status(500).send("Error updating skills");
+              } else {
+                  console.log("Skill removed successfully");
+                  res.status(200).send("Skill removed successfully");
+              }
+          });
       }
-    });
   });
 });
+
+app.post('/deleteDATA', (req, res) => {
+  // Extract the username from the request
+  const storedUsername = req.cookies.username;
+
+  // Check if the username is defined
+  if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Extract the skill to remove from the request body
+  const skillToRemove = req.body.skillName;
+
+  // Fetch the current list of skills from the database
+  connection.query('SELECT skill FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching skills:", err);
+          res.status(500).send("Error fetching skills");
+      } else {
+
+          const currentSkill = result[0].skill.split(',').map(skill => skill.trim());
+          const updatedSkill = currentSkill.filter(skill => skill !== skillToRemove);
+          const updatedSkillString = updatedSkill.join(', ');
+
+          // Update the 'student' table with the updated skills
+
+          // Update the 'student' table with the updated skills
+          connection.query('UPDATE teacher SET skill = ? WHERE username = ?', [updatedSkillString, storedUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating skills:", err);
+                  res.status(500).send("Error updating skills");
+              } else {
+                  console.log("Skill removed successfully");
+                  res.status(200).send("Skill removed successfully");
+              }
+          });
+      }
+  });
+});
+
+app.post('/deleteEDU', (req, res) => {
+  // Extract the username from the request
+  const storedEducationUsername = req.cookies.username;
+
+  // Check if the username is defined
+  if (!storedEducationUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Extract the education to remove from the request body
+  const educationToRemove = req.body.educationName;
+
+  // Fetch the current list of educations from the database
+  connection.query('SELECT education FROM teacher WHERE username = ?', [storedEducationUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching educations:", err);
+          res.status(500).send("Error fetching educations");
+      } else {
+          const currentEducation = result[0].education.split(',').map(education => education.trim());
+          const updatedEducation = currentEducation.filter(education => education !== educationToRemove);
+          const updatedEducationString = updatedEducation.join(', ');
+
+          // Update the 'student' table with the updated educations
+          connection.query('UPDATE teacher SET education = ? WHERE username = ?', [updatedEducationString, storedEducationUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating educations:", err);
+                  res.status(500).send("Error updating educations");
+              } else {
+                  console.log("Education removed successfully");
+                  res.status(200).send("Education removed successfully");
+              }
+          });
+      }
+  });
+});
+
+
+app.post('/deleteProfessional', (req, res) => {
+  // Extract the username from the request
+  const storedUsername = req.cookies.username;
+  const profToRemove = req.body.profName;
+
+  // Check if the username is defined
+  if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Fetch the current list of professional data from the database
+  connection.query('SELECT professional FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching professional data:", err);
+          res.status(500).send("Error fetching professional data");
+      } else {
+          const currentProf = result[0].professional.split(',').map(prof => prof.trim());
+          const updatedProf = currentProf.filter(prof => prof !== profToRemove);
+          const updatedProfString = updatedProf.join(', ');
+
+          // Update the 'student' table with the updated professional data
+          connection.query('UPDATE teacher SET professional = ? WHERE username = ?', [updatedProfString, storedUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating professional data:", err);
+                  res.status(500).send("Error updating professional data");
+              } else {
+                  console.log("Professional data removed successfully");
+                  res.status(200).send("Professional data removed successfully");
+              }
+          });
+      }
+  });
+});
+
+
+app.get('/new_ideas', (req, res) => {
+  try {
+    // Query the MySQL database to select distinct username, project_name, and summary
+    connection.query('SELECT username, project_name, summary, year, front, back, filename FROM project GROUP BY username, project_name, summary, year, front, back, filename', (error, results, fields) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'project' page and pass the query results
+        res.render('new_ideas', { data: results, title: 'User new_ideas' }); // Updated path to 'project'
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+

@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script>
     <link rel="database" href="../database.js">
+    <link rel="script" href="node.js">
     <title>Settings</title>
 </head>
 <body>
@@ -45,15 +46,36 @@
 </body>
 </html>
 
-<script src="script.js"></script>
+<script src="node.js"></script>
 <script>
 
-
-    // Hide the link with id "hideLink"
-  // Get the link element by its ID
-
-
-
+  var student = getCookie('student');
+  var teacher = getCookie('teacher');
+  var developer = getCookie('developer');
+  var logged = getCookie('logged');
+  
+  if (student && logged === 'true') {
+      // If the user is a student and logged in, hide the hideLink
+      document.getElementById('teacherLink').style.display = 'none';
+  } else if (teacher && logged === 'true') {
+      // If the user is a teacher and logged in, hide the teacherLink
+      document.getElementById('hideLink').style.display = 'none';
+  } else if (developer && logged === 'true') {
+    // If the user is a teacher and logged in, hide the teacherLink
+    document.getElementById('hideLink').style.display = 'none';
+}
+  
+  // Function to get cookie value
+  function getCookie(name) {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+              return cookie.substring(name.length + 1);
+          }
+      }
+      return '';
+  }
 
     document.getElementById("backButton").addEventListener("click", function () {
         window.history.back();

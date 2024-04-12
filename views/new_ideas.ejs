@@ -22,7 +22,7 @@
             <img class="logo" id="loo" src="light1.png">
         <div class="menu">
           <span class="feat"><a class="no" href="../student user/userpanel.html">Home</a></span>
-          <span class="feat"><a class="Active" href="../plagi">Search</a></span>
+          <span class="feat"><a class="Active" href="../search">Search</a></span>
           <span class="feat"><a class="no" href="../student user/one-to-one.html">one-to-one</a></span>
           <span class="feat"><a class="no" href="../student user/self detect.html">self detect</a></span>
           <span class="feat"><a class="no" href="../student user/code plagi.html">code</a></span>
@@ -48,10 +48,10 @@
                 </div>
             </div>
     </nav><br><br><br><br><br>
-
+    
     <div class="option">
-        <a class="goe feat" id="feat">Search Projects</a>
-        <a class="goe feat" href="../new_ideas">New projects ideas</a>
+        <a class="goe feat" href="../plagi">Search Projects</a>
+        <a class="goe feat" id="feat">New projects ideas</a>
       </div>
       <div class="search">
         <div class="input">
@@ -80,32 +80,34 @@
                 <% data.forEach(row => { %>
                 <tr>
                   <td>
-                    <h1>Username</h1><p class="data"><%= row.username %></p>
+                    <h1><i class="fas fa-user"></i> Username</h1><p class="data"><%= row.username %></p>
                   </td>
                   <td>
-                    <h1>Project name</h1>( Click on the Project name for files)
+                    <h1><i class="fas fa-file-alt"></i> Project name</h1>
                     <p class="data">
                       <!-- Update the link to point to the related route with username and project name parameters -->
-                      <a href="/fileDetails/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
+                      <a><%= row.project_name %></a>
                     </p>
                   </td>
                   <td>
-                    <h1>Summary</h1>
+                    <h1><i class="fas fa-align-left"></i> Summary</h1>
                     <p class="data"><%= row.summary %></p>
                   </td>
                   <td>
-                    <h1>Frontend Technology used</h1>
+                    <h1><i class="fas fa-code"></i> Frontend Technology Used</h1>
                     <p class="data"><%= row.front %></p>
                   </td>
                   <td>
-                    <h1>Backend Technology used</h1>
+                    <h1><i class="fas fa-server"></i> Backend Technology used</h1>
                     <p class="data"><%= row.back %></p>
                   </td>
                   <td>
-                    <h1>Year</h1>
+                    <h1><i class="far fa-calendar-alt"></i> Year</h1>
                     <p class="data"><%= row.year %></p>
                   </td>
-                  
+                  <td>
+                    <a class="Download" href="<%= row.data %>" download="<%= row.filename %>"> <i class="fas fa-download"></i>Download File</a>
+                  </td>
                 </tr>
                 <% }); %>
               <% } else { %>
@@ -235,6 +237,7 @@
             }
             return null;
         }
+
   document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const projectTable = document.getElementById('projectTable');
@@ -302,230 +305,229 @@
   
         </script>
         
-        
-        <style>
+    <style>
   
-          #searchButton{
-            background-color: #d83030;
-            font-size:small;
-            padding: 7px;
-            border: none;
-            color: #ffffff;
-            border-radius: 0.3rem;
-          }
-          /* Styles for the search bar */
-      #searchInput {
-        width: 300px;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 16px;
-        margin-top: 1rem;
-      }
-      
-      /* Styles for the search bar placeholder */
-      #searchInput::placeholder {
-        color: #999;
-      }
-      
-      /* Styles for the search bar on focus */
-      #searchInput:focus {
-        outline: none;
-        border-color: #4CAF50;
-        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-      }
-      
-      .search{
-        margin-top: 1rem;
-        margin-bottom: 2rem;
-        text-align-last: center;
-        justify-content: center;
-        width: 100%;
-        display: flex;
-      }
-      
-      .container {
-        width: 80vw;
-        margin: 0 auto;
-        color: var(--h1-color);
-      }
-      
-    
-      
-      .head2 {
-        margin-bottom: 20px;
-      }
-      
-    
-    
-      h3{
-        color: var(--primary-color);
-        background: var(--h1-color);
-        padding: 10px;
+      #searchButton{
+        background-color: #d83030;
+        font-size:small;
+        padding: 7px;
+        border: none;
+        color: #ffffff;
         border-radius: 0.3rem;
-        text-align: center;
-        box-shadow: 0 0 10px var(--h1-color);
-        border: 1px solid var(--primary-color);
       }
-    
-      #projectTable {
-        width: 100%;
-      }
-      
-      #projectTable tr {
-        display: flex;
-        flex-direction: column;
-        border: 1px solid var(--h1-color);
-        margin-bottom: 4rem;
-        margin-top: 1rem;
-        border-radius: 0.5rem;
-      }
-      
-      #projectTable th,
-      #projectTable td {
-        padding: 10px 10px 0px 10px;
-      }
-      
-      #projectTable th {
-        font-weight: bold;
-      }
-      
-      .datas {
-        display: flex;
-        flex-direction: row;
-      }
-      
-      .datas h4 {
-        margin: 0;
-        width: 120px; /* Adjust as needed for label width */
-      }
-      
-      .datas p {
-        margin: 0;
-      }
-      
-    
-    .option {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-      
-    }
-    
-    .goe {
-      text-align: center;
-      background-color:var(--study-color);
-      margin: 0 5px; /* Adjust the margin as needed */
-      padding: 5px 10px; /* Adjust the padding as needed */
-      text-decoration: none;
-      color: var(--third-color);
-      border-radius: 5px;
-    }
-    
-    .goe:hover {
-      background-color: var(--error-color);
-    }
-    
-    #feat{
-      text-decoration: underline;
-      box-shadow: 0 0 5px var(--h1-color);
-      border: 1px solid var(--third-color);
-    }
-    
-    .msg {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center; /* This centers the text within the <span> element */
-      background-color: none;
-    }
-    
-    .message-container {
-      text-align: center;
-    }
-    
-    .message {
-      font-size: x-large;
-      padding: 10px;
-    }
-    
-    .message-container img {
-      max-width: 100%;
-      max-height: 80%;
-    }
-    
-    .input{
-      align-content: center;
-      padding: 0px 70px 0px 70px;
-      border-radius: 0.5rem;
-      width: 30vw;
-      background-color: #2268ff;
-    }
-    
-    i{
-      color: var(--h1-color);
-    }
-    
-    .no{
-      margin-bottom: 3rem;
-    }
-    
-    thead{
-      display: none;
-    }
-    
-    .container h1 {
-      font-size: 1.5em;
-      margin-bottom: 0.3rem;
-      background: var(--study-color);
-      padding: 6px 0px 6px 10px;
-      border-radius: 0.5rem;
-    }
-    
-    .datas {
-      margin-bottom: 4rem;
-      border: 2px solid var(--h1-color);
-      padding: 20px;
-      border-radius: 0.5rem
-    }
-    
-    .data {
-      font-size: 1em;
-      margin-bottom: 1rem;
-      margin-top: 0.5rem;
-      background: var(--copied-color);
-      padding: 1rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 1px 3px var(--h1-color); /* Add box shadow */
-    }
-    
-    .Download {
-      background-color: #f80808;
-      padding: 10px;
-      display: flex;
-      width: max-content;
-      margin-bottom: 1rem;
-      border-radius: 0.3rem;
-      color: white;
-      transition: background-color 0.3s, transform 0.3s;
-    }
-    
-    .Download:hover {
-      background-color: #d60606; 
-      transform: translateY(-4px); 
-    }
-    
-    .Download i{
-      margin-right: 0.5rem;
-    }
-    
-    .set i{
-      color: white;
-    }
-    
-      </style>
-      </html>
-      
+      /* Styles for the search bar */
+  #searchInput {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-top: 1rem;
+  }
+  
+  /* Styles for the search bar placeholder */
+  #searchInput::placeholder {
+    color: #999;
+  }
+  
+  /* Styles for the search bar on focus */
+  #searchInput:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+  }
+  
+  .search{
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    text-align-last: center;
+    justify-content: center;
+    width: 100%;
+    display: flex;
+  }
+  
+  .container {
+    width: 80vw;
+    margin: 0 auto;
+    color: var(--h1-color);
+  }
+  
+
+  
+  .head2 {
+    margin-bottom: 20px;
+  }
+  
+
+
+  h3{
+    color: var(--primary-color);
+    background: var(--h1-color);
+    padding: 10px;
+    border-radius: 0.3rem;
+    text-align: center;
+    box-shadow: 0 0 10px var(--h1-color);
+    border: 1px solid var(--primary-color);
+  }
+
+  #projectTable {
+    width: 100%;
+  }
+  
+  #projectTable tr {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--h1-color);
+    margin-bottom: 4rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  #projectTable th,
+  #projectTable td {
+    padding: 10px 10px 0px 10px;
+  }
+  
+  #projectTable th {
+    font-weight: bold;
+  }
+  
+  .datas {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .datas h4 {
+    margin: 0;
+    width: 120px; /* Adjust as needed for label width */
+  }
+  
+  .datas p {
+    margin: 0;
+  }
+  
+
+.option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  
+}
+
+.goe {
+  text-align: center;
+  background-color:var(--study-color);
+  margin: 0 5px; /* Adjust the margin as needed */
+  padding: 5px 10px; /* Adjust the padding as needed */
+  text-decoration: none;
+  color: var(--third-color);
+  border-radius: 5px;
+}
+
+.goe:hover {
+  background-color: var(--error-color);
+}
+
+#feat{
+  text-decoration: underline;
+  box-shadow: 0 0 5px var(--h1-color);
+  border: 1px solid var(--third-color);
+}
+
+.msg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* This centers the text within the <span> element */
+  background-color: none;
+}
+
+.message-container {
+  text-align: center;
+}
+
+.message {
+  font-size: x-large;
+  padding: 10px;
+}
+
+.message-container img {
+  max-width: 100%;
+  max-height: 80%;
+}
+
+.input{
+  align-content: center;
+  padding: 0px 70px 0px 70px;
+  border-radius: 0.5rem;
+  width: 30vw;
+  background-color: #2268ff;
+}
+
+i{
+  color: var(--h1-color);
+}
+
+.no{
+  margin-bottom: 3rem;
+}
+
+thead{
+  display: none;
+}
+
+.container h1 {
+  font-size: 1.5em;
+  margin-bottom: 0.3rem;
+  background: var(--study-color);
+  padding: 6px 0px 6px 10px;
+  border-radius: 0.5rem;
+}
+
+.datas {
+  margin-bottom: 4rem;
+  border: 2px solid var(--h1-color);
+  padding: 20px;
+  border-radius: 0.5rem
+}
+
+.data {
+  font-size: 1em;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  background: var(--copied-color);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px var(--h1-color); /* Add box shadow */
+}
+
+.Download {
+  background-color: #f80808;
+  padding: 10px;
+  display: flex;
+  width: max-content;
+  margin-bottom: 1rem;
+  border-radius: 0.3rem;
+  color: white;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.Download:hover {
+  background-color: #d60606; 
+  transform: translateY(-4px); 
+}
+
+.Download i{
+  margin-right: 0.5rem;
+}
+
+.set i{
+  color: white;
+}
+
+  </style>
+  </html>
+  

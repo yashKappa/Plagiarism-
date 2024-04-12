@@ -14,6 +14,7 @@
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="file.css">
     <link rel="database" href="../database.js">
+    <link rel="users" href="../routes/users.js">
     <title>User Profile</title>
 </head>
 
@@ -143,7 +144,7 @@
                                         <li>
                                             <div class="education-item">
                                                 <textarea readonly><%= education %></textarea>
-                                                <button class="remove-btn" onclick="removeEDU('<%= education %>')"><i class="fas fa-times"></i></button>
+                                                <button class="remove-btn" onclick="deleteEDU('<%= education %>')"><i class="fas fa-times"></i></button>
                                             </div>
                                         </li>
                                     <% }); %>
@@ -168,7 +169,7 @@
                                         <li>
                                             <div class="professional-item">
                                                 <textarea readonly><%= prof %></textarea>
-                                                <button class="remove-btn" onclick="removeProfessional('<%= prof %>')"><i class="fas fa-times"></i></button>
+                                                <button class="remove-btn" onclick="deleteProfessional('<%= prof %>')"><i class="fas fa-times"></i></button>
                                             </div>
                                         </li>
                                     <% }); %>
@@ -298,9 +299,9 @@
         });
     }
     
-    function removeEDU(educationName) {
+    function deleteEDU(educationName) {
         // Assuming your server endpoint for removing education is '/removeEDU'
-        $.post('/removeEDU', { educationName: educationName }, function(response) {
+        $.post('/deleteEDU', { educationName: educationName }, function(response) {
             // Handle the success response
             console.log('Education removed successfully');
             // Reload the page or update the UI as needed
@@ -311,9 +312,9 @@
         });
     }
     
-    function removeProfessional(profName) {
+    function deleteProfessional(profName) {
         // Assuming your server endpoint for removing professional data is '/removeProfessional'
-        $.post('/removeProfessional', { profName: profName }, function(response) {
+        $.post('/deleteProfessional', { profName: profName }, function(response) {
             // Handle the success response
             console.log('Professional data removed successfully');
             // Reload the page or update the UI as needed

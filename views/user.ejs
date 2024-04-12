@@ -49,7 +49,7 @@
   </div>
   <div class="container">
       <div class="header">
-          <h1>Users Project Repository</h1>
+          <h1 class="message">Users Project Repository</h1>
           <div class="actions">
               <i class="bx bx-search"></i>
               <i class="bx bx-filter"></i>
@@ -91,7 +91,10 @@
         <% if (data && data.length > 0) { %>
        
           <% } else { %>
-          <p class="message">Data was not found or Empty</p>
+              <div class="message-container">
+                <img src="https://michassi.com/assets/web//images/no_data_found.png" alt="Your Image">
+                <p>Data was not found or Empty</p>
+              </div>
         <% } %>
       </form>
 </div>
@@ -369,7 +372,7 @@ console.error('Error fetching file content:', error);
 
 .content {
     margin-left: 250px;
-    padding: 20px;
+    padding: 10px;
 }
 
 .sidebar button {
@@ -564,6 +567,7 @@ button:hover {
     table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 1rem;
     }
     
     th, td {
@@ -592,7 +596,6 @@ button:hover {
     .message {
         color: #ffffff;
         background-color: #1d1d1d;
-        width: calc(25% - 10px);
         padding: 10px;
         font-weight: bold;
         text-align: center;
@@ -623,5 +626,21 @@ button:hover {
         color: #00bfff;
     }
     
+    .msg {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center; /* This centers the text within the <td> element */
+    }
+    
+    .message-container {
+      text-align: center;
+    }
+    
+    .message-container img {
+      max-width: 100%;
+      max-height: 80%;
+      margin-top: 2rem;
+    }
 </style>
 </html>
