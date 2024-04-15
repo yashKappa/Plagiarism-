@@ -42,6 +42,7 @@ app.get("/", function (req, res) {
   const username = req.cookies.username;
   const logged = req.cookies.logged;
   const teacher = req.cookies.teacher;
+  const developer = req.cookies.developer;
   const admin = req.cookies.admin;
 
 
@@ -122,9 +123,14 @@ app.post('/register', (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    const query = 'INSERT INTO student (username, email, password) VALUES (?, ?, ?)';
+    // SQL query with default values for columns not specified in the registration form
+    const query = 'INSERT INTO student (username, email, password, teacher, developer) VALUES (?, ?, ?, ?, ?)';
 
-    connection.query(query, [username, email, password], (error, results) => {
+    // Assuming `--` is the default value for the teacher column
+    const defaultTeacher = '--';
+    const defaultDeveloper = '--';
+
+    connection.query(query, [username, email, password, defaultTeacher, defaultDeveloper], (error, results) => {
       if (error) {
         console.error("Error occurred during registration:", error);
         res.redirect('/student/student register.html');
@@ -152,6 +158,7 @@ app.post('/register', (req, res) => {
   }
 });
 
+
 app.get('/student/userpanel.html', (req, res) => {
   if (req.loggedInUser) {
     res.sendFile(path.join(__dirname, 'student user/userpanel.html'));
@@ -169,7 +176,7 @@ app.post("/log", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT * FROM teacher WHERE username = ? AND password = ?";  const request = new sql.Request();
+  const query = "SELECT * FROM student WHERE username = ? AND password = ?";  const request = new sql.Request();
   request.input('username', sql.NVarChar, username);
   request.input('password', sql.NVarChar, password);
 
@@ -201,20 +208,27 @@ app.post("/log", (req, res) => {
 
 app.post('/go', (req, res) => {
   try {
-    const { username, email, password, university, college, teacher } = req.body;
-    const query = 'INSERT INTO teacher (username, email, password, university, college, teacher) VALUES (?, ?, ?, ?, ?, ?)';
-    
-    connection.query(query, [username, email, password, university, college, teacher], (error, results) => {
+    const {username, email, password, teacher, university, college, developer } = req.body;
+
+    // SQL query with default values for columns not specified in the registration form
+    const query = 'INSERT INTO student (username, email, password, teacher, university, college, developer) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+    // Assuming `--` is the default value for the developer column
+    const defaultDeveloper = '--';
+
+    connection.query(query, [username, email, password, teacher, university, college, defaultDeveloper], (error, results) => {
       if (error) {
         console.error("Error occurred during registration:", error);
         res.redirect('/student/student register.html');
       } else {
         // Check if the query was successful
         if (results.affectedRows > 0) {
+          // Assuming `student` is a property in the results object
+          const teacher = results.teacher; // Adjust this line according to your query results
           res.cookie('username', username);
           res.cookie('teacher', 'teacher');
-          res.cookie('logged', 'true');
-          // Set session variable
+          res.cookie('logged', 'true'); // Add this line to set the 'logged' cookie
+          // Redirect to the user panel page
           req.cookies.user = username;
           // Redirect to the user panel page
           res.redirect('/student user/userpanel.html');
@@ -247,7 +261,7 @@ app.post("/MU", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT * FROM teacher WHERE developer = ? AND password = ?";  const request = new sql.Request();
+  const query = "SELECT * FROM student WHERE developer = ? AND password = ?";  const request = new sql.Request();
   request.input('developer', sql.NVarChar, username);
   request.input('password', sql.NVarChar, password);
 
@@ -279,21 +293,35 @@ app.post("/MU", (req, res) => {
 
 app.post('/MUR', (req, res) => {
   try {
-    const { username, email, password, university, college, teacher } = req.body;
-    const query = 'INSERT INTO teacher (username, email, password, university, college, teacher) VALUES (?, ?, ?, ?, ?, ?)';
-    
-    connection.query(query, [username, email, password, university, college, teacher], (error, results) => {
+    const { username, email, password, teacher, university, college, developer, company, work } = req.body;
+  
+    // SQL query with default values for columns not specified in the registration form
+    const query = 'INSERT INTO student (username, email, password, teacher, university, college, developer, company, work) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  
+    // Assuming `--` is the default value for the teacher column
+    const defaultTeacher = '--';
+    const defaultUniversity = '--';
+    const defaultCollege = '--';
+  
+    // Use the defaultTeacher value if teacher is not provided
+    const teacherValue = teacher || defaultTeacher;
+    const universityValue = university || defaultUniversity;
+    const collegeValue = college || defaultCollege;
+  
+    connection.query(query, [username, email, password, teacherValue, defaultUniversity, defaultCollege, developer, company, work], (error, results) => {
       if (error) {
         console.error("Error occurred during registration:", error);
         res.redirect('/student/student register.html');
       } else {
         // Check if the query was successful
         if (results.affectedRows > 0) {
+          // Assuming `student` is a property in the results object
+          const developer = results.developer; // Adjust this line according to your query results
           res.cookie('username', username);
-          res.cookie('developer', 'developer');
-          res.cookie('logged', 'true');
-          // Set session variable
-          req.cookies.user = username;
+      res.cookie('developer', 'developer');
+      res.cookie('logged', 'true'); // Add this line to set the 'logged' cookie
+      // Redirect to the user panel page
+      req.cookies.user = username;
           // Redirect to the user panel page
           res.redirect('/student user/userpanel.html');
         } else {
@@ -818,7 +846,7 @@ app.get('/teacher_profile', (req, res) => {
       return res.status(401).send('Unauthorized. Please log in.');
     }
 
-    connection.query('SELECT DISTINCT username, email, password, lang, exp, professional, education, skill FROM teacher WHERE username = ?', [storedUsername], (error, results) => {
+    connection.query('SELECT DISTINCT username, email, password, lang, exp, professional, education, skill FROM student WHERE username = ?', [storedUsername], (error, results) => {
       if (error) {
         console.error('Error executing MySQL query:', error);
         res.status(500).send('Internal Server Error');
@@ -921,7 +949,7 @@ app.post("/teacher_profile/data", (req, res) => {
       const { lang, skill, exp, professional, education } = req.body;
 
       const updateQuery = `
-          UPDATE teacher
+          UPDATE student
           SET lang = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM lang), ''), ''), ?)),
               skill = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM skill), ''), ''), ?)),
               exp = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM exp), ''), ''), ?)),
@@ -1247,7 +1275,7 @@ app.post('/deleteSkill', (req, res) => {
   const langToRemove = req.body.langName;
 
   // Fetch the current list of skills from the database
-  connection.query('SELECT lang FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
+  connection.query('SELECT lang FROM student WHERE username = ?', [storedUsername], (err, result) => {
       if (err) {
           console.error("Error fetching skills:", err);
           res.status(500).send("Error fetching skills");
@@ -1260,7 +1288,7 @@ app.post('/deleteSkill', (req, res) => {
           // Update the 'student' table with the updated skills
 
           // Update the 'student' table with the updated skills
-          connection.query('UPDATE teacher SET lang = ? WHERE username = ?', [updatedLangString, storedUsername], (err, result) => {
+          connection.query('UPDATE student SET lang = ? WHERE username = ?', [updatedLangString, storedUsername], (err, result) => {
               if (err) {
                   console.error("Error updating skills:", err);
                   res.status(500).send("Error updating skills");
@@ -1286,7 +1314,7 @@ app.post('/deleteDATA', (req, res) => {
   const skillToRemove = req.body.skillName;
 
   // Fetch the current list of skills from the database
-  connection.query('SELECT skill FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
+  connection.query('SELECT skill FROM student WHERE username = ?', [storedUsername], (err, result) => {
       if (err) {
           console.error("Error fetching skills:", err);
           res.status(500).send("Error fetching skills");
@@ -1299,7 +1327,7 @@ app.post('/deleteDATA', (req, res) => {
           // Update the 'student' table with the updated skills
 
           // Update the 'student' table with the updated skills
-          connection.query('UPDATE teacher SET skill = ? WHERE username = ?', [updatedSkillString, storedUsername], (err, result) => {
+          connection.query('UPDATE student SET skill = ? WHERE username = ?', [updatedSkillString, storedUsername], (err, result) => {
               if (err) {
                   console.error("Error updating skills:", err);
                   res.status(500).send("Error updating skills");
@@ -1325,7 +1353,7 @@ app.post('/deleteEDU', (req, res) => {
   const educationToRemove = req.body.educationName;
 
   // Fetch the current list of educations from the database
-  connection.query('SELECT education FROM teacher WHERE username = ?', [storedEducationUsername], (err, result) => {
+  connection.query('SELECT education FROM student WHERE username = ?', [storedEducationUsername], (err, result) => {
       if (err) {
           console.error("Error fetching educations:", err);
           res.status(500).send("Error fetching educations");
@@ -1335,7 +1363,7 @@ app.post('/deleteEDU', (req, res) => {
           const updatedEducationString = updatedEducation.join(', ');
 
           // Update the 'student' table with the updated educations
-          connection.query('UPDATE teacher SET education = ? WHERE username = ?', [updatedEducationString, storedEducationUsername], (err, result) => {
+          connection.query('UPDATE student SET education = ? WHERE username = ?', [updatedEducationString, storedEducationUsername], (err, result) => {
               if (err) {
                   console.error("Error updating educations:", err);
                   res.status(500).send("Error updating educations");
@@ -1360,7 +1388,7 @@ app.post('/deleteProfessional', (req, res) => {
   }
 
   // Fetch the current list of professional data from the database
-  connection.query('SELECT professional FROM teacher WHERE username = ?', [storedUsername], (err, result) => {
+  connection.query('SELECT professional FROM student WHERE username = ?', [storedUsername], (err, result) => {
       if (err) {
           console.error("Error fetching professional data:", err);
           res.status(500).send("Error fetching professional data");
@@ -1370,7 +1398,7 @@ app.post('/deleteProfessional', (req, res) => {
           const updatedProfString = updatedProf.join(', ');
 
           // Update the 'student' table with the updated professional data
-          connection.query('UPDATE teacher SET professional = ? WHERE username = ?', [updatedProfString, storedUsername], (err, result) => {
+          connection.query('UPDATE student SET professional = ? WHERE username = ?', [updatedProfString, storedUsername], (err, result) => {
               if (err) {
                   console.error("Error updating professional data:", err);
                   res.status(500).send("Error updating professional data");
@@ -1403,4 +1431,232 @@ app.get('/new_ideas', (req, res) => {
 });
 
 
+/*************** Forget password ***********************/
 
+app.post('/forgot-password', (req, res) => {
+  const { email, username } = req.body;
+
+  // Check if email and username are defined
+  if (!email || !username) {
+    return res.status(400).send('Email and username are required');
+  }
+
+  // Trim whitespace from email and username
+  const trimmedEmail = email.trim();
+  const trimmedUsername = username.trim();
+
+  // Query the database to check if the email corresponds to the same username
+  connection.query('SELECT * FROM student WHERE email = ? AND username = ?', [trimmedEmail, trimmedUsername], (error, results) => {
+    if (error) {
+      console.error('Error querying the database:', error);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if any rows were returned (i.e., if email and username match)
+    if (results.length > 0) {
+      // Set cookies with username and email
+      res.cookie('username', trimmedUsername, { maxAge: 120000 }); // 2 minutes
+      res.cookie('email', trimmedEmail, { maxAge: 120000 }); // 2 minutes
+
+      // Redirect to the newpass.html page
+      res.redirect('/student/new pass.html');
+    } else {
+      // Redirect with error message
+      res.redirect("/student/forget pass.html?error=Invalid Username or Password");
+    }
+  });
+});
+
+
+app.post('/reset-password', (req, res) => {
+  const { newPassword, confirmPassword } = req.body;
+
+  // Check if newPassword and confirmPassword match
+  if (newPassword !== confirmPassword) {
+    return res.status(400).send('New password and confirm password do not match');
+  }
+
+  // Retrieve username and email from cookies
+  const username = req.cookies.username;
+  const email = req.cookies.email;
+
+  // Check if username and email are present in cookies
+  if (!username || !email) {
+    return res.status(400).send('Username and email not found in cookies');
+  }
+
+  // Query the database to update the password
+  connection.query('UPDATE student SET password = ? WHERE email = ? AND username = ?', [newPassword, email, username], (error, results) => {
+    if (error) {
+      console.error('Error updating password in the database:', error);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the password was updated successfully
+    if (results.affectedRows > 0) {
+      res.cookie('username', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('student', 'student', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('logged', 'true', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.clearCookie('email'); // Clear the email cookie
+      // Set session variable
+      req.cookies.user = username;
+      res.redirect('/student user/userpanel.html'); // Redirect to the login page
+    } else {
+      res.status(401).send('Failed to update password');
+    }
+  });
+});
+
+
+/*************** Teacher Forget password ***********************/
+
+app.post('/tech-password', (req, res) => {
+  const { email, username } = req.body;
+
+  // Check if email and username are defined
+  if (!email || !username) {
+    return res.status(400).send('Email and username are required');
+  }
+
+  // Trim whitespace from email and username
+  const trimmedEmail = email.trim();
+  const trimmedUsername = username.trim();
+
+  // Query the database to check if the email corresponds to the same username
+  connection.query('SELECT * FROM student WHERE email = ? AND username = ?', [trimmedEmail, trimmedUsername], (error, results) => {
+    if (error) {
+      console.error('Error querying the database:', error);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if any rows were returned (i.e., if email and username match)
+    if (results.length > 0) {
+      // Set cookies with username and email
+      res.cookie('username', trimmedUsername, { maxAge: 120000 }); // 2 minutes
+      res.cookie('email', trimmedEmail, { maxAge: 120000 }); // 2 minutes
+
+      // Redirect to the newpass.html page
+      res.redirect('/teacher/new pass.html');
+    } else {
+      // Redirect with error message
+      res.redirect("/teacher/forget pass.html?error=Invalid Username or Password");
+    }
+  });
+});
+
+
+app.post('/new-tech-password', (req, res) => {
+  const { newPassword, confirmPassword } = req.body;
+
+  // Check if newPassword and confirmPassword match
+  if (newPassword !== confirmPassword) {
+    return res.status(400).send('New password and confirm password do not match');
+  }
+
+  // Retrieve username and email from cookies
+  const username = req.cookies.username;
+  const email = req.cookies.email;
+
+  // Check if username and email are present in cookies
+  if (!username || !email) {
+    return res.status(400).send('Username and email not found in cookies');
+  }
+
+  // Query the database to update the password
+  connection.query('UPDATE student SET password = ? WHERE email = ? AND username = ?', [newPassword, email, username], (error, results) => {
+    if (error) {
+      console.error('Error updating password in the database:', error);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the password was updated successfully
+    if (results.affectedRows > 0) {
+      res.cookie('username', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('teacher', 'teacher', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('logged', 'true', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.clearCookie('email'); // Clear the email cookie
+      // Set session variable
+      req.cookies.user = username;
+      res.redirect('/student user/userpanel.html'); // Redirect to the login page
+    } else {
+      res.status(401).send('Failed to update password');
+    }
+  });
+});
+
+
+/*************** Developer Forget password ***********************/
+
+app.post('/dev-password', (req, res) => {
+  const { email, username } = req.body;
+
+  // Check if email and username are defined
+  if (!email || !username) {
+    return res.status(400).send('Email and username are required');
+  }
+
+  // Trim whitespace from email and username
+  const trimmedEmail = email.trim();
+  const trimmedUsername = username.trim();
+
+  // Query the database to check if the email corresponds to the same username
+  connection.query('SELECT * FROM student WHERE email = ? AND username = ?', [trimmedEmail, trimmedUsername], (error, results) => {
+    if (error) {
+      console.error('Error querying the database:', error);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if any rows were returned (i.e., if email and username match)
+    if (results.length > 0) {
+      // Set cookies with username and email
+      res.cookie('username', trimmedUsername, { maxAge: 120000 }); // 2 minutes
+      res.cookie('email', trimmedEmail, { maxAge: 120000 }); // 2 minutes
+
+      // Redirect to the newpass.html page
+      res.redirect('/university/new pass.html');
+    } else {
+      // Redirect with error message
+      res.redirect("/university/forget pass.html?error=Invalid Username or Password");
+    }
+  });
+});
+
+
+app.post('/new-dev-password', (req, res) => {
+  const { newPassword, confirmPassword } = req.body;
+
+  // Check if newPassword and confirmPassword match
+  if (newPassword !== confirmPassword) {
+    return res.status(400).send('New password and confirm password do not match');
+  }
+
+  // Retrieve username and email from cookies
+  const username = req.cookies.username;
+  const email = req.cookies.email;
+
+  // Check if username and email are present in cookies
+  if (!username || !email) {
+    return res.status(400).send('Username and email not found in cookies');
+  }
+
+  // Query the database to update the password
+  connection.query('UPDATE student SET password = ? WHERE email = ? AND username = ?', [newPassword, email, username], (error, results) => {
+    if (error) {
+      console.error('Error updating password in the database:', error);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Check if the password was updated successfully
+    if (results.affectedRows > 0) {
+      res.cookie('username', username, { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('developer', 'developer', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.cookie('logged', 'true', { maxAge: 3 * 24 * 60 * 60 * 1000 });
+          res.clearCookie('email'); // Clear the email cookie
+      // Set session variable
+      req.cookies.user = username;
+      res.redirect('/student user/userpanel.html'); // Redirect to the login page
+    } else {
+      res.status(401).send('Failed to update password');
+    }
+  });
+});

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.8.335/pdf.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.27.0/ace.js"></script><title>Forgot Password</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f7f7;
+}
+
+.container {
+  max-width: 700px;
+  margin: 90px auto;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+}
+
+.container img {
+  width: 50%;
+  margin-left: 20px;
+}
+
+.container form {
+  width: 50%;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 90%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup{
+  background-color: #ffffff79;
+  width: 80%;
+  margin-left: 1.3rem;
+  text-align: center;
+  margin-top: -1rem;
+  border-radius: 0.2rem;
+  font-weight: bold;
+  font-size: small;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+i{
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 700px;
+    margin: 90px auto;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+  }
+
+  .container img {
+    width: 100%;
+    margin-bottom: 20px;
+    margin-left: 0;
+    display: none;
+  }
+
+  .container form {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <form action="/forgot-password" method="POST" onsubmit="return showErrorMessage()">
+    <h2>Forgot Password</h2>
+    <div class="form-group">
+      <i class="fas fa-user"></i> <span class="name">Username</span>
+      <input type="text" name="username" placeholder="Username" required>
+    </div>
+    <div class="form-group">
+      <i class="fas fa-envelope"></i> <span class="name">Email</span>
+      <input type="email" name="email" placeholder="Email" required>
+    </div>
+    <div id="errorPopup" class="popup">
+      <p id="errorMessage" style="color: rgb(255, 0, 0);"></p>
+  </div>
+    <button type="submit" class="btn">Verify</button>
+  </form>
+  
+  <img src="https://cdni.iconscout.com/illustration/premium/thumb/forgot-password-4268397-3551744.png" alt="Forgot Password Image">
+</div>
+<label><a href="new pass.html">Forgot password?</a></label>
+
+
+<script>
+  function showError(message) {
+    const errorPopup = document.getElementById('errorPopup');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    // Set the error message text
+    errorMessage.textContent = message;
+
+    // Show the popup
+    errorPopup.style.display = 'block';
+
+    // Close the popup after 3 seconds (adjust as nee   ded)
+    setTimeout(() => {
+      errorPopup.style.display = 'none';
+    }, 5000);
+  }
+
+  // Check if there's an error parameter in the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const error = urlParams.get('error');
+
+  // If there's an error, show the popup
+  if (error) {
+    showError(error);
+  }
+
+  function showErrorMessage() {
+    // Retrieve the username and password values
+    var username = document.getElementsByName("username")[0].value;
+    var email = document.getElementsByName("email")[0].value;
+
+    // Check the validity of credentials (you may want to improve this check)
+    if (username === "" || email === "") {
+        document.getElementById("errorMessage").innerText = "Username and email are required.";
+        return false; // Prevent form submission
+    }
+
+    // If everything is okay, you can return true to allow the form submission
+    return true;
+}
+</script>
+</body>
+</html>

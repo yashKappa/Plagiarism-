@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forgot Password</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f7f7f7;
+}
+
+.container {
+  max-width: 700px;
+  margin: 90px auto;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+}
+
+.container img {
+  width: 50%;
+  margin-right: 20px;
+}
+
+.container form {
+  width: 50%;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: calc(100% - 30px);
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group .toggle-password {
+  position: absolute;
+  top: 65%;
+  right: 2%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.name{
+    font-size: large;
+}
+
+i{
+    margin-bottom: 0.5rem;
+  }
+
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container img {
+    width: 100%;
+    margin-bottom: 20px;
+    margin-right: 0;
+    display: none;
+  }
+
+  .container form {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <form id="resetPasswordForm" action="/new-tech-password" method="POST">
+        <h2>Reset Password</h2>
+        <div class="form-group">
+          <i class="fas fa-lock"></i> <span class="name">New Password</span>
+          <input type="password" name="newPassword" id="newPassword" placeholder="New Password" required>
+          <span class="toggle-password" onclick="togglePassword('newPassword')">👁️</span>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock"></i><span class="name"> Confirm Password</span>
+          <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required>
+          <span class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</span>
+        </div>
+        <div id="passwordMismatchError" style="color: red; display: none;">New password and confirm password do not match</div>
+        <button type="submit" class="btn">Reset Password</button>
+      </form>
+  <img src="https://cdni.iconscout.com/illustration/premium/thumb/forgot-password-4268397-3551744.png" alt="Forgot Password Image">
+</div>
+
+<script>
+function togglePassword(inputId) {
+  const input = document.getElementById(inputId);
+  input.type === 'password' ? input.type = 'text' : input.type = 'password';
+}
+
+document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+  
+    if (newPassword !== confirmPassword) {
+      document.getElementById('passwordMismatchError').style.display = 'block';
+      event.preventDefault(); // Prevent form submission
+    }
+  });
+</script>
+
+</body>
+</html>
