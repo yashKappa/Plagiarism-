@@ -1,4 +1,58 @@
-const darkModePreference = localStorage.getItem('darkMode');
+
+
+function displaySavedImage(imageData) {
+    const imageContainer = document.getElementById('image-container1');
+    const image = new Image();
+    image.src = imageData;
+    imageContainer.appendChild(image);
+  }
+  
+  // Load the saved image from local storage when the page loads
+  window.onload = function() {
+    const savedImageData = localStorage.getItem('kappa_savedImage');
+    if (savedImageData) {
+        displaySavedImage(savedImageData);
+    }
+  };
+  
+    function saveImage() {
+    const input = document.getElementById('image-input');
+    const file = input.files[0];
+    
+    // Check if username exists in cookies
+    const username = getCookie('username');
+    if (!username) {
+        alert("Please enter your username first.");
+        return;
+    }
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const imageData = event.target.result;
+            // Store image data along with username in local storage
+            localStorage.setItem(username + '_savedImage', imageData);
+            displayImageInMultipleContainers(imageData);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function displayImageInMultipleContainers(imageData) {
+    // Get both image containers by their IDs
+    const container1 = document.getElementById('image-container1');
+    const container2 = document.getElementById('image-container2');
+    
+    // Set the inner HTML of both containers to display the image
+    container1.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+    container2.innerHTML = `<img src="${imageData}" alt="Saved Image">`;
+}
+
+    
+
+
+  
+  const darkModePreference = localStorage.getItem('darkMode');
 const dark = document.getElementById("dark");
 const loo = document.getElementById("loo");
 
@@ -102,6 +156,19 @@ window.addEventListener("load", () => {
         });
     });
 });
+
+function loadFileContent(editorId, input) {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        const content = e.target.result;
+        document.getElementById(editorId).textContent = content;
+    };
+
+    reader.readAsText(file);
+}
+
 /*
 function handleFileSelect() {
     var fileInput = document.getElementById("fileInput");
@@ -234,7 +301,13 @@ document.getElementById('file1').addEventListener('change', function () {
 document.getElementById('file2').addEventListener('change', function () {
     updateEditorFromFile(this, ace.edit("editor1"));
 });
-
+// Function to get the Ace editor line number
+function getAceEditorLineNumber(editor, lineNumber) {
+    return lineNumber - 1; // Adjust for Ace editor's 0-based index
+}
+document.getElementById('checkPlagiarism').addEventListener('click', function() {
+    checkPlagiarism();
+});
 function checkPlagiarism() {
     // Get the content of both editors
     const editor1 = ace.edit("editor");
@@ -297,41 +370,29 @@ function checkPlagiarism() {
     displayNotSimilarLines(notSimilarLines1, notSimilarLines2);
 }
 
-// Function to find common lines between two arrays
+
+
 // Function to find common lines between two arrays
 function getCommonLines(array1, array2) {
     const common = [];
-    const minLength = Math.min(array1.length, array2.length);
-
-    for (let i = 0; i < minLength; i++) {
-        const line1 = array1[i];
-        const line2 = array2[i];
-
-        if (line1 === line2) {
-            common.push({ editor1Line: i + 1, editor2Line: i + 1, text: line1 });
-        }
-    }
-
+    array1.forEach((line1, index1) => {
+        array2.forEach((line2, index2) => {
+            if (line1 === line2) {
+                common.push({ editor1Line: index1 + 1, editor2Line: index2 + 1, text: line1 });
+            }
+        });
+    });
     return common;
 }
 
-
 // Function to display copied lines
 function displayCopiedLines(commonLines) {
-    const editor1 = ace.edit("editor");
-    const editor2 = ace.edit("editor1");
-    
     const copiedLinesList = document.getElementById('copied-lines-list');
     copiedLinesList.innerHTML = '';
 
     commonLines.forEach(line => {
-        const { editor1Line, editor2Line, text } = line;
-
-        const aceEditor1Line = getAceEditorLineNumber(editor1, editor1Line);
-        const aceEditor2Line = getAceEditorLineNumber(editor2, editor2Line);
-
         const listItem = document.createElement('li');
-        listItem.textContent = `Editor line ${aceEditor1Line} = Editor1 line ${aceEditor2Line}: ${text}`;
+        listItem.textContent = `Editor line ${line.editor1Line} = Editor1 line ${line.editor2Line}: ${line.text}`;
         copiedLinesList.appendChild(listItem);
     });
 
@@ -339,26 +400,6 @@ function displayCopiedLines(commonLines) {
     const copiedLinesDiv = document.getElementById('copied-lines');
     copiedLinesDiv.style.display = 'block';
 }
-
-// Function to get the Ace editor line number, accounting for empty lines
-function getAceEditorLineNumber(editor, lineNumber) {
-    const totalLines = editor.session.getLength();
-    let nonEmptyLineCount = 0;
-
-    for (let i = 0; i < totalLines; i++) {
-        const line = editor.session.getLine(i);
-        if (line.trim() !== '') {
-            nonEmptyLineCount++;
-        }
-
-        if (nonEmptyLineCount === lineNumber) {
-            return i + 1; // Return the line number (adjusted for Ace editor's 0-based indexing)
-        }
-    }
-
-    return lineNumber; // Fallback to the original line number if not found
-}
-
 
 // Function to clear copied lines
 function clearCopiedLines() {
@@ -442,3 +483,20 @@ function cancelFileSelection() {
     var fileWrapper = document.getElementById("filewrapper");
     fileWrapper.innerHTML = ""; // Clear the file list
 }
+
+
+
+document.getElementById('logout-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('logout-popup').style.display = 'block';
+});
+
+document.getElementById('logout-no').addEventListener('click', function() {
+    document.getElementById('logout-popup').style.display = 'none';
+});
+
+document.getElementById('logout-yes').addEventListener('click', function() {
+    // Handle logout here
+    document.getElementById('logout-popup').style.display = 'none';
+    window.location.href = '/logout';
+});

@@ -4,11 +4,15 @@
     font-family: 'poppins';
 }
 
+
 body {
-    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Vn2w2-RF61NYQb--tJGoOB0E6ioGTeG2Hw&usqp=CAU");
+    background-image: url("https://img.freepik.com/premium-photo/computer-with-glasses-3d-programming-code_124008-52.jpg");
+    background-color: #f7f7f7;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100%; /* Adjust the background size */
 }
+
+
 
 .loli img{
     width: 7rem;
@@ -31,35 +35,129 @@ body {
             padding-top: 3rem;
             padding-bottom: 1rem;
         }
-        .main{
-            background-color: rgb(88, 110, 233);
-            width: 35%;
-            height: 70vh;
-            border-radius: 5% 5% 5% 5%;
-            box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
-        .main1{
-            background-color:rgb(88, 110, 233);
-            width: 35%;
-            height: 80vh;
-            border-radius: 5% 5% 5% 5%;
-            box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+        
+        .man {
+            position: absolute;
+            left: -8.5rem;
+            top: 14rem;
+            animation: slideFromLefts 2.8s forwards; 
         }
-        .tec{
+
+        .man1 {
+            position: absolute;
+            right: -27.5rem;
+            top: 14rem;
+            animation: slideFromRights 2.8s forwards; 
+        }
+
+    
+@keyframes slideFromLefts {
+    from { 
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideFromRights {
+    from { 
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+
+.fade-out {
+    animation: fadeOut 1s forwards; 
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+        .man img{
+            width: 30%;
+        }
+
+        .man1 img{
+            width: 30%;
+        }
+
+        .main {
+            width: max-content;
+            height: max-content;
+            padding: 30px;
+            border-radius: 0.5rem;
+            box-shadow: 0px 0px 10px 0px #ff0000; /* Initial color */
+            animation: borderTransition 3s infinite alternate, slideFromLeft 3s forwards; /* Border transition and slide animation */
+        }
+        
+        @keyframes borderTransition {
+            0% { box-shadow: 0px 0px 10px 0px #ff0000; }
+            25% { box-shadow: 0px 0px 10px 0px #cc00ff; }
+            50% { box-shadow: 0px 0px 10px 0px #0099ff; }
+            75% { box-shadow: 0px 0px 10px 0px #5900ff; }
+            100% { box-shadow: 0px 0px 10px 0px #0000ff; }
+        }
+        
+        @keyframes slideFromLeft {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        
+
+         
+        .main1 {
+            width: max-content;
+            height: max-content;
+            padding: 30px;
+            border-radius: 0.5rem;
+            box-shadow: 0px 0px 10px 0px #ff0000; /* Initial color */
+            animation: borderTransition 3s infinite alternate, slideFromRight 3s forwards; /* Border transition and slide animation */
+        }
+        
+        @keyframes borderTransition {
+            0% { box-shadow: 0px 0px 10px 0px #ff0000; }
+            25% { box-shadow: 0px 0px 10px 0px #cc00ff; }
+            50% { box-shadow: 0px 0px 10px 0px #0099ff; }
+            75% { box-shadow: 0px 0px 10px 0px #5900ff; }
+            100% { box-shadow: 0px 0px 10px 0px #0000ff; }
+        }
+        
+        @keyframes slideFromRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        /*.tec{
             width: 70%;
-            background-color:rgb(110, 129, 235);
+            background-color:rgba(255, 255, 255, 0);;
             float: right;
             height: 70vh;
-            border-radius: 5% 5% 5% 5%;
+            border-radius: 0rem 6rem 0rem 6rem;
             box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
-       
+        }*/
 
-        }
         .tech{
             width: 70%;
             background-color:rgb(110, 129, 235);
             float: right;
-            height: 80vh;
+            height: 75vh;
             border-radius: 5% 5% 5% 5%;
             box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
         }
@@ -90,19 +188,23 @@ body {
    }
 
         span{
-            color: #000000;
+            color: #ffffff;
             font-size: small;
             display: flex;
-            padding-top: 25%;
-            padding-left: 28%;
+            padding-top: 8%;
+            justify-content: center;
+            text-align-last: center;
+            padding-left: 40px;
         }
  
         header{
-            color: #000000;
+            color: #ffffff;
             font-size: 30px;
             display: flex;
-            padding-left: 38%;
             padding-bottom: 2rem;
+            justify-content: center;
+            padding-bottom: 8%;
+            padding-left: 40px;
         }
         
         .input-field .input{
@@ -114,6 +216,7 @@ body {
             font-weight:600;
             background-color: rgb(255, 255, 255);
             border-radius: 0.3rem;
+            border: 1px solid black;
         }
         .input-field{
             width: 80%;
@@ -162,7 +265,7 @@ body {
             font-size: 20px;
             height: 35px;
             outline: none;
-            width: 45%;
+            width: 90%;
             color: rgb(0, 0, 0);
             background:  #53fd6a;
             cursor: pointer;
@@ -190,10 +293,12 @@ body {
         }
         .one{
             display: flex;
+            color: white;
         }
+
         label a{
             text-decoration: none;
-            color: #000000;
+            color: #fcfcfc;
         }
         .next a{
             height: 45px;
@@ -208,14 +313,17 @@ body {
         } 
         .student{
             padding-top: 10%;
-            width: 83%;
-            padding-left: 32%;
+            width: 100%;
             justify-content: center;
+            text-align-last: center;
         }
         .stureg{
             border-radius: 0.3rem;
-            color: #000000;
+            color: #fffcfc;
             font-size: large;
+            padding-bottom: 1rem;
+            background-color: hsl(241, 93%, 56%);
+            padding: 10px;
         }
         
         .img{
@@ -246,30 +354,44 @@ body {
             width: 15rem;
             font-weight:bolder;
             padding-left: 1rem;
+            animation: slideFromLeft 3s forwards;   
         }
+        @keyframes slideFromLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         .top1{
             float: left;
             width: 15rem;
             font-weight:bolder;
-            padding-left: 4rem;
+            padding-left: 1rem;
+            animation: slideFromRight 3s forwards;   
         }
+        @keyframes slideFromRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         .ss{
             padding-left: 5rem;
         }
         .stu{
-            padding-left: 20%;
-            padding-top: 3%;
+            text-align: center;
+            padding-bottom: 1rem;
+            padding-top: 1rem;
         }
         .mob{
             display: none;
         }
         .register{
-            text-align: center;
-            width: 80%;
+            justify-content: center;            
+            width: 100%;
         }
         .p{
             padding-left: 25%;
             padding-top: 13%;
+            color: #ffffff;
         }
         .register1{
             text-align: center;
@@ -306,16 +428,18 @@ body {
             animation: float 3s infinite;
         }
 
-        .popup{
-            background-color: #ffffff79;
-            width: 80%;
-            margin-left: 1.3rem;
-            text-align: center;
-            margin-top: -1rem;
-            border-radius: 0.2rem;
-            font-weight: bold;
-            font-size: small;
-        }
+       .popup {
+    background-color: #ffffff79;
+    width: 80%;
+    margin-left: 1.3rem;
+    text-align: center;
+    margin-top: -1rem;
+    border-radius: 0.2rem;
+    font-weight: bold;
+    font-size: small;
+    z-index: 999; /* Adjust the value as needed to ensure it's above other elements */
+}
+
         @keyframes float {
             0% {
                 transform: translateY(0);

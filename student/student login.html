@@ -19,14 +19,18 @@
     </div>
     <div class="box">
         <div class="tec">
+            <div class="container">
+            <div class="man">
+                <img src="../push.png" alt="Man pushing wall">
+            </div>
             <form action="/student" method="POST" onsubmit="return showErrorMessage()">
                 <div class="top"> 
                     <div class="mob"><img class="mo" src="https://icons.veryicon.com/png/o/miscellaneous/domain-icons/my-account-login.png"></div>
                     <span>Already have an account?</span>
                     <header>Sign in </header>
-                </div><img class="im" src="search (1).png">
-                <div class="msg">Get the similar and unique code to help you think unique  
-                </div>
+                </div><!--<img class="im" src="search (1).png">-->
+                <!--<div class="msg">Get the similar and unique code to help you think unique  
+                </div>-->
                
                 <div class="main">
                     <div class="input-field">
@@ -63,8 +67,19 @@
                 </div>
             </form>
         </div>
+        </div>
     </div>
     <script>
+
+// Hide the man element after 4 seconds
+setTimeout(function() {
+    const manElement = document.querySelector('.man');
+    manElement.classList.add('fade-out'); // Apply fade-out animation
+    setTimeout(function() {
+        manElement.style.display = 'none'; // Hide the man element after the fade-out animation completes
+    }, 1000); // Wait for 1 second (duration of the fade-out animation)
+}, 4000); // 4000 milliseconds = 4 seconds
+
         function myFunction() {
             var element = document.body;
             element.classList.toggle("dark-mode");

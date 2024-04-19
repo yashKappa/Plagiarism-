@@ -123,40 +123,49 @@ app.post('/register', (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // SQL query with default values for columns not specified in the registration form
-    const query = 'INSERT INTO student (username, email, password, teacher, developer) VALUES (?, ?, ?, ?, ?)';
+    // SQL query to check if the username already exists
+    const checkQuery = 'SELECT * FROM student WHERE username = ?';
+    
+    connection.query(checkQuery, [username], (checkError, checkResults) => {
+      if (checkError) {
+        console.error("Error occurred during registration:", checkError);
+        return res.redirect('/student/student register.html');
+      }
 
-    // Assuming `--` is the default value for the teacher column
-    const defaultTeacher = '--';
-    const defaultDeveloper = '--';
+      if (checkResults.length > 0) {
+        // Username already exists, stay on the registration page with an error message
+        return res.redirect("/student/student register.html?error=Username already exists");
+      }
 
-    connection.query(query, [username, email, password, defaultTeacher, defaultDeveloper], (error, results) => {
-      if (error) {
-        console.error("Error occurred during registration:", error);
-        res.redirect('/student/student register.html');
-      } else {
-        // Check if the query was successful
+      // Username does not exist, proceed with registration
+      const insertQuery = 'INSERT INTO student (username, email, password, teacher, developer) VALUES (?, ?, ?, ?, ?)';
+      const defaultTeacher = '--';
+      const defaultDeveloper = '--';
+
+      connection.query(insertQuery, [username, email, password, defaultTeacher, defaultDeveloper], (error, results) => {
+        if (error) {
+          console.error("Error occurred during registration:", error);
+          return res.redirect('/student/student register.html');
+        }
+
+        // Registration successful, redirect to user panel
         if (results.affectedRows > 0) {
-          // Assuming `student` is a property in the results object
-          const student = results.student; // Adjust this line according to your query results
           res.cookie('username', username);
           res.cookie('student', 'student');
           res.cookie('logged', 'true');
-          // Set session variable
           req.cookies.user = username;
-          // Redirect to the user panel page
-          res.redirect('/student user/userpanel.html');
+          return res.redirect('/student user/userpanel.html');
         } else {
-          res.redirect("/student/student login.html?error= Username already exists");
+          return res.redirect("/student/student register.html?error=Unknown error occurred");
         }
-      }
+      });
     });
-    
   } catch (error) {
     console.error("Error occurred during registration:", error);
     res.redirect('/student/student register.html');
   }
 });
+
 
 
 app.get('/student/userpanel.html', (req, res) => {
