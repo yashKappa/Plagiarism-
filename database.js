@@ -121,51 +121,38 @@ app.listen(PORT, () => {
 
 app.post('/register', (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const {username, email, password} = req.body;
 
-    // SQL query to check if the username already exists
-    const checkQuery = 'SELECT * FROM student WHERE username = ?';
-    
-    connection.query(checkQuery, [username], (checkError, checkResults) => {
-      if (checkError) {
-        console.error("Error occurred during registration:", checkError);
-        return res.redirect('/student/student register.html');
-      }
+    // SQL query with default values for columns not specified in the registration form
+    const query = 'INSERT INTO student (username, email, password) VALUES (?, ?, ?)';
 
-      if (checkResults.length > 0) {
-        // Username already exists, stay on the registration page with an error message
-        return res.redirect("/student/student register.html?error=Username already exists");
-      }
 
-      // Username does not exist, proceed with registration
-      const insertQuery = 'INSERT INTO student (username, email, password, teacher, developer) VALUES (?, ?, ?, ?, ?)';
-      const defaultTeacher = '--';
-      const defaultDeveloper = '--';
-
-      connection.query(insertQuery, [username, email, password, defaultTeacher, defaultDeveloper], (error, results) => {
-        if (error) {
-          console.error("Error occurred during registration:", error);
-          return res.redirect('/student/student register.html');
-        }
-
-        // Registration successful, redirect to user panel
+    connection.query(query, [username, email, password], (error, results) => {
+      if (error) {
+        console.error("Error occurred during registration:", error);
+        res.redirect('/student/student register.html');
+      } else {
+        // Check if the query was successful
         if (results.affectedRows > 0) {
+          // Assuming `student` is a property in the results object
+          const teacher = results.teacher; // Adjust this line according to your query results
           res.cookie('username', username);
           res.cookie('student', 'student');
-          res.cookie('logged', 'true');
+          res.cookie('logged', 'true'); // Add this line to set the 'logged' cookie
+          // Redirect to the user panel page
           req.cookies.user = username;
-          return res.redirect('/student user/userpanel.html');
+          // Redirect to the user panel page
+          res.redirect('/student user/userpanel.html');
         } else {
-          return res.redirect("/student/student register.html?error=Unknown error occurred");
+          res.redirect('/teacher/teacher register.html');
         }
-      });
+      }
     });
   } catch (error) {
-    console.error("Error occurred during registration:", error);
-    res.redirect('/student/student register.html');
+    console.error(error);
+    res.redirect('/teacher/teacher register.html');
   }
 });
-
 
 
 app.get('/student/userpanel.html', (req, res) => {
@@ -185,7 +172,7 @@ app.post("/log", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT * FROM student WHERE username = ? AND password = ?";  const request = new sql.Request();
+  const query = "SELECT * FROM teacher WHERE username = ? AND password = ?";  const request = new sql.Request();
   request.input('username', sql.NVarChar, username);
   request.input('password', sql.NVarChar, password);
 
@@ -217,15 +204,13 @@ app.post("/log", (req, res) => {
 
 app.post('/go', (req, res) => {
   try {
-    const {username, email, password, teacher, university, college, developer } = req.body;
+    const {username, email, password, teacher, university, college } = req.body;
 
     // SQL query with default values for columns not specified in the registration form
-    const query = 'INSERT INTO student (username, email, password, teacher, university, college, developer) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO teacher (username, email, password, teacher, university, college) VALUES ( ?, ?, ?, ?, ?, ?)';
 
-    // Assuming `--` is the default value for the developer column
-    const defaultDeveloper = '--';
 
-    connection.query(query, [username, email, password, teacher, university, college, defaultDeveloper], (error, results) => {
+    connection.query(query, [username, email, password, teacher, university, college], (error, results) => {
       if (error) {
         console.error("Error occurred during registration:", error);
         res.redirect('/student/student register.html');
@@ -270,7 +255,7 @@ app.post("/MU", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT * FROM student WHERE developer = ? AND password = ?";  const request = new sql.Request();
+  const query = "SELECT * FROM university WHERE developer = ? AND password = ?";  const request = new sql.Request();
   request.input('developer', sql.NVarChar, username);
   request.input('password', sql.NVarChar, password);
 
@@ -302,22 +287,15 @@ app.post("/MU", (req, res) => {
 
 app.post('/MUR', (req, res) => {
   try {
-    const { username, email, password, teacher, university, college, developer, company, work } = req.body;
+    const { username, email, password} = req.body;
   
     // SQL query with default values for columns not specified in the registration form
-    const query = 'INSERT INTO student (username, email, password, teacher, university, college, developer, company, work) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO university (username, email, password) VALUES (?, ?, ?)';
   
     // Assuming `--` is the default value for the teacher column
-    const defaultTeacher = '--';
-    const defaultUniversity = '--';
-    const defaultCollege = '--';
+
   
-    // Use the defaultTeacher value if teacher is not provided
-    const teacherValue = teacher || defaultTeacher;
-    const universityValue = university || defaultUniversity;
-    const collegeValue = college || defaultCollege;
-  
-    connection.query(query, [username, email, password, teacherValue, defaultUniversity, defaultCollege, developer, company, work], (error, results) => {
+    connection.query(query, [username, email, password], (error, results) => {
       if (error) {
         console.error("Error occurred during registration:", error);
         res.redirect('/student/student register.html');
@@ -1667,5 +1645,49 @@ app.post('/new-dev-password', (req, res) => {
     } else {
       res.status(401).send('Failed to update password');
     }
+  });
+});
+
+
+// Assuming you have already configured your Express app and connected it to the database
+
+// Route to render the info.ejs page
+app.get('/info', (req, res) => {
+  const username = req.cookies.username;
+
+  if (!username) {
+      // Redirect to login page if user is not logged in
+      return res.redirect('/login');
+  }
+
+  // Query the database to retrieve project count for the logged-in user
+  connection.query('SELECT COUNT(DISTINCT project_name) AS projectCount FROM file WHERE username = ?', [username], (error, results) => {
+      if (error) {
+          console.error("Error occurred while fetching project count:", error);
+          return res.status(500).send("Internal Server Error");
+      }
+
+      const projectCount = results[0].projectCount;
+
+      if (projectCount > 0) {
+          // If user has projects, query the database to retrieve project names and their counts
+          connection.query('SELECT project_name, COUNT(*) AS count FROM file WHERE username = ? GROUP BY project_name', [username], (error, results) => {
+              if (error) {
+                  console.error("Error occurred while fetching project data:", error);
+                  return res.status(500).send("Internal Server Error");
+              }
+
+              // Extract project names and counts from results
+              const projectNames = results.map(row => row.project_name);
+              const projectCounts = results.map(row => row.count);
+              const projectDates = results.map(row => row.date); // Add this line
+
+              // Render the info.ejs template with username, project count, and project data
+              res.render('info', { username, projectCount, projectNames, projectCounts, projectDates }); // Pass projectDates to the template
+          });
+      } else {
+          // If user has no projects, render the info.ejs template with only username and project count
+          res.render('info', { username, projectCount });
+      }
   });
 });

@@ -44,58 +44,54 @@
 
 
 <div class="content">
-  <div class="bb">
-  </div>
-  <div class="container">
-      <div class="header">
-          <h1 class="message">Users Project Repository</h1>
-          <div class="actions">
-              <i class="bx bx-search"></i>
-              <i class="bx bx-filter"></i>
-          </div>
-      </div>
-      <% if (data && data.length > 0) { %>
-        <p class="message">Total projects displayed: <%= data.length %></p>
+    <h1>User Projects</h1>
+    <% if (username) { %>
+        <p>Welcome, <%= username %>!</p>
+        <% if (projectCount > 0) { %>
+            <p>You have <%= projectCount %> projects.</p>
+            <!-- Display line graph -->
+            <canvas id="projectChart"></canvas>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js library -->
+            <script>
+                // Get dates and project counts from the server
+                const dates = <%= JSON.stringify(projectDates) %>;
+                const projectCounts = <%= JSON.stringify(projectCounts) %>;
+    
+                // Create a line chart
+                const ctx = document.getElementById('projectChart').getContext('2d');
+                const projectChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Projects',
+                            data: projectCounts,
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        <% } else { %>
+            <p>You don't have any projects yet.</p>
         <% } %>
-     
-      <form id="deleteForm" action="/user/delete" method="post">
-        <table border="1">
-          <tr>
-            <th>Username</th>
-            <th>Project name</th>
-            <th>Summary</th>
-          </tr>
-          <% data.forEach(row => { %>
-            <tr>
-              <td><p class="data"><%= row.username %></p></td>
-              <td>
-                <p class="data">
-                  <!-- Update the link to point to the related route with username and project name parameters -->
-                  <a class="data" href="/related/<%= row.username %>/<%= row.project_name %>"><%= row.project_name %></a>
-                </p>
-                <!-- Add hidden input fields to hold the data for deletion -->
-                <input type="hidden" name="username" value="<%= row.username %>">
-                <input type="hidden" name="projectName" value="<%= row.project_name %>">
-                <!-- Update the input names to use an array notation -->
-                <div>
-                  Please confirm deletion
-                  <input type="checkbox" id="checkbox-<%= row.username %>-<%= row.project_name %>" name="selectedProjects" value="<%= row.username %>-<%= row.project_name %>" onchange="toggleDeleteButton(this)" required />
-                </div>
-                <button type="button" onclick="deleteProject('<%= row.username %>', '<%= row.project_name %>')" disabled>Delete</button>                
-              </td>
-              <td><p class="datas"><%= row.summary %></p></td>
-            </tr>
-          <% }); %>
-        </table>
-        <% if (data && data.length > 0) { %>
-       
-          <% } else { %>
-              <div class="message-container">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx-IWZyD_Nm6PWsdDzY8cerKQTmdplpLJfsw&usqp=CAU" alt="Your Image">
-                <p>Data was not found or Empty</p>
-              </div>
-        <% } %>
-      </form>
+    <% } else { %>
+        <p>Please log in to view your projects.</p>
+    <% } %>
+    
 </div>
 </body>
   
