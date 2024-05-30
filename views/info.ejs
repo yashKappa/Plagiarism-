@@ -24,9 +24,11 @@
   <div class="sidebar">
     <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
     <div class="img"><div id="image-container1"></div></div>
-    <a class="no" href="../student user/profile.html"><i class="fas fa-cog"> </i>Setting</a>
+    <a class="active" href="../student user/profile.html"><i class="fas fa-cog"> </i>Setting</a>
     <a href="../profile" id="hideLink"><i class="fas fa-user"></i> Profile</a>
-    <a href="../teacher_profile" id="teacherLink"><i class="fas fa-user"></i> Profile</a>    <a class="active" href="../user"><i class="fas fa-poll"> </i>Status</a>
+    <a href="../teacher_profile" id="teacherLink"><i class="fas fa-user"></i> Profile</a>  
+    <a href="../developer_profile" id="developLink"><i class="fas fa-user"></i>dev Profile</a>  
+      <a href="../user"><i class="fas fa-poll"> </i>Status</a>
     <div class="home">
     <a class="fea" href="../student user/userpanel.html"><i class="fas fa-home"> </i>Home</a>
     <a class="feat" id="logout-btn">
@@ -44,69 +46,84 @@
 
 
 <div class="content">
-    <h1>User Projects</h1>
     <% if (username) { %>
         <p>Welcome, <%= username %>!</p>
         <% if (projectCount > 0) { %>
             <p>You have <%= projectCount %> projects.</p>
-            <!-- Display line graph -->
-            <canvas id="projectChart"></canvas>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js library -->
-            <script>
-                // Get dates and project counts from the server
-                const dates = <%= JSON.stringify(projectDates) %>;
-                const projectCounts = <%= JSON.stringify(projectCounts) %>;
-    
-                // Create a line chart
-                const ctx = document.getElementById('projectChart').getContext('2d');
-                const projectChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: dates,
-                        datasets: [{
-                            label: 'Projects',
-                            data: projectCounts,
-                            borderColor: 'rgb(75, 192, 192)',
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            x: {
-                                type: 'time',
-                                time: {
-                                    unit: 'day'
-                                }
-                            },
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            </script>
+           
+          
         <% } else { %>
             <p>You don't have any projects yet.</p>
         <% } %>
     <% } else { %>
         <p>Please log in to view your projects.</p>
     <% } %>
-    
+    <div class="section" id="teacherLink1">
+      <h3>------------------ Home ------------------</h3>
+      <a href="../student user/userpanel.html"><img src="https://t3.ftcdn.net/jpg/03/19/15/80/360_F_319158029_4JKXm8ZJy7BaaciR3SB6ZuGxL1mVGPRA.jpg"></a>
+    </div>
+    <div class="section" id="teacherLink2">
+      <h3>------------------ User Data ------------------</h3>
+      <a href="../teacher_profile"><img src="https://st4.depositphotos.com/3116407/24507/i/450/depositphotos_245071132-stock-photo-illustration-profile-concept.jpg"></a>
+      <a href="../user"><img src="https://thumbs.dreamstime.com/b/project-status-icon-outline-style-thin-line-creative-logo-graphic-design-more-163108323.jpg"></a>
+    </div>
+
+    <div class="section" id="hideLink1">
+      <h3>------------------ Home ------------------</h3>
+      <a href="../student user/userpanel.html"><img src="https://t3.ftcdn.net/jpg/03/19/15/80/360_F_319158029_4JKXm8ZJy7BaaciR3SB6ZuGxL1mVGPRA.jpg"></a>
+    </div>
+    <div class="section" id="hideLink2">
+      <h3>------------------ User Data ------------------</h3>
+      <a href="../profile"><img src="https://st4.depositphotos.com/3116407/24507/i/450/depositphotos_245071132-stock-photo-illustration-profile-concept.jpg"></a>
+      <a href="../user"><img src="https://thumbs.dreamstime.com/b/project-status-icon-outline-style-thin-line-creative-logo-graphic-design-more-163108323.jpg"></a>
+    </div>
+
+    <div class="section" id="developLink1">
+      <h3>------------------ Home ------------------</h3>
+      <a href="../student user/userpanel.html"><img src="https://t3.ftcdn.net/jpg/03/19/15/80/360_F_319158029_4JKXm8ZJy7BaaciR3SB6ZuGxL1mVGPRA.jpg"></a>
+    </div>
+    <div class="section" id="developLink2">
+      <h3>------------------ User Data ------------------</h3>
+      <a href="../developer_profile"><img src="https://st4.depositphotos.com/3116407/24507/i/450/depositphotos_245071132-stock-photo-illustration-profile-concept.jpg"></a>
+      <a href="../user"><img src="https://thumbs.dreamstime.com/b/project-status-icon-outline-style-thin-line-creative-logo-graphic-design-more-163108323.jpg"></a>
+    </div>
 </div>
 </body>
   
 <script>
   var student = getCookie('student');
-var teacher = getCookie('teacher');
-var logged = getCookie('logged');
+  var teacher = getCookie('teacher');
+  var developer = getCookie('developer');
+  var logged = getCookie('logged');
+  
+  if ((student || teacher || developer) && logged === 'true') {
+      // If the user is a student, teacher, or developer and logged in, hide the appropriate links
+      if (student) {
+          document.getElementById('teacherLink').style.display = 'none';
+          document.getElementById('teacherLink1').style.display = 'none';
+          document.getElementById('teacherLink2').style.display = 'none';
+          document.getElementById('developLink').style.display = 'none';
+          document.getElementById('developLink1').style.display = 'none';
+          document.getElementById('developLink2').style.display = 'none';
 
-if (student && logged === 'true') {
-    // If the user is a student and logged in, hide the hideLink
-    document.getElementById('teacherLink').style.display = 'none';
-} else if (teacher && logged === 'true') {
-    // If the user is a teacher and logged in, hide the teacherLink
-    document.getElementById('hideLink').style.display = 'none';
-}
+      } else if (teacher) {
+          document.getElementById('hideLink').style.display = 'none';
+          document.getElementById('hideLink1').style.display = 'none';
+          document.getElementById('hideLink2').style.display = 'none';
+          document.getElementById('developLink').style.display = 'none';
+          document.getElementById('developLink1').style.display = 'none';
+          document.getElementById('developLink2').style.display = 'none';
+
+      } else if (developer) {
+        document.getElementById('teacherLink').style.display = 'none';
+        document.getElementById('teacherLink1').style.display = 'none';
+        document.getElementById('teacherLink2').style.display = 'none';
+        document.getElementById('hideLink').style.display = 'none';
+        document.getElementById('hideLink1').style.display = 'none';
+        document.getElementById('hideLink2').style.display = 'none';
+      }
+  }
+  
 
 // Function to get cookie value
 function getCookie(name) {
@@ -401,6 +418,8 @@ button:hover {
 .sidebar a.active {
     background-color: #2b3ac4;
     box-shadow: 0 0 10px rgba(255, 254, 254, 0.329);
+    margin-top: 2rem;
+  
 }
 
 .active:hover{
@@ -637,5 +656,34 @@ button:hover {
       max-height: 80%;
       margin-top: 2rem;
     }
+
+    P{
+      background-color: #0024f321;
+      padding: 10px;
+      width: fit-content;
+      border-radius: 0.5rem;
+      border: 2px solid black;
+    }
+
+    h3{
+      font-weight: 100;
+    }
+
+    .section img{
+      box-shadow: 0px 0px 10px black;
+      border-radius: 0.5rem;
+      margin-left: 2rem;
+    }
+
+    .section img:hover{
+      box-shadow: 0px 10px 10px black;
+      cursor: pointer;
+    }
+
+    img{
+      width: 25%;
+      height: 30vh;
+    }
+
 </style>
 </html>

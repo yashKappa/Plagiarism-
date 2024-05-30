@@ -23,10 +23,9 @@
     <div class="sidebar">
         <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
         <div class="img"><div id="image-container2"></div></div>
-        <a class="no" href="../student user/profile.html"><i class="fas fa-cog"> </i>Setting</a>
+        <a class="no" href="../info"><i class="fas fa-cog"> </i>Setting</a>
         <a class="active" href="../profile"><i class="fas fa-user"> </i>Profile</a>
         <a href="../user"><i class="fas fa-poll"> </i>Status</a>
-        <a href="#"><i class="fas fa-moon"> </i>Dark Mode</a>
         <div class="home">
         <a class="fea" href="../student user/userpanel.html"><i class="fas fa-home"> </i>Home</a>
         <a class="feat" id="logout-btn">
@@ -61,7 +60,7 @@
         <button onclick="saveImage()">Save Image</button>
     </div>
 
-        <form id="updateProfileForm" action="/teacher_profile/data" method="post" enctype="multipart/form-data" onsubmit="submitForm(event)">
+        <form id="updateProfileForm" action="/developer_profile/data" method="post" enctype="multipart/form-data" onsubmit="submitForm(event)">
             <div class="table">
                 <% data.forEach(user => { %>
                     
@@ -79,14 +78,6 @@
                         <div class="head"><i class="fas fa-lock"></i> Password </div>
                         <p><%= '*'.repeat(user.password.length) %></p>
                     </div>
-                    <div class="section">
-                        <div class="head"><i class="fas fa-envelope"></i> Company </div>
-                        <p><%= user.company %></p>
-                    </div>
-                    <div class="section">
-                        <div class="head"><i class="fas fa-envelope"></i> Work </div>
-                        <p><%= user.work %></p>
-                    </div>
                     <!-- Skill Section -->
                     <div class="section" id="skill-section">
                         <div class="head"><i class="fas fa-code"></i> Skill </div>
@@ -101,7 +92,7 @@
                                     <li>
                                         <div class="skill-item">
                                             <textarea readonly><%= skill %></textarea>
-                                            <button class="remove-btn" onclick="deleteDATA('<%= skill %>')"><i class="fas fa-times"></i></button>
+                                            <button class="remove-btn" onclick="devDATA('<%= skill %>')"><i class="fas fa-times"></i></button>
                                         </div>
                                     </li>
                                 <% }); %>
@@ -126,7 +117,7 @@
                                     <li>
                                         <div class="lang-item">
                                             <textarea readonly><%= lang %></textarea>
-                                            <button class="remove-btn" onclick="deleteSkill('<%= lang %>')"><i class="fas fa-times"></i></button>
+                                            <button class="remove-btn" onclick="devSkill('<%= lang %>')"><i class="fas fa-times"></i></button>
                                         </div>
                                     </li>
                                 <% }); %>
@@ -152,7 +143,7 @@
                                         <li>
                                             <div class="education-item">
                                                 <textarea readonly><%= education %></textarea>
-                                                <button class="remove-btn" onclick="deleteEDU('<%= education %>')"><i class="fas fa-times"></i></button>
+                                                <button class="remove-btn" onclick="devEDU('<%= education %>')"><i class="fas fa-times"></i></button>
                                             </div>
                                         </li>
                                     <% }); %>
@@ -177,7 +168,7 @@
                                         <li>
                                             <div class="professional-item">
                                                 <textarea readonly><%= prof %></textarea>
-                                                <button class="remove-btn" onclick="deleteProfessional('<%= prof %>')"><i class="fas fa-times"></i></button>
+                                                <button class="remove-btn" onclick="devProfessional('<%= prof %>')"><i class="fas fa-times"></i></button>
                                             </div>
                                         </li>
                                     <% }); %>
@@ -188,6 +179,7 @@
                                 <button class="update-btn" data-section="professional">ADD</button>
                             </div>
                         </div>
+
                         
                 <% }); %>
             </div>
@@ -281,9 +273,9 @@
     };
     
 
-    function deleteSkill(langName) {
+    function devSkill(langName) {
         // Assuming your server endpoint for removing a skill is '/removeSkill'
-        $.post('/deleteSkill', { langName: langName }, function(response) {
+        $.post('/devSkill', { langName: langName }, function(response) {
             // Handle the success response
             console.log('Skill removed successfully');
             // Reload the page or update the UI as needed
@@ -294,9 +286,9 @@
         });
     }
     
-    function deleteDATA(skillName) {
+    function devDATA(skillName) {
         // Assuming your server endpoint for removing a skill is '/removeSkill'
-        $.post('/deleteDATA', { skillName: skillName }, function(response) {
+        $.post('/devDATA', { skillName: skillName }, function(response) {
             // Handle the success response
             console.log('Skill removed successfully');
             // Reload the page or update the UI as needed
@@ -307,9 +299,9 @@
         });
     }
     
-    function deleteEDU(educationName) {
+    function devEDU(educationName) {
         // Assuming your server endpoint for removing education is '/removeEDU'
-        $.post('/deleteEDU', { educationName: educationName }, function(response) {
+        $.post('/devEDU', { educationName: educationName }, function(response) {
             // Handle the success response
             console.log('Education removed successfully');
             // Reload the page or update the UI as needed
@@ -320,9 +312,9 @@
         });
     }
     
-    function deleteProfessional(profName) {
+    function devProfessional(profName) {
         // Assuming your server endpoint for removing professional data is '/removeProfessional'
-        $.post('/deleteProfessional', { profName: profName }, function(response) {
+        $.post('/devProfessional', { profName: profName }, function(response) {
             // Handle the success response
             console.log('Professional data removed successfully');
             // Reload the page or update the UI as needed

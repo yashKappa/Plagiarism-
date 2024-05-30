@@ -5,9 +5,10 @@
 }
 
 body {
-    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Vn2w2-RF61NYQb--tJGoOB0E6ioGTeG2Hw&usqp=CAU");
+    background-image: url("https://img.freepik.com/premium-photo/computer-with-glasses-3d-programming-code_124008-52.jpg");
+    background-color: #f7f7f7;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100%; /* Adjust the background size */
 }
 
 .loli img{
@@ -21,7 +22,7 @@ body {
             min-height: 90vh;
             padding-top: 1rem;
             padding-bottom: 1rem;
-            padding-right: 3.5rem;
+            margin-right: 5rem;
         }
         .box1{
             display: flex;
@@ -30,21 +31,33 @@ body {
             min-height: 90vh;
             padding-top: 3rem;
             padding-bottom: 1rem;
-            padding-right: 4rem;
+            margin-right: 3rem;
         }
         .main{
-            background-color:  rgb(88, 110, 233);
+            background-color: rgb(88, 110, 233);
             width: 35%;
             height: 70vh;
             border-radius: 5% 5% 5% 5%;
             box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
         }
         .main1{
-            background-color:  rgb(88, 110, 233);
-            width: 45%;
+            width: 35vw;
             height: 80vh;
             border-radius: 5% 5% 5% 5%;
-            box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+            box-shadow: 0px 0px 10px 0px #ff0000; /* Initial color */
+            animation: borderTransition 3s infinite alternate, slideFromRight 3s forwards;        }
+
+        @keyframes borderTransition {
+            0% { box-shadow: 0px 0px 10px 0px #ff0000; }
+            25% { box-shadow: 0px 0px 10px 0px #cc00ff; }
+            50% { box-shadow: 0px 0px 10px 0px #0099ff; }
+            75% { box-shadow: 0px 0px 10px 0px #5900ff; }
+            100% { box-shadow: 0px 0px 10px 0px #0000ff; }
+        }
+        
+        @keyframes slideFromRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
         }
         .tec{
             width: 70%;
@@ -56,14 +69,8 @@ body {
        
 
         }
-        .tech{
-            width: 85%;
-            background-color: rgb(110, 129, 235);
-            float: right;
-            height: 80vh;
-            border-radius: 5% 5% 5% 5%;
-            box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
-        }
+        
+        
         .logo{
             width: 3rem;
             height: 3rem;
@@ -91,7 +98,7 @@ body {
    }
 
         span{
-            color: #000000;
+            color: #ffffff;
             font-size: small;
             display: flex;
             padding-top: 25%;
@@ -99,7 +106,7 @@ body {
         }
  
         header{
-            color: #000000;
+            color: #ffffff;
             font-size: 30px;
             display: flex;
             padding-left: 38%;
@@ -108,13 +115,14 @@ body {
         
         .input-field .input{
             height: 30px;
-            width: 35%;
+            width: 40%;
             border: none;
             font-size:  15px;
             padding: 0 0 1px 45px;    
             font-weight:600;
             background-color: rgb(255, 255, 255);
             border-radius: 0.3rem;
+            margin-left: 0.5rem;
         }
         .input-field{
             width: 80%;
@@ -122,13 +130,14 @@ body {
         }
         .input-field1 .input{
             height: 30px;
-            width: 70%;
+            width: 79%;
             border: none;
             font-size:  15px;
             padding: 0 0 1px 45px;    
             font-weight:600;
             background-color: rgb(255, 255, 255);
             border-radius: 0.3rem;
+            margin-right: -0.5rem;
         }
         .input-field1{
             width: 80%;
@@ -163,13 +172,15 @@ body {
             font-size: 20px;
             height: 35px;
             outline: none;
-            width: 45%;
+            width: 50%;
             color: rgb(0, 0, 0);
             background:  #53fd6a;
             cursor: pointer;
             transition: .3s ;
             font-weight: 900;
             box-shadow: 1px 2px 0px 0px rgb(0, 0, 0);
+            justify-content: center;
+            text-align-last: center;
         }
         
         .stusubmit:hover{
@@ -215,10 +226,62 @@ body {
         }
         .stureg{
             border-radius: 2rem;
-            color: #000000;
+            background-color: hsl(241, 93%, 56%);
             font-size: large;
         }
+        .man1 {
+            position: absolute;
+            right: -27.5rem;
+            top: 18rem;
+            animation: slideFromRights 3.2s forwards; 
+        }
         
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+@keyframes slideFromLefts {
+    from { 
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideFromRights {
+    from { 
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+
+.fade-out {
+    animation: fadeOut 1s forwards; 
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+        .man img{
+            width: 30%;
+        }
+
+        .man1 img{
+            width: 30%;
+        }
         .img{
             width: 25%;
             height:35vh;
@@ -228,18 +291,18 @@ body {
             
         }
         .im1{
-            width: 45%;
-            height:35vh;
+            width: 25%;
+            height:40vh;
             float: right;
             padding-top: 8rem;
-            padding-right: 6%;
+            padding-right: 15%;
         }
         .im{
-            width: 45%;
+            width: 25%;
             height:35vh;
             float: right;
             padding-top: 6rem;
-            padding-right: 13%;
+            padding-right: 22%;
         }
         
         .top{
@@ -248,12 +311,19 @@ body {
             font-weight:bolder;
             padding-left: 1rem;
         }
+        
         .top1{
             float: left;
             width: 15rem;
             font-weight:bolder;
-            padding-left: 4rem;
+            padding-left: 6rem;
+            animation: slideFromRight 3s forwards;   
         }
+        @keyframes slideFromRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }   
+
         .ss{
             padding-left: 5rem;
         }
@@ -274,9 +344,10 @@ body {
         }
         .register1{
             text-align: center;
-            width: 80%;
+            width: 90%;
         }
         .p1{
+            color: white;
             padding-left: 20%;
             padding-top: 10%;
         }
@@ -286,16 +357,19 @@ body {
         }
         .student1{
             padding-top: 8%;
-            width: 70%;
-            padding-left: 30%;
+            width: 100%;
             justify-content: center;
+            text-align-last: center;
         }
         .stureg1{
-            border-radius: 2rem;
-            color: #000000;
+            border-radius: 0.3rem;
+            color: #fffcfc;
             font-size: large;
-            
+            padding-bottom: 1rem;
+            background-color: hsl(241, 93%, 56%);
+            padding: 10px 30px 10px 30px;
         }
+       
 
         .im{
             animation: float 3s infinite;
@@ -323,17 +397,21 @@ body {
 @media only screen and (max-width: 600px) {
     body{
         width: 98%;
+        height: 100vh;
     }
     .main {
         width: 90%; 
-        height: 55vh;
+        height: 68vh;
         padding: 2rem 1rem; 
         box-shadow: 1px 5px 30px 1px rgb(0, 0, 0);
     }
 
     .box{
         min-height: 70vh;
-        padding-right: 0.4rem;
+        align-items: center;
+        align-self: center;
+        align-content: center;
+        margin-bottom: 3rem;
     }
 
     .tec{
@@ -363,7 +441,7 @@ body {
         padding-left: 2.5rem;
     }
     span{
-        color: #000000;
+        color: #ffffff;
         font-size: small;
         padding-left: 20%;
     }
@@ -415,7 +493,9 @@ body {
     .im {
         display: none; 
     }
-
+    .im1{
+        display: none; 
+    }
     .img {
         display: none; 
     }
@@ -426,5 +506,53 @@ body {
     }
     .stureg{
         padding-right: 3rem;
+    }
+    .msg{
+        display: none;
+    }
+    .se{
+        float: none;
+    }
+    .input-field .input{
+        height: 30px;
+        width: 90%;
+        border: none;
+        font-size:  15px;
+        padding: 0 0 1px 45px;    
+        font-weight:600;
+        background-color: rgb(255, 255, 255);
+        border-radius: 0.3rem;
+    }
+    .input-field{
+        width: 80%;
+        padding-left: 1rem;
+    }
+    .input-field1 .input{
+        height: 30px;
+        width: 90%;
+        border: none;
+        font-size:  15px;
+        padding: 0 0 1px 45px;    
+        font-weight:600;
+        background-color: rgb(255, 255, 255);
+        border-radius: 0.3rem;
+    }
+    .input-field1{
+        width: 80%;
+        padding-left: 1rem;
+    }
+    .input-field2 .input{
+        height: 30px;
+        width: 90%;
+        border: none;
+        font-size:  15px;
+        padding: 0 0 1px 45px;    
+        font-weight:600;
+        background-color: rgb(255, 255, 255);
+        border-radius: 0.3rem;
+    }
+    .input-field2{
+        width: 80%;
+        padding-left: 1rem;
     }
 }

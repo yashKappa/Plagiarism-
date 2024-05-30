@@ -255,7 +255,7 @@ app.post("/MU", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT * FROM university WHERE developer = ? AND password = ?";  const request = new sql.Request();
+  const query = "SELECT * FROM university WHERE username = ? AND password = ?";  const request = new sql.Request();
   request.input('developer', sql.NVarChar, username);
   request.input('password', sql.NVarChar, password);
 
@@ -1691,3 +1691,214 @@ app.get('/info', (req, res) => {
       }
   });
 });
+
+
+app.get('/developer_profile', (req, res) => {
+  try {
+    const storedUsername = req.cookies.username;
+
+    if (!storedUsername) {
+      return res.status(401).send('Unauthorized. Please log in.');
+    }
+
+    connection.query('SELECT DISTINCT username, email, password, lang, skill, exp, professional, education FROM university WHERE username = ?', [storedUsername], (error, results) => {
+      if (error) {
+        console.error('Error executing MySQL query:', error);
+        res.status(500).send('Internal Server Error');
+      } else {
+        res.render('developer_profile', { data: results, title: 'User developer_profile' });
+      }
+    });
+  } catch (err) {
+    console.error('Error handling MySQL query:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.post("/developer_profile/data", (req, res) => {
+  try {
+      const storedUsername = req.cookies.username;
+
+      if (!storedUsername) {
+          return res.status(401).send("Invalid username. Please log in with the correct username.");
+      }
+
+      const { lang, skill, exp, professional, education } = req.body;
+
+      const updateQuery = `
+          UPDATE university
+          SET lang = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM lang), ''), ''), ?)),
+              skill = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM skill), ''), ''), ?)),
+              exp = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM exp), ''), ''), ?)),
+              professional = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM professional), ''), ''), ?)),
+              education = TRIM(BOTH ',' FROM CONCAT_WS(', ', IFNULL(NULLIF(TRIM(BOTH ',' FROM education), ''), ''), ?))
+          WHERE username = ?
+      `;
+
+      connection.query(updateQuery, [lang, skill, exp, professional, education, storedUsername], (err, result) => {
+          if (err) {
+              console.error("Error updating profile data:", err);
+              res.status(500).send("Error updating profile data");
+          } else {
+              console.log("Profile updated successfully");
+              res.status(200).send("Profile updated successfully");
+          }
+      });
+  } catch (error) {
+      console.error("Error in profile data update route:", error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
+
+app.post('/devSkill', (req, res) => {
+  // Extract the username from the request
+  const storedUsername = req.cookies.username;
+
+  // Check if the username is defined
+  if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Extract the skill to dev from the request body
+  const langTodev = req.body.langName;
+
+  // Fetch the current list of skills from the database
+  connection.query('SELECT lang FROM university WHERE username = ?', [storedUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching skills:", err);
+          res.status(500).send("Error fetching skills");
+      } else {
+          // Extract the skills from the result
+          const currentLang = result[0].lang.split(',').map(lang => lang.trim());
+          const updatedLang = currentLang.filter(lang => lang !== langTodev);
+          const updatedLangString = updatedLang.join(', ');
+
+          // Update the 'university' table with the updated skills
+
+          // Update the 'university' table with the updated skills
+          connection.query('UPDATE university SET lang = ? WHERE username = ?', [updatedLangString, storedUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating skills:", err);
+                  res.status(500).send("Error updating skills");
+              } else {
+                  console.log("Skill devd successfully");
+                  res.status(200).send("Skill devd successfully");
+              }
+          });
+      }
+  });
+});
+
+
+app.post('/devDATA', (req, res) => {
+  // Extract the username from the request
+  const storedUsername = req.cookies.username;
+
+  // Check if the username is defined
+  if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Extract the skill to dev from the request body
+  const skillTodev = req.body.skillName;
+
+  // Fetch the current list of skills from the database
+  connection.query('SELECT skill FROM university WHERE username = ?', [storedUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching skills:", err);
+          res.status(500).send("Error fetching skills");
+      } else {
+
+          const currentSkill = result[0].skill.split(',').map(skill => skill.trim());
+          const updatedSkill = currentSkill.filter(skill => skill !== skillTodev);
+          const updatedSkillString = updatedSkill.join(', ');
+
+          // Update the 'university' table with the updated skills
+
+          // Update the 'university' table with the updated skills
+          connection.query('UPDATE university SET skill = ? WHERE username = ?', [updatedSkillString, storedUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating skills:", err);
+                  res.status(500).send("Error updating skills");
+              } else {
+                  console.log("Skill devd successfully");
+                  res.status(200).send("Skill devd successfully");
+              }
+          });
+      }
+  });
+});
+
+app.post('/devEDU', (req, res) => {
+  // Extract the username from the request
+  const storedEducationUsername = req.cookies.username;
+
+  // Check if the username is defined
+  if (!storedEducationUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Extract the education to dev from the request body
+  const educationTodev = req.body.educationName;
+
+  // Fetch the current list of educations from the database
+  connection.query('SELECT education FROM university WHERE username = ?', [storedEducationUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching educations:", err);
+          res.status(500).send("Error fetching educations");
+      } else {
+          const currentEducation = result[0].education.split(',').map(education => education.trim());
+          const updatedEducation = currentEducation.filter(education => education !== educationTodev);
+          const updatedEducationString = updatedEducation.join(', ');
+
+          // Update the 'university' table with the updated educations
+          connection.query('UPDATE university SET education = ? WHERE username = ?', [updatedEducationString, storedEducationUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating educations:", err);
+                  res.status(500).send("Error updating educations");
+              } else {
+                  console.log("Education devd successfully");
+                  res.status(200).send("Education devd successfully");
+              }
+          });
+      }
+  });
+});
+
+
+app.post('/devProfessional', (req, res) => {
+  // Extract the username from the request
+  const storedUsername = req.cookies.username;
+  const profTodev = req.body.profName;
+
+  // Check if the username is defined
+  if (!storedUsername) {
+      return res.status(401).send("Invalid username. Please log in with the correct username.");
+  }
+
+  // Fetch the current list of professional data from the database
+  connection.query('SELECT professional FROM university WHERE username = ?', [storedUsername], (err, result) => {
+      if (err) {
+          console.error("Error fetching professional data:", err);
+          res.status(500).send("Error fetching professional data");
+      } else {
+          const currentProf = result[0].professional.split(',').map(prof => prof.trim());
+          const updatedProf = currentProf.filter(prof => prof !== profTodev);
+          const updatedProfString = updatedProf.join(', ');
+
+          // Update the 'university' table with the updated professional data
+          connection.query('UPDATE university SET professional = ? WHERE username = ?', [updatedProfString, storedUsername], (err, result) => {
+              if (err) {
+                  console.error("Error updating professional data:", err);
+                  res.status(500).send("Error updating professional data");
+              } else {
+                  console.log("Professional data devd successfully");
+                  res.status(200).send("Professional data devd successfully");
+              }
+          });
+      }
+  });
+});
+

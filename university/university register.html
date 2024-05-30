@@ -18,15 +18,18 @@
     <div class="loli">
         <img class="logo" id="loo" src="../dark1.png">
     </div>
-    <div class="box1">
+    <div class="box">
         <div class="tech">
+            <div class="container">
+                <div class="man1">
+                    <img src="../right_push.png" alt="Man pushing wall">
+                </div>
             <form action="/MUR" method="POST">
                 <div class="top1">
                     <div class="mob"><img class="mo" src="https://icons.veryicon.com/png/o/miscellaneous/domain-icons/my-account-login.png"></div>
-                    <span class="ss">Don't have an account?</span>
-                    <header>Sign up</header>
+                    <span class="right">Don't have an account</span>
+                    <header class="right">Sign up</header>
                 </div> 
-                <img class="im1" src="https://www.multirecruit.com/wp-content/uploads/2022/05/What-is-Full-Stack-Developer.png">
                 
                 <div class="main1">
                     <div class="se">
@@ -43,19 +46,19 @@
                             <div class="tag"><i class='bx bx-lock-alt'></i></div>
                         </div>
                     </div>
-                    <!--<div class="sec">
+                    <div class="sec">
                         <div class="input-field">
-                            <input type="TexT" name="company" class="input" placeholder="Company name" required>
+                            <input type="TexT" name="university" class="input" placeholder="university" required>
                             <div class="tag"><i class='bx bx-user' ></i></div>
                         </div>
                         <div class="input-field">
-                            <input type="TexT" name="work" class="input" placeholder="Work on company" required>
+                            <input type="TexT" name="college" class="input" placeholder="college" required>
                             <div class="tag"><i class='bx bx-user' ></i></div>
                         </div>
                         <div class="input-field">
-                            <input type="TexT" name="developer" class="input" placeholder="name" required>
+                            <input type="TexT" name="teacher" class="input" placeholder="teacher name" required>
                             <div class="tag"><i class='bx bx-user' ></i></div>
-                        </div>-->
+                        </div>
                         
                     </div>
                    
@@ -74,15 +77,26 @@
                         <input type="submit" class="stusubmit" value="register">
                     </div>
                     <div class="register1">
-                        <div class="p1">Already have any account?</div>
+                        <div class="p1">Already have any account</div>
                         <div class="stu1"><a class="stureg1" href="university login.html">login</a></div>
                     
                 </div>
                 </div>
             </form>
         </div>
+
+        </div>
     </div>
     <script>
+        setTimeout(function() {
+            const man1Element = document.querySelector('.man1');
+            man1Element.classList.add('fade-out'); // Apply fade-out animation
+            setTimeout(function() {
+                manElement.style.display = 'none'; // Hide the man element after the fade-out animation completes
+            }, 1000); // Wait for 1 second (duration of the fade-out animation)
+        }, 4000); // 4000 milliseconds = 4 seconds
+        
+        
         function myFunction() {
             var element = document.body;
             element.classList.toggle("dark-mode");

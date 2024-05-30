@@ -24,9 +24,11 @@
   <div class="sidebar">
     <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
     <div class="img"><div id="image-container1"></div></div>
-    <a class="no" href="../student user/profile.html"><i class="fas fa-cog"> </i>Setting</a>
+    <a class="no" href="../info"><i class="fas fa-cog"> </i>Setting</a>
     <a href="../profile" id="hideLink"><i class="fas fa-user"></i> Profile</a>
-    <a href="../teacher_profile" id="teacherLink"><i class="fas fa-user"></i> Profile</a>    <a class="active" href="../user"><i class="fas fa-poll"> </i>Status</a>
+    <a href="../teacher_profile" id="teacherLink"><i class="fas fa-user"></i> Profile</a>    
+    <a href="../developer_profile" id="developLink"><i class="fas fa-user"></i>dev Profile</a>    
+    <a class="active" href="../user"><i class="fas fa-poll"> </i>Status</a>
     <div class="home">
     <a class="fea" href="../student user/userpanel.html"><i class="fas fa-home"> </i>Home</a>
     <a class="feat" id="logout-btn">
@@ -101,17 +103,34 @@
   
 <script>
   var student = getCookie('student');
-var teacher = getCookie('teacher');
-var logged = getCookie('logged');
+  var teacher = getCookie('teacher');
+  var developer = getCookie('developer');
+  var logged = getCookie('logged');
+  
+  if ((student || teacher || developer) && logged === 'true') {
+      // If the user is a student, teacher, or developer and logged in, hide the appropriate links
+      if (student) {
+          document.getElementById('teacherLink').style.display = 'none';
+          document.getElementById('teacherLink1').style.display = 'none';
+          document.getElementById('teacherLink2').style.display = 'none';
+          document.getElementById('developLink').style.display = 'none';
 
-if (student && logged === 'true') {
-    // If the user is a student and logged in, hide the hideLink
-    document.getElementById('teacherLink').style.display = 'none';
-} else if (teacher && logged === 'true') {
-    // If the user is a teacher and logged in, hide the teacherLink
-    document.getElementById('hideLink').style.display = 'none';
-}
+      } else if (teacher) {
+          document.getElementById('hideLink').style.display = 'none';
+          document.getElementById('hideLink1').style.display = 'none';
+          document.getElementById('hideLink2').style.display = 'none';
+          document.getElementById('developLink').style.display = 'none';
 
+      } else if (developer) {
+        document.getElementById('hideLink').style.display = 'none';
+        document.getElementById('teacherLink').style.display = 'none';
+        document.getElementById('teacherLink1').style.display = 'none';
+        document.getElementById('teacherLink2').style.display = 'none';
+        document.getElementById('hideLink1').style.display = 'none';
+        document.getElementById('hideLink2').style.display = 'none';
+      }
+  }
+  
 // Function to get cookie value
 function getCookie(name) {
     var cookies = document.cookie.split(';');
@@ -189,6 +208,7 @@ window.onload = function() {
       displayImageInMultipleContainers(savedImageData);
   }
 };
+
 
 // Function to get the value of a cookie by its name
 function getCookie(name) {
